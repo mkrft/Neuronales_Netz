@@ -29,19 +29,33 @@ def race_loop():
 
         for car in GRID_CACHE:
 
-            # TODO Compute the needed lap time
+            # Compute the needed lap time
             needed_lap_time = compute_lap_times(car)
 
             car.race_time += needed_lap_time
 
-            # TODO Add tyre degredation
+            
 
-        # TODO Check for overtakes
-        # TODO Define rules for overtaking like a probability function concerning the intervals after the "last" lap
-        # TODO Compute the invervals and store them somewhere to get the from there again... maybe as attribute of a car?
+            # TODO Check for overtakes
+            # TODO Define rules for overtaking like a probability function concerning the intervals after the "last" lap
+            
+            # TODO Compute the invervals!
 
-        # TODO Add possibility of a pitstop in this lap
-        # TODO this means adding pitstop delta time to race_time and changing tyre to new ones that are fresh
+            # Determine if the car has increased tyre degradation or not
+            if car.delta_to_car_infront <= 1.0:
+                close_car_infront = True
+            else:
+                close_car_infront = False
+            
+            # Let the tyre degrade according to the interval to car infront
+            if close_car_infront:
+                car.tyre.degrade(car_infront=True)
+            else:
+                car.tyre.degrade()
+
+            # TODO Add possibility of a pitstop in this lap
+            # TODO this means adding pitstop delta time to race_time and changing tyre to new ones that are fresh
+
 
         # End active lap
         current_lap += 1

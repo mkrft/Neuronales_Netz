@@ -17,7 +17,7 @@ def test_print(current_lap):
     """
 
     print(f"Current Lap: {current_lap}")
-    print("| Driver | Pos | Tyre | RaceTime | Interval |")
+    print("| Driver | Pos |    Tyre   |    RaceTime    | Interval |")
     for car in GRID_CACHE:
-        print(f"|  {car.driver.short}   |  {car.position}  |  {car.tyre.compound}   |     {car.race_time}    |   TODO   |")
+        print(f"|  {car.driver.short}   |  {car.position}  |  {car.tyre.compound} {round(car.tyre.degredation * 100, 2)}%   |     {car.race_time}    |   {car.delta_to_car_infront}   |")
     print("\n")

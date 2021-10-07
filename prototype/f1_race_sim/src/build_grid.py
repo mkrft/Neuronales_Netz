@@ -10,11 +10,16 @@
 #=====Imports=========================================
 
 #=====Module Imports==================================
-from src.config import NUMBER_OF_COMPETITORS
+from src.config import (
+    NUMBER_OF_COMPETITORS,
+    RACE_START_OFFSET
+)
 from src.const import (
     DEFAULT_DRIVER_NAME, 
     DEFAULT_DRIVER_SHORT, 
     GRID_CACHE,
+    HARD,
+    MEDIUM,
     SOFT
 )
 
@@ -37,6 +42,9 @@ def build_grid():
         - How to give different cars different tyres
     """
 
+    # To seperate the field in the beginning
+    starting_offset = 0
+
     # Generate a starting grid
     for i in range(NUMBER_OF_COMPETITORS):
 
@@ -53,13 +61,16 @@ def build_grid():
             skill=0.5
         )
 
-        tyre = Tyre(compound=SOFT)
+        tyre = Tyre(compound=HARD)
 
         car = Car(
             driver=driver,
             power=0.5,
             tyre=tyre,
-            position=i+1
+            position=i+1,
+            race_time=starting_offset
         )
+
+        starting_offset += RACE_START_OFFSET
 
         GRID_CACHE.append(car)
