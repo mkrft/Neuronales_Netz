@@ -39,7 +39,7 @@ def driver_function(skill):
     return - {float} - skill_delta
     """
 
-    return
+    return 0.0
 
 
 def power_function(power):
@@ -51,7 +51,7 @@ def power_function(power):
     return - {float} - power_delta
     """
 
-    return
+    return 0.0
 
 
 def tyre_function(tyre):
@@ -64,4 +64,4 @@ def tyre_function(tyre):
     return - {float} - tyre_delta - Delta the tyre influences laptime in seconds
     """
 
-    return
+    return 0.0
