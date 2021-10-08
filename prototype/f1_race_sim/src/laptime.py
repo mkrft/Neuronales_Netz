@@ -2,14 +2,17 @@
     Module to compute a estimated laptime concering
     every important aspect of a car (power, driver, tyre, ...)
 
-"""
+    The Reference Time sets the time that shall be returned if
+    the power is 0.5
+    the skill is 0.5
+    and with fresh mediums (degredation 100%)
 
-#=====Imports=========================================
+    TODO Add the function
+
+"""
 
 #=====Module Imports==================================
 from src.config import REFERANCE_LAP_TIME
-
-#=====Libraries=======================================
 
 
 #=====Functions=======================================
@@ -23,6 +26,42 @@ def compute_lap_times(car):
     return - {int} - lap_time
     """
 
-    # TODO Implement this Computation!
+    lap_time = REFERANCE_LAP_TIME + driver_function(car.driver.skill) + power_function(car.power) + tyre_function(car.tyre)
 
-    return REFERANCE_LAP_TIME
+    return lap_time
+
+def driver_function(skill):
+    """
+    Compute the driver influence on the laptime
+
+    param - {float} - skill - Skill value of the driver
+
+    return - {float} - skill_delta
+    """
+
+    return
+
+
+def power_function(power):
+    """
+    Compute the cars power influence on the laptime
+
+    param - {float} - power - Power value of the car
+
+    return - {float} - power_delta
+    """
+
+    return
+
+
+def tyre_function(tyre):
+    """
+    Compute the tyre influence on the laptime
+    according to the tyre compound and degredation
+
+    param - {obj} - tyre - Object of the class tyre, fitted to a car
+
+    return - {float} - tyre_delta - Delta the tyre influences laptime in seconds
+    """
+
+    return
