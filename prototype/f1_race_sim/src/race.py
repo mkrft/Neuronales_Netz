@@ -39,9 +39,18 @@ def race_loop():
             # TODO Check for overtakes
             # TODO Define rules for overtaking like a probability function concerning the intervals after the "last" lap
             
-            # TODO Compute the invervals!
+            # Compute the invervals
+            for other_car in GRID_CACHE:
+
+                # Search for the car infront
+                # And compute the delta between them
+                if car.position - 1 == other_car.position:
+                    car.delta_to_car_infront = round(car.race_time - other_car.race_time, 3)
+                    break
+
 
             # Determine if the car has increased tyre degradation or not
+            # TODO add function to corelate detla with the penalty
             if car.delta_to_car_infront <= 1.0:
                 close_car_infront = True
             else:

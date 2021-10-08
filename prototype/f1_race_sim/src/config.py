@@ -17,7 +17,7 @@ RACE_DISTANCE = 50
 REFERANCE_LAP_TIME = 80.0
 
 # Race Time offset due to starting in order not parallel
-RACE_START_OFFSET = 0.05
+RACE_START_OFFSET = 0.1
 
 # Percentage value range of tyre degreation per normal lap
 TYRE_DEG_SOFT = (0.03, 0.045)

@@ -61,7 +61,7 @@ def build_grid():
             skill=0.5
         )
 
-        tyre = Tyre(compound=HARD)
+        tyre = Tyre(compound=SOFT)
 
         car = Car(
             driver=driver,
