@@ -31,28 +31,22 @@ def race_loop():
 
             # Compute the needed lap time
             needed_lap_time = compute_lap_times(car)
-
             car.race_time += needed_lap_time
 
-            
 
+            # TODO Has this to be done at the end of the lap or while for consistency? 
             # TODO Check for overtakes
             # TODO Define rules for overtaking like a probability function concerning the intervals after the "last" lap
-            
-            # Compute the invervals
-            for other_car in GRID_CACHE:
-
-                # Search for the car infront
-                # And compute the delta between them
-                if car.position - 1 == other_car.position:
-                    car.delta_to_car_infront = round(car.race_time - other_car.race_time, 3)
-                    break
 
 
             # Determine if the car has increased tyre degradation or not
             # TODO add function to corelate detla with the penalty
-            if car.delta_to_car_infront <= 1.0:
+            if car.delta_to_car_infront == "-":
+                close_car_infront = False
+
+            elif car.delta_to_car_infront <= 1.0 and car.position != 1:
                 close_car_infront = True
+
             else:
                 close_car_infront = False
             
@@ -66,8 +60,25 @@ def race_loop():
             # TODO this means adding pitstop delta time to race_time and changing tyre to new ones that are fresh
 
 
+        # Order grid by race time at the end of the lap
+        grid_sorted = sorted(GRID_CACHE, key=lambda car: car.race_time)
+
+        # Alter the positions according to race time
+        for index in range(0, len(grid_sorted)):
+
+            # Set the new position of this lap
+            grid_sorted[index].position = index + 1
+
+            # Compute the according intervals
+            # But skip the driver on pos one
+            if index == 0:
+                grid_sorted[index].delta_to_car_infront = "-"
+                continue
+
+            grid_sorted[index].delta_to_car_infront = round(grid_sorted[index].race_time - grid_sorted[index - 1].race_time, 2)
+
         # End active lap
         current_lap += 1
 
         # Display the current standigs
-        test_print(current_lap)
+        test_print(current_lap, grid_sorted)

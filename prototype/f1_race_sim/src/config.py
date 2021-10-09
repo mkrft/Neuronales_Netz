@@ -11,7 +11,7 @@
 NUMBER_OF_COMPETITORS = 20
 
 # Set the race distance, meaning the number of laps to drive
-RACE_DISTANCE = 50
+RACE_DISTANCE = 60
 
 # Set the reference for a lap time in seconds
 REFERANCE_LAP_TIME = 80.0

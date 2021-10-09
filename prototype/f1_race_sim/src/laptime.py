@@ -11,6 +11,9 @@
 
 """
 
+# TODO Remove random alteration; just here for testing
+import random
+
 #=====Module Imports==================================
 from src.config import REFERANCE_LAP_TIME
 
@@ -26,7 +29,7 @@ def compute_lap_times(car):
     return - {int} - lap_time
     """
 
-    lap_time = REFERANCE_LAP_TIME + driver_function(car.driver.skill) + power_function(car.power) + tyre_function(car.tyre)
+    lap_time = REFERANCE_LAP_TIME + driver_function(car.driver.skill) + power_function(car.power) + tyre_function(car.tyre) + random.randint(1,3)
 
     return lap_time
 

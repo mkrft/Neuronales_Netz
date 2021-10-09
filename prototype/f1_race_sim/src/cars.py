@@ -61,6 +61,16 @@ class Car():
         self._race_time = race_time
 
 
+    # position Getter/Setter
+    @property
+    def position(self):
+        return self._position
+    
+    @position.setter
+    def position(self, position):
+        self._position = position
+
+
     # delta_to_car_infront Getter/Setter
     @property
     def delta_to_car_infront(self):
