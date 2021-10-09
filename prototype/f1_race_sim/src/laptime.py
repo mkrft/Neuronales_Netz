@@ -7,15 +7,18 @@
     the skill is 0.5
     and with fresh mediums (degredation 100%)
 
-    TODO Add the function
+    TODO validate functions to compute laptime
 
 """
 
-# TODO Remove random alteration; just here for testing
-import random
 
 #=====Module Imports==================================
 from src.config import REFERANCE_LAP_TIME
+from src.const import (
+        SOFT,
+        MEDIUM,
+        HARD
+        )
 
 
 #=====Functions=======================================
@@ -29,9 +32,10 @@ def compute_lap_times(car):
     return - {int} - lap_time
     """
 
-    lap_time = REFERANCE_LAP_TIME + driver_function(car.driver.skill) + power_function(car.power) + tyre_function(car.tyre) + random.randint(1,3)
+    lap_time = REFERANCE_LAP_TIME + driver_function(car.driver.skill) + power_function(car.power) + tyre_function(car.tyre)
 
     return lap_time
+
 
 def driver_function(skill):
     """
@@ -42,7 +46,7 @@ def driver_function(skill):
     return - {float} - skill_delta
     """
 
-    return 0.0
+    return round(-2*skill + 1, 2)
 
 
 def power_function(power):
@@ -54,7 +58,7 @@ def power_function(power):
     return - {float} - power_delta
     """
 
-    return 0.0
+    return round(1.833333 - 3*power, 2)
 
 
 def tyre_function(tyre):
@@ -67,4 +71,9 @@ def tyre_function(tyre):
     return - {float} - tyre_delta - Delta the tyre influences laptime in seconds
     """
 
-    return 0.0
+    if tyre.compound == SOFT:
+        return round(16.5857 - 21.8214 * tyre.degredation, 2)
+    elif tyre.compound == MEDIUM:
+        return round(17.4095 - 21.2857 * tyre.degredation, 2)
+    elif tyre.compound == HARD:
+        return round(18.681 - 21.6286 * tyre.degredation, 2)
