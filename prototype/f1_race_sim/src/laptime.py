@@ -34,7 +34,7 @@ def compute_lap_times(car):
 
     lap_time = REFERANCE_LAP_TIME + driver_function(car.driver.skill) + power_function(car.power) + tyre_function(car.tyre)
 
-    return lap_time
+    return round(lap_time, 2)
 
 
 def driver_function(skill):

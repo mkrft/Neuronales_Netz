@@ -4,12 +4,31 @@
 
 """
 
+#=====Imports=========================================
+import random
+
+#=====Module Imports==================================
+from src.const import (
+    SOFT,
+    MEDIUM,
+    HARD
+)
+
+from src.config import (
+    PITSTOP_DELTA_TIME,
+    PITSTOP_ERROR_RANGE
+)
+
+from src.tyre import Tyre 
+
+
+#=====Code============================================
 class Car():
     """
         Class for easier creation of mutiple cars with different attributes
     """
 
-    def __init__(self, driver, power, tyre, position, race_time, delta_to_car_infront=0):
+    def __init__(self, driver, power, tyre, position, race_time, delta_to_car_infront=0, stops=0):
         """
         Constructor Car
 
@@ -27,7 +46,39 @@ class Car():
         self.position = position
         self.race_time = race_time
         self.delta_to_car_infront = delta_to_car_infront
+        self.stops = stops
 
+    #=====Methods=====================================
+    def pitstop(self, tyre_choice):
+        """
+        Function to change tyres to a fresh set and
+        add the pitstop detla time to the race time
+
+        param - {int} - tyre_choice - correlating with the const tyre ints
+        """
+
+        # Add the Pitstop delta time to the racetime and add potential
+        # time loss due to pitstop errors
+        self.race_time += (PITSTOP_DELTA_TIME + round(random.uniform(PITSTOP_ERROR_RANGE[0], PITSTOP_ERROR_RANGE[1]), 2))
+
+        # Fit new tyre to the car
+        if tyre_choice == SOFT:
+            self.tyre = Tyre(SOFT)
+
+        elif tyre_choice == MEDIUM:
+            self.tyre = Tyre(MEDIUM)
+
+        elif tyre_choice == HARD:
+            self.tyre = Tyre(HARD)
+        
+        else:
+            # TODO add TyreNotKnownError Exception
+            pass
+
+        # Increment number of pitstops done
+        self.stops += 1
+
+        return
     
     #=====Property Function Class Car=================
     

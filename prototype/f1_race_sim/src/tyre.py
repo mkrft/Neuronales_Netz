@@ -7,7 +7,6 @@
 #=====Imports=========================================
 import random
 
-
 #=====Module Imports==================================
 from src.config import (
     TYRE_DEG_SOFT,

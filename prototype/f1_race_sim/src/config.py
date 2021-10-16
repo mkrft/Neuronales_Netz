@@ -25,4 +25,10 @@ TYRE_DEG_MEDIUM = (0.02, 0.035)
 TYRE_DEG_HARD = (0.01, 0.025)
 
 # Value of increased tyre deg per close interval lap
-TYRE_INTERVAL_PENALTY = (0.01, 0.03)
+TYRE_INTERVAL_PENALTY = (0.005, 0.015)
+
+# Seconds lost during a pitstop
+PITSTOP_DELTA_TIME = 22
+
+# Describing the potential time lost due to pitstop errors
+PITSTOP_ERROR_RANGE = (0.0, 1.0)

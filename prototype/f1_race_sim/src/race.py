@@ -11,9 +11,16 @@ from src.config import (
     REFERANCE_LAP_TIME
 )
 
+from src.const import (
+    SOFT,
+    MEDIUM,
+    HARD
+)
+
 from src.const import GRID_CACHE
 from src.laptime import compute_lap_times
 from src.display import test_print
+from src.overtake import check_overtake
 
 #=====Libraries=======================================
 
@@ -31,16 +38,10 @@ def race_loop():
 
             # Compute the needed lap time
             needed_lap_time = compute_lap_times(car)
-            car.race_time += needed_lap_time
-
-
-            # TODO Has this to be done at the end of the lap or while for consistency? 
-            # TODO Check for overtakes
-            # TODO Define rules for overtaking like a probability function concerning the intervals after the "last" lap
-
+            car.race_time = round(car.race_time + needed_lap_time, 2)
 
             # Determine if the car has increased tyre degradation or not
-            # TODO add function to corelate detla with the penalty
+            # TODO add function to corelate delta with the penalty
             if car.delta_to_car_infront == "-":
                 close_car_infront = False
 
@@ -56,8 +57,11 @@ def race_loop():
             else:
                 car.tyre.degrade()
 
-            # TODO Add possibility of a pitstop in this lap
-            # TODO this means adding pitstop delta time to race_time and changing tyre to new ones that are fresh
+            # TODO How to decide wether to pit and on which tyre
+            # TODO How to give this option to the AI?
+            # TODO Only test implementation
+            if current_lap == 25: 
+                car.pitstop(MEDIUM)
 
 
         # Order grid by race time at the end of the lap
@@ -77,8 +81,18 @@ def race_loop():
 
             grid_sorted[index].delta_to_car_infront = round(grid_sorted[index].race_time - grid_sorted[index - 1].race_time, 2)
 
+        # TODO Check for overtakes
+        # TODO Define rules for overtaking like a probability function concerning the intervals after the "last" lap
+        for index in range(0, len(grid_sorted)):
+            
+            if grid_sorted[index].delta_to_car_infront <= OVERTAKE_TRESHOLD:
+
+                check_overtake(grid_sorted[index], grid_sorted[index - 1])
+
         # End active lap
         current_lap += 1
+
+        # TODO Check if last lap and everyone has fullfilled the rule of changeing tyres at least once to different compound
 
         # Display the current standigs
         test_print(current_lap, grid_sorted)
