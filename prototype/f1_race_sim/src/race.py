@@ -8,7 +8,8 @@
 #=====Module Imports==================================
 from src.config import (
     RACE_DISTANCE,
-    REFERANCE_LAP_TIME
+    REFERANCE_LAP_TIME,
+    OVERTAKE_TRESHOLD
 )
 
 from src.const import (
@@ -21,6 +22,7 @@ from src.const import GRID_CACHE
 from src.laptime import compute_lap_times
 from src.display import test_print
 from src.overtake import check_overtake
+from src.order_grid import order_grid
 
 #=====Libraries=======================================
 
@@ -44,10 +46,8 @@ def race_loop():
             # TODO add function to corelate delta with the penalty
             if car.delta_to_car_infront == "-":
                 close_car_infront = False
-
             elif car.delta_to_car_infront <= 1.0 and car.position != 1:
                 close_car_infront = True
-
             else:
                 close_car_infront = False
             
@@ -64,35 +64,25 @@ def race_loop():
                 car.pitstop(MEDIUM)
 
 
-        # Order grid by race time at the end of the lap
-        grid_sorted = sorted(GRID_CACHE, key=lambda car: car.race_time)
+        # Sort the whole grid and set the accoridng intervals
+        grid_sorted = order_grid()
+        
 
-        # Alter the positions according to race time
-        for index in range(0, len(grid_sorted)):
-
-            # Set the new position of this lap
-            grid_sorted[index].position = index + 1
-
-            # Compute the according intervals
-            # But skip the driver on pos one
-            if index == 0:
-                grid_sorted[index].delta_to_car_infront = "-"
-                continue
-
-            grid_sorted[index].delta_to_car_infront = round(grid_sorted[index].race_time - grid_sorted[index - 1].race_time, 2)
-
-        # TODO Check for overtakes
-        # TODO Define rules for overtaking like a probability function concerning the intervals after the "last" lap
-        for index in range(0, len(grid_sorted)):
+        # Check fpr potential overtakes and let them happen
+        for index in range(1, len(grid_sorted)):
             
             if grid_sorted[index].delta_to_car_infront <= OVERTAKE_TRESHOLD:
 
-                check_overtake(grid_sorted[index], grid_sorted[index - 1])
+                if check_overtake(grid_sorted[index], grid_sorted[index - 1]):
+
+                    # TODO let them switch position without destroying constistency
+                    pass
+
 
         # End active lap
         current_lap += 1
 
         # TODO Check if last lap and everyone has fullfilled the rule of changeing tyres at least once to different compound
 
-        # Display the current standigs
+        # Display the current standings
         test_print(current_lap, grid_sorted)
