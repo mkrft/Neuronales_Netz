@@ -9,7 +9,6 @@
 from src.config import (
     RACE_DISTANCE,
     REFERANCE_LAP_TIME,
-    OVERTAKE_TRESHOLD
 )
 
 from src.const import (
@@ -21,7 +20,7 @@ from src.const import (
 from src.const import GRID_CACHE
 from src.laptime import compute_lap_times
 from src.display import test_print
-from src.overtake import check_overtake
+from src.overtake import overtaking
 from src.order_grid import order_grid
 
 #=====Libraries=======================================
@@ -43,7 +42,7 @@ def race_loop():
             car.race_time = round(car.race_time + needed_lap_time, 2)
 
             # Determine if the car has increased tyre degradation or not
-            # TODO add function to corelate delta with the penalty
+            # TODO add function to correlate delta with the penalty
             if car.delta_to_car_infront == "-":
                 close_car_infront = False
             elif car.delta_to_car_infront <= 1.0 and car.position != 1:
@@ -68,16 +67,11 @@ def race_loop():
         grid_sorted = order_grid()
         
 
-        # Check fpr potential overtakes and let them happen
-        for index in range(1, len(grid_sorted)):
-            
-            if grid_sorted[index].delta_to_car_infront <= OVERTAKE_TRESHOLD:
+        # Check for potential overtakes and let them happen
+        # TODO Overtakes can still happen just by having a quicker lap...
+        overtaking(grid_sorted)
 
-                if check_overtake(grid_sorted[index], grid_sorted[index - 1]):
-
-                    # TODO let them switch position without destroying constistency
-                    pass
-
+        grid_sorted = order_grid()
 
         # End active lap
         current_lap += 1
