@@ -13,13 +13,9 @@
 
 """
 
-#=====Imports=========================================
-
 #=====Module Imports==================================
 from src.build_grid import build_grid
 from src.race import race_loop
-
-#=====Libraries=======================================
 
 #=====Program Entry===================================
 if __name__ == "__main__":

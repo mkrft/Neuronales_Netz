@@ -44,6 +44,7 @@ class Car():
         self.power = power
         self.tyre = tyre
         self.position = position
+        self.starting_pos = position
         self.race_time = race_time
         self.delta_to_car_infront = delta_to_car_infront
         self.stops = stops
@@ -139,5 +140,14 @@ class Car():
     @stops.setter
     def stops(self, stops):
         self._stops = stops
+
+    # starting_pos Getter/Setter
+    @property
+    def starting_pos(self):
+        return self._starting_pos
+    
+    @starting_pos.setter
+    def starting_pos(self, starting_pos):
+        self._starting_pos = starting_pos
     
     
