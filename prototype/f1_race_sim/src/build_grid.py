@@ -45,6 +45,9 @@ def build_grid():
     # To seperate the field in the beginning
     starting_offset = 0
 
+    # Reset the Grid
+    GRID_CACHE.clear()
+
     # Generate a starting grid
     for i in range(NUMBER_OF_COMPETITORS):
 
@@ -72,5 +75,7 @@ def build_grid():
         )
 
         starting_offset += RACE_START_OFFSET
+
+        print(GRID_CACHE)
 
         GRID_CACHE.append(car)

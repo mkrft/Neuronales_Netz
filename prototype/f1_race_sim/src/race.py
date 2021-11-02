@@ -3,12 +3,11 @@
     to simulate a full "lap" around the virtual circut
 """
 
-#=====Imports=========================================
-
 #=====Module Imports==================================
 from src.config import (
     RACE_DISTANCE,
     REFERANCE_LAP_TIME,
+    CURRENT_RACE_LAP
 )
 
 from src.const import (
@@ -23,23 +22,19 @@ from src.display import test_print
 from src.overtake import overtaking
 from src.order_grid import order_grid
 
-#=====Libraries=======================================
-
 
 #=====Functions=======================================
 def race_loop():
-    
-    # Init the current lap with the starting lap of 0
-    current_lap = 0
 
     # "Race" until the RACE_DISTANCE is reached
-    while current_lap < RACE_DISTANCE:
+    while CURRENT_RACE_LAP[0] < RACE_DISTANCE:
 
         for car in GRID_CACHE:
 
             # Compute the needed lap time
             needed_lap_time = compute_lap_times(car)
             car.race_time = round(car.race_time + needed_lap_time, 2)
+            car.last_lap = needed_lap_time
 
             # Determine if the car has increased tyre degradation or not
             # TODO add function to correlate delta with the penalty
@@ -59,7 +54,7 @@ def race_loop():
             # TODO How to decide wether to pit and on which tyre
             # TODO How to give this option to the AI?
             # TODO Only test implementation
-            if current_lap == 25: 
+            if CURRENT_RACE_LAP[0] == 25: 
                 car.pitstop(MEDIUM)
 
 
@@ -74,9 +69,9 @@ def race_loop():
         grid_sorted = order_grid()
 
         # End active lap
-        current_lap += 1
+        CURRENT_RACE_LAP[0] += 1
 
         # TODO Check if last lap and everyone has fullfilled the rule of changeing tyres at least once to different compound
 
         # Display the current standings
-        test_print(current_lap, grid_sorted)
+        test_print(CURRENT_RACE_LAP[0], grid_sorted)

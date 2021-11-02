@@ -17,10 +17,18 @@ from const import (
     MEDIUM,
     HARD
 )
+
+from config import (
+    CURRENT_RACE_LAP,
+    RACE_DISTANCE
+)
+
+from build_grid import build_grid
+
 #=====Libraries=======================================
 from gym import Env
 from gym.spaces import Discrete, Box
-import numpy
+import numpy as np
 
 #=====Functions=======================================
 class RacingEnv(Env):
@@ -29,7 +37,7 @@ class RacingEnv(Env):
     Parent  Env     OpenAI Gym Blueprint for an RL Environment
     """
 
-    def __init__(self):
+    def __init__(self, car):
         """
         Constructor of our Env
         """
@@ -40,17 +48,18 @@ class RacingEnv(Env):
         # Arry of possibilities
         # TODO Here we will have to give a full grid state via
         # TODO a tensor or some sort
-        self.observation_space = #TODO
+        self.observation_space = Box(low=np.array([0]), high=np.array([110]))
+
+
+        # Add the according car
+        self.car = car
 
         # Starting state
         # TODO should represent the grid from the beginning as sort of tensor?
-        self.state  = #TODO
-
-        # Add relevant car TODO may be done different
-        # self.car = car
+        self.state  = self.car.last_lap
 
         
-    def step(self, action, car):
+    def step(self, action):
         """
         Routine that shall be done each lap by the Agent
 
@@ -67,30 +76,39 @@ class RacingEnv(Env):
         if action == 0:
             pass
         elif action == 1:
-            car.pitstop(SOFT)
+            self.car.pitstop(SOFT)
         elif action == 2:
-            car.pitstop(MEDIUM)
+            self.car.pitstop(MEDIUM)
         else:
-            car.pitstop(HARD)
+            self.car.pitstop(HARD)
 
         # Give according reward per step
         # TODO
-        reward = 0
+        if self.state > self.car.last_lap:
+            reward = -1
+        else:
+            reward = 1
+
+        # Store the last lap time to compare
+        # in the next step
+        self.state = self.car.last_lap
         
-        # Check if race is over
-        if current_lap != 60:
+        # TODO Check if race is over
+        if CURRENT_RACE_LAP[0] != RACE_DISTANCE:
             done = False
         else:
             done = True
-
 
         # Add debug info for later
         info = {}
 
         return self.state, reward, done, info
 
+
     def reset(self):
         """
         Clear the grid and build a new one
         """
-        pass
+        
+        build_grid()
+        CURRENT_RACE_LAP[0] = 0
