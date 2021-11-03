@@ -20,7 +20,8 @@ from src.const import (
 
 from src.config import (
     CURRENT_RACE_LAP,
-    RACE_DISTANCE
+    RACE_DISTANCE,
+    NUMBER_OF_COMPETITORS
 )
 
 from src.build_grid import build_grid
@@ -48,15 +49,14 @@ class RacingEnv(Env):
         # Arry of possibilities
         # TODO Here we will have to give a full grid state via
         # TODO a tensor or some sort
-        self.observation_space = Box(low=np.array([0]), high=np.array([110]))
+        self.observation_space = Box(low=np.array([1]), high=np.array([NUMBER_OF_COMPETITORS]))
 
 
         # Add the according car
         self.car = car
 
         # Starting state
-        # TODO should represent the grid from the beginning as sort of tensor?
-        self.state  = car.last_lap
+        self.state  = car.tyre.degredation
 
         
     def step(self, action):
@@ -82,22 +82,20 @@ class RacingEnv(Env):
         else:
             self.car.pitstop(HARD)
 
-        # Give according reward per step
-        # TODO
-        if self.state > self.car.last_lap:
-            reward = -1
-        else:
-            reward = 1
-
-        # Store the last lap time to compare
-        # in the next step
-        self.state = self.car.last_lap
+        # Set the new state
+        self.state = self.car.tyre.degredation
         
-        # TODO Check if race is over
+        # Check if race is over and comupte the reward to give
         if CURRENT_RACE_LAP[0] < RACE_DISTANCE - 1:
             done = False
+            reward = 0
         else:
             done = True
+
+            if self.car.starting_pos + self.car.position == 2:
+                reward = 20
+            else:
+                reward = -1 * self.car.position - self.car.starting_pos
 
         # Add debug info for later
         info = {}

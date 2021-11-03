@@ -2,6 +2,8 @@
     Declaration of the Cars as own Class with the
     according attributes
 
+    TODO Add two dry tyres rule
+
 """
 
 #=====Imports=========================================

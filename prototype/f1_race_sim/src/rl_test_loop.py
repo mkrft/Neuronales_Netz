@@ -27,6 +27,7 @@ from src.display import test_print
 from src.overtake import overtaking
 from src.order_grid import order_grid
 from src.cars import Car
+from src.tyre import Tyre
 
 #=====Libraries=======================================
 
@@ -38,7 +39,7 @@ def ai_race_loop():
     """
 
     # Create the RaceEnvironment with a dummy car
-    Race = RacingEnv(Car(None, None, None, None, None))
+    Race = RacingEnv(Car(None, None, Tyre(SOFT), None, None))
 
     # Play through the game for every episode
     for episode in range(0, EPISODES + 1):

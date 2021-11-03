@@ -76,6 +76,4 @@ def build_grid():
 
         starting_offset += RACE_START_OFFSET
 
-        print(GRID_CACHE)
-
         GRID_CACHE.append(car)
