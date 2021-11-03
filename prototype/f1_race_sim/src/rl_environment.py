@@ -12,18 +12,18 @@
 #=====Imports=========================================
 
 #=====Module Imports==================================
-from const import (
+from src.const import (
     SOFT,
     MEDIUM,
     HARD
 )
 
-from config import (
+from src.config import (
     CURRENT_RACE_LAP,
     RACE_DISTANCE
 )
 
-from build_grid import build_grid
+from src.build_grid import build_grid
 
 #=====Libraries=======================================
 from gym import Env
@@ -56,7 +56,7 @@ class RacingEnv(Env):
 
         # Starting state
         # TODO should represent the grid from the beginning as sort of tensor?
-        self.state  = self.car.last_lap
+        self.state  = car.last_lap
 
         
     def step(self, action):
@@ -94,7 +94,7 @@ class RacingEnv(Env):
         self.state = self.car.last_lap
         
         # TODO Check if race is over
-        if CURRENT_RACE_LAP[0] != RACE_DISTANCE:
+        if CURRENT_RACE_LAP[0] < RACE_DISTANCE - 1:
             done = False
         else:
             done = True
@@ -112,3 +112,13 @@ class RacingEnv(Env):
         
         build_grid()
         CURRENT_RACE_LAP[0] = 0
+
+    #==Set active car=================================
+    # car Getter/Setter
+    @property
+    def car(self):
+        return self._car
+    
+    @car.setter
+    def car(self, car):
+        self._car = car

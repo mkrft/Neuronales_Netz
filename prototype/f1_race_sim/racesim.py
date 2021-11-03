@@ -2,7 +2,7 @@
     F1 Race Simulator
 
     This Project follows the ambition to simulate
-    the timeing sheets of a full formula one race
+    the timing sheets of a full formula one race
     with concern to tyre degradation.
 
     author:     Alexander Müller
