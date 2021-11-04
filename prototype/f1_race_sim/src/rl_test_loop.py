@@ -30,9 +30,10 @@ from src.cars import Car
 from src.tyre import Tyre
 
 from src.keras_test import build_model
+from src.agent import build_agent
 
 #=====Libraries=======================================
-
+from tensorflow.keras.optimizers import Adam
 
 #=====Functions=======================================
 def ai_race_loop():
@@ -113,8 +114,14 @@ def ai_race_loop():
 
         # Give Information about the performance of our AI
         print(f"Race: {episode}\tScore: {score}")
-        input()
 
-    
+
+    # Testing some RL AI Stuff    
     model = build_model(Race.observation_space.shape, Race.action_space.n)
-    model.summary
+    model.summary()
+
+    agent = build_agent(model, Race.action_space.n)
+    agent.compile(Adam(lr=1e-3), metrics=["mae"])
+    agent.fit(Race, nb_steps=50000, visualize=False, verbose=1)
+
+

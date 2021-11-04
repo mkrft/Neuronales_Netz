@@ -7,7 +7,6 @@
 #=====Libraries=======================================
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten
-from tensorflow.keras.optimizers import Adam
 
 #=====Functions=======================================
 def build_model(states, actions):

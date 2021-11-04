@@ -110,6 +110,10 @@ class RacingEnv(Env):
         build_grid()
         CURRENT_RACE_LAP[0] = 0
 
+        #Trying something
+        self.state = 1
+        return self.state
+
     #==Set active car=================================
     # car Getter/Setter
     @property
