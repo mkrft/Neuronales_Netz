@@ -29,6 +29,8 @@ from src.order_grid import order_grid
 from src.cars import Car
 from src.tyre import Tyre
 
+from src.keras_test import build_model
+
 #=====Libraries=======================================
 
 
@@ -112,3 +114,7 @@ def ai_race_loop():
         # Give Information about the performance of our AI
         print(f"Race: {episode}\tScore: {score}")
         input()
+
+    
+    model = build_model(Race.observation_space.shape, Race.action_space.n)
+    model.summary

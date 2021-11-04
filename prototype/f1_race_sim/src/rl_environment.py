@@ -20,8 +20,7 @@ from src.const import (
 
 from src.config import (
     CURRENT_RACE_LAP,
-    RACE_DISTANCE,
-    NUMBER_OF_COMPETITORS
+    RACE_DISTANCE
 )
 
 from src.build_grid import build_grid
@@ -49,7 +48,7 @@ class RacingEnv(Env):
         # Arry of possibilities
         # TODO Here we will have to give a full grid state via
         # TODO a tensor or some sort
-        self.observation_space = Box(low=np.array([1]), high=np.array([NUMBER_OF_COMPETITORS]))
+        self.observation_space = Box(low=np.array([0]), high=np.array([1]))
 
 
         # Add the according car
