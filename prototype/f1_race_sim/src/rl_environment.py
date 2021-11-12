@@ -43,7 +43,7 @@ class RacingEnv(Env):
         """
 
         # Define four descrete possible actions
-        self.action_space = Discrete(4)
+        self.action_space = Discrete(8)
 
         # Arry of possibilities
         # TODO Here we will have to give a full grid state via
@@ -72,14 +72,14 @@ class RacingEnv(Env):
         """
 
         # Perform the according actions
-        if action == 0:
-            pass
-        elif action == 1:
+        if action == 1:
             self.car.pitstop(SOFT)
         elif action == 2:
             self.car.pitstop(MEDIUM)
-        else:
+        elif action == 3:
             self.car.pitstop(HARD)
+        else:
+            pass
 
         # Set the new state
         self.state = self.car.tyre.degredation
