@@ -15,28 +15,15 @@
 #=====Imports=========================================
 import json
 import requests
-import argparse
+
+#=====Module Imports==================================
+
+#=====Libraries=======================================
+from prettytable import PrettyTable
+
 
 
 #=====Functions=======================================
-def parse_args():
-    """
-    Simple argument handler
-    """
-
-    # Create Handler
-    arg_parser = argparse.ArgumentParser()
-
-    # Define arguments
-    arg_parser.add_argument("-y", type=int, help="The given season year")
-    arg_parser.add_argument("-r", type=int, help="The Race Round Number of the given year")
-    arg_parser.add_argument("-l", type=int, help="The Number of the Lap you want to inspect")
-
-    # Parse arguments and return accordingly
-    args = arg_parser.parse_args()
-    return {"year" : args.y, "race" : args.r, "lap" : args.l}
-
-
 def get_lap_data(input_dict):
     """
     Perfom a Request to the Formula One API
@@ -66,7 +53,7 @@ def get_race_data(input_dict):
     while not bad_request:
 
         search_url = f"""http://ergast.com/api/f1/{input_dict["year"]}/{input_dict["race"]}/laps/{lap_number}.json"""
-        
+
         data = requests.get(url=search_url).json()
         data = data["MRData"]["RaceTable"]
 
@@ -89,18 +76,26 @@ def get_race_data(input_dict):
         # Increment the lap counter
         lap_number += 1
 
-    print(json.dumps(race_data, indent=4))
-
     return race_data
 
-#=====Main============================================
-if __name__ == "__main__":
 
-    # Parse the inputs
-    input_dict = parse_args()
+def output_race_data(race_data):
+    """
+    Print a nice overview concerning the data found
+    """
 
-    # Get the data from API Call
-    if input_dict["lap"] is None:
-        race_json = get_race_data(input_dict)
-    else:
-        race_json = get_lap_data(input_dict)
+    # Add the needed key headers
+    for driver in race_data:
+
+        # Create a table
+        table = PrettyTable()
+        table.field_names = ["Lap", driver]
+
+        # Get all lap times according to the lap
+        for lap in race_data[driver]:
+            table.add_row([lap, race_data[driver][lap]["time"]])
+
+        # Give output and reset
+        print(table)
+        del table
+    return    
