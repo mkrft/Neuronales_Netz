@@ -38,5 +38,7 @@ def plot_driver_lap_times(race_data, driver_name):
         return
 
     # Create plot
+    median_lap_times = sorted(lap_times)[int(len(lap_times)/2)]
+    plt.axis((0, laps[-1]+1, median_lap_times - 1.8, median_lap_times + 3.0))
     plt.plot(laps, lap_times)
     plt.show()
