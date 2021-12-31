@@ -27,10 +27,11 @@ from src.order_grid import order_grid
 
 
 #=====Functions=======================================
-def race_loop():
+def race_loop(print_opt=True):
     
     # Init the current lap with the starting lap of 0
     current_lap = 0
+    racedata = []
 
     # "Race" until the RACE_DISTANCE is reached
     while current_lap < RACE_DISTANCE:
@@ -72,6 +73,7 @@ def race_loop():
         overtaking(grid_sorted)
 
         grid_sorted = order_grid()
+        racedata.append(grid_sorted)
 
         # End active lap
         current_lap += 1
@@ -79,4 +81,7 @@ def race_loop():
         # TODO Check if last lap and everyone has fullfilled the rule of changeing tyres at least once to different compound
 
         # Display the current standings
-        test_print(current_lap, grid_sorted)
+        if print_opt:
+            test_print(current_lap, grid_sorted)
+
+    return racedata 
