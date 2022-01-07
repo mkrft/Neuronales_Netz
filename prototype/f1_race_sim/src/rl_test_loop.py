@@ -10,7 +10,9 @@
 from src.config import (
     EPISODES,
     REFERANCE_LAP_TIME,
-    CURRENT_RACE_LAP
+    CURRENT_RACE_LAP,
+    LEARNING_RATE,
+    DISCOUNT_RATE
 )
 
 from src.const import (
@@ -34,15 +36,19 @@ from src.agent import build_agent
 
 #=====Libraries=======================================
 from tensorflow.keras.optimizers import Adam
+import numpy as np
 
 #=====Functions=======================================
 def ai_race_loop():
     """
     Main Loop representing the game
     """
-
     # Create the RaceEnvironment with a dummy car
     Race = RacingEnv(Car(None, None, Tyre(SOFT), None, None))
+
+    # Dont know why the dimension of box and discrete have dissimilar getters, bit ugly
+    action_size = Race.action_space.n
+    observation_size = Race.observation_space.shape[0]
 
     # Play through the game for every episode
     for episode in range(0, EPISODES + 1):
@@ -80,15 +86,13 @@ def ai_race_loop():
                 else:
                     car.tyre.degrade()
 
-                # TODO How to decide wether to pit and on which tyre
-                # TODO How to give this option to the AI?
-                # TODO Only test implementation
+                # decide the strat for the car
                 if car == Race.car:
 
-                    # Check AI Pitstrat
                     pit_strat = Race.action_space.sample()
                     n_state, reward, done, info = Race.step(pit_strat)
                     score += reward
+                    state = n_state
 
                 elif CURRENT_RACE_LAP[0] == 25: 
                     car.pitstop(MEDIUM)
@@ -100,7 +104,7 @@ def ai_race_loop():
 
             # Check for potential overtakes and let them happen
             # TODO Overtakes can still happen just by having a quicker lap...
-            overtaking(grid_sorted)
+            overtaking(grid_sorted, print_opt=False)
 
             grid_sorted = order_grid()
 
@@ -109,19 +113,20 @@ def ai_race_loop():
 
             # TODO Check if last lap and everyone has fullfilled the rule of changeing tyres at least once to different compound
 
-            # Display the current standings
-            test_print(CURRENT_RACE_LAP[0], grid_sorted)
+
+        # Display the current standings
+        test_print(CURRENT_RACE_LAP[0], grid_sorted)
 
         # Give Information about the performance of our AI
         print(f"Race: {episode}\tScore: {score}")
 
 
     # Testing some RL AI Stuff    
-    model = build_model(Race.observation_space.shape, Race.action_space.n)
-    model.summary()
+    # model = build_model(Race.observation_space.shape, Race.action_space.n)
+    # model.summary()
 
-    agent = build_agent(model, Race.action_space.n)
-    agent.compile(Adam(lr=1e-3), metrics=["mae"])
-    agent.fit(Race, nb_steps=50000, visualize=False, verbose=1)
+    # agent = build_agent(model, Race.action_space.n)
+    # agent.compile(Adam(lr=1e-3), metrics=["mae"])
+    # agent.fit(Race, nb_steps=50000, visualize=False, verbose=1)
 
 

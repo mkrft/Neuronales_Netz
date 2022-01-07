@@ -43,7 +43,7 @@ class RacingEnv(Env):
         """
 
         # Define four descrete possible actions
-        self.action_space = Discrete(8)
+        self.action_space = Discrete(4)
 
         # Arry of possibilities
         # TODO Here we will have to give a full grid state via
