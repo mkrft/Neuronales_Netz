@@ -41,7 +41,7 @@ def check_overtake(car, car_infront):
     return overtake_done
 
 
-def overtaking(grid_sorted):
+def overtaking(grid_sorted, print_opt = True):
     """
     Function for handling the overtake rules and
     to actually perform the overtakes
@@ -68,4 +68,5 @@ def overtaking(grid_sorted):
                 grid_sorted[index - 1].position = pos_cache
                 grid_sorted[index - 1].race_time = race_time_cache
 
-                print(f"{grid_sorted[index].driver.short} overtook {grid_sorted[index - 1].driver.short}")
+                if print_opt:
+                    print(f"{grid_sorted[index].driver.short} overtook {grid_sorted[index - 1].driver.short}")

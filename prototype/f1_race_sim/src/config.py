@@ -35,3 +35,9 @@ PITSTOP_ERROR_RANGE = (0.0, 1.0)
 
 # Delta to car infront that has to be to make the overtake possible
 OVERTAKE_TRESHOLD = 1.0
+
+# Current Race Lap as global var
+CURRENT_RACE_LAP = [0]
+
+# Times how often the games shall be played
+EPISODES = 10000

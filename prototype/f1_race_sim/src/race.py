@@ -3,12 +3,11 @@
     to simulate a full "lap" around the virtual circut
 """
 
-#=====Imports=========================================
-
 #=====Module Imports==================================
 from src.config import (
     RACE_DISTANCE,
     REFERANCE_LAP_TIME,
+    CURRENT_RACE_LAP
 )
 
 from src.const import (
@@ -23,8 +22,6 @@ from src.display import test_print
 from src.overtake import overtaking
 from src.order_grid import order_grid
 
-#=====Libraries=======================================
-
 
 #=====Functions=======================================
 def race_loop(print_opt=True):
@@ -34,13 +31,14 @@ def race_loop(print_opt=True):
     racedata = []
 
     # "Race" until the RACE_DISTANCE is reached
-    while current_lap < RACE_DISTANCE:
+    while CURRENT_RACE_LAP[0] < RACE_DISTANCE:
 
         for car in GRID_CACHE:
 
             # Compute the needed lap time
             needed_lap_time = compute_lap_times(car)
             car.race_time = round(car.race_time + needed_lap_time, 2)
+            car.last_lap = needed_lap_time
 
             # Determine if the car has increased tyre degradation or not
             # TODO add function to correlate delta with the penalty
@@ -60,7 +58,7 @@ def race_loop(print_opt=True):
             # TODO How to decide wether to pit and on which tyre
             # TODO How to give this option to the AI?
             # TODO Only test implementation
-            if current_lap == 25: 
+            if CURRENT_RACE_LAP[0] == 25: 
                 car.pitstop(MEDIUM)
 
 
@@ -76,7 +74,7 @@ def race_loop(print_opt=True):
         racedata.append(grid_sorted)
 
         # End active lap
-        current_lap += 1
+        CURRENT_RACE_LAP[0] += 1
 
         # TODO Check if last lap and everyone has fullfilled the rule of changeing tyres at least once to different compound
 

@@ -2,6 +2,8 @@
     Declaration of the Cars as own Class with the
     according attributes
 
+    TODO Add two dry tyres rule
+
 """
 
 #=====Imports=========================================
@@ -28,7 +30,7 @@ class Car():
         Class for easier creation of mutiple cars with different attributes
     """
 
-    def __init__(self, driver, power, tyre, position, race_time, delta_to_car_infront=0, stops=0):
+    def __init__(self, driver, power, tyre, position, race_time, delta_to_car_infront=0, stops=0, last_lap=110):
         """
         Constructor Car
 
@@ -44,9 +46,11 @@ class Car():
         self.power = power
         self.tyre = tyre
         self.position = position
+        self.starting_pos = position
         self.race_time = race_time
         self.delta_to_car_infront = delta_to_car_infront
         self.stops = stops
+        self.last_lap = last_lap
 
     #=====Methods=====================================
     def pitstop(self, tyre_choice):
@@ -59,7 +63,9 @@ class Car():
 
         # Add the Pitstop delta time to the racetime and add potential
         # time loss due to pitstop errors
-        self.race_time = round(self.race_time +PITSTOP_DELTA_TIME + random.uniform(PITSTOP_ERROR_RANGE[0], PITSTOP_ERROR_RANGE[1]), 2)
+        lost_pit_time = round(PITSTOP_DELTA_TIME + random.uniform(PITSTOP_ERROR_RANGE[0], PITSTOP_ERROR_RANGE[1]), 2)
+        self.race_time = round(self.race_time + lost_pit_time, 2)
+        self.last_lap = round(self.last_lap + lost_pit_time, 2)
 
         # Fit new tyre to the car
         if tyre_choice == SOFT:
@@ -139,5 +145,25 @@ class Car():
     @stops.setter
     def stops(self, stops):
         self._stops = stops
+
+    # starting_pos Getter/Setter
+    @property
+    def starting_pos(self):
+        return self._starting_pos
+    
+    @starting_pos.setter
+    def starting_pos(self, starting_pos):
+        self._starting_pos = starting_pos
+
+
+    # last_lap Getter/Setter
+    @property
+    def last_lap(self):
+        return self._last_lap
+    
+    @last_lap.setter
+    def last_lap(self, last_lap):
+        self._last_lap = last_lap
+    
     
     
