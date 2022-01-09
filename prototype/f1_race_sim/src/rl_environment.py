@@ -24,6 +24,7 @@ from src.config import (
 )
 
 from src.build_grid import build_grid
+from src.get_data import get_race
 
 #=====Libraries=======================================
 from gym import Env
@@ -47,15 +48,20 @@ class RacingEnv(Env):
 
         # Arry of possibilities
         # TODO Here we will have to give a full grid state via
-        # TODO a tensor or some sort
-        self.observation_space = Box(low=np.array([0]), high=np.array([1]))
+
+        # limits of our state values
+        float32_max = np.finfo(np.float32).max
+        highs = np.array([20.0, 3.0, 1.0, float32_max , float32_max])
+        lows = np.array([1.0, 0.0, 0.0, 0.0 , 0.0])
+        self.observation_space = Box(low=lows, high=highs)
 
 
         # Add the according car
         self.car = car
 
         # Starting state
-        self.state  = car.tyre.degredation
+        # position, tyre.compound, car.tyre.degredation, car.race_time, car.delta_to_car_infront
+        self.state = [1.0, 1.0, 1.0, 0.0, 0.0]
 
         
     def step(self, action):
@@ -82,8 +88,9 @@ class RacingEnv(Env):
             pass
 
         # Set the new state
-        self.state = self.car.tyre.degredation
-        
+        # self.state = self.car.tyre.degredation
+        self.state = get_race(self.car)
+
         # Check if race is over and comupte the reward to give
         if CURRENT_RACE_LAP[0] < RACE_DISTANCE - 1:
             done = False
@@ -111,7 +118,7 @@ class RacingEnv(Env):
         CURRENT_RACE_LAP[0] = 0
 
         #Trying something
-        self.state = 1
+        self.state = [1.0, 1.0, 1.0, 0.0, 0.0]
         return self.state
 
     #==Set active car=================================

@@ -14,9 +14,9 @@ import torch.optim as optim
 #=================== Code ====================
 
 # A neural Network to predict pitstop rewards 
-class Agent(toch.nn.Module):
-    def __init__(self, learning_rate, input_vect_sample):
-        super().__init__()
+class Agent(nn.Module):
+    def __init__(self, learning_rate, inputlen):
+        super(Agent, self).__init__()
         self.reward = 0
         self.short_mem = np.array([])
         self.mem = np.array([])
@@ -29,38 +29,37 @@ class Agent(toch.nn.Module):
 
         # epsilon for policy
         self.epsilon = 1
+        self.epsilon_decay = 0.001
+        self.epsilon_min = 0.1
 
         # weight of later rewards
-        self.gamma = 0.8
+        self.gamma = 0.9
 
         # layer sizes, for now 3 layers
         # fixed : input is the length of the input data
-        self.first = len(input_vect_sample)
+        self.first = inputlen 
         # variable hidden layer
         self.second = 200
         # output is the number of actions to take
         self.third = 4
 
-        self.optimizer = optim.SGD(self.parameters(), lr=self.lr)
-
-        self.init_layers()
-        
-
-    def init_layers(self):
         # initialize the network layers
         self.f1 = nn.Linear(self.first, self.second)
         self.f2 = nn.Linear(self.second, self.third)
+
+        # optimizer must be initiallized last because it needs all parameters (the weights)
+        self.optimizer = optim.SGD(self.parameters(), lr=self.lr)
 
     def forward(self, x):
         # feed an input vector through the network
         x = self.nonlinearity(self.f1(x))
         x = self.nonlinearity(self.f2(x))
-        x = F.softmax(x)
+        x = F.softmax(x, dim=0)
         return x
 
     def add_replay(self, state, action, reward, next, done):
         # remember an action for replaying
-        self.mem.append([state, action, reward, next, done])
+        np.append(self.mem, [state, action, reward, next, done])
 
     def replay(self, mem, size):
         # replay some training examples
@@ -71,6 +70,10 @@ class Agent(toch.nn.Module):
 
         for state, action, reward, next, done in batch:
             self.train_single(state, action, reward, next, done)
+
+    def decay_espilon(self):
+        if self.epsilon > self.epsilon_min:
+            self.epsilon -= self.epsilon_decay
 
 
     def train_single(self, state, action, reward, next, done):
@@ -83,20 +86,26 @@ class Agent(toch.nn.Module):
 
         target = reward
         
-        # convert state arrays to tensors
-        next_state = torch.tensor(np.expand_dims(next, 0))
-        state = torch.tensor(np.expand_dims(state, 0), requires_grad=True)
+        # convert state arrays to list of lists and then to tensors
+        next_state = torch.tensor(next, dtype=torch.float32)
+        state = torch.tensor(state, dtype=torch.float32 ,requires_grad=True)
 
-        # approximately the value the network should give
+        # approximately the value the network should give for current state + action
         if not done:
-        target = reward + self.gamma * torch.max(self.forward(next_state)[0])
+            target = reward + self.gamma * torch.max(self.forward(next_state)[0])
 
-        # value the network gives
+        # value for current state + all actions network gives
         out = self.forward(state)
+
+        # make a target vector, needs to be the same shape as the network output
+        target_vector = out.clone()
+        target_vector[action] = target    # set the appropriate index
+        target_vector.detach()      # dont need a gradient on this
+        # print(f"target vector: {target_vector}")
 
         #optimize
         self.optimizer.zero_grad()
-        loss = F.mse_loss(out, target)
+        loss = F.mse_loss(out, target_vector)
         loss.backward()
         self.optimizer.step()
 

@@ -11,8 +11,6 @@ from src.config import (
     EPISODES,
     REFERANCE_LAP_TIME,
     CURRENT_RACE_LAP,
-    LEARNING_RATE,
-    DISCOUNT_RATE
 )
 
 from src.const import (
@@ -31,12 +29,13 @@ from src.order_grid import order_grid
 from src.cars import Car
 from src.tyre import Tyre
 
-from src.keras_test import build_model
-from src.agent import build_agent
+from src.agent import Agent
+from src.get_data import get_race
 
 #=====Libraries=======================================
-from tensorflow.keras.optimizers import Adam
 import numpy as np
+import random
+import torch
 
 #=====Functions=======================================
 def ai_race_loop():
@@ -50,6 +49,7 @@ def ai_race_loop():
     action_size = Race.action_space.n
     observation_size = Race.observation_space.shape[0]
 
+    agent = Agent(learning_rate=0.1, inputlen=observation_size)
     # Play through the game for every episode
     for episode in range(0, EPISODES + 1):
 
@@ -57,6 +57,8 @@ def ai_race_loop():
         done = False
         score = 0
         state = Race.reset()
+
+        agent.decay_espilon()
 
         # Set the active car
         Race.car = GRID_CACHE[0]
@@ -88,9 +90,20 @@ def ai_race_loop():
 
                 # decide the strat for the car
                 if car == Race.car:
+                    # depending on epsilon: explore or exploit
+                    if random.uniform(0, 1) < agent.epsilon:
+                        pit_strat = Race.action_space.sample()
 
-                    pit_strat = Race.action_space.sample()
+                    else:
+                        pit_strat = torch.argmax(agent.forward(torch.tensor(state,dtype=torch.float32, requires_grad=True)))
+
                     n_state, reward, done, info = Race.step(pit_strat)
+
+                    # train with the data
+
+                    agent.train_single(state, pit_strat, reward, n_state, done)
+                    agent.add_replay(state, pit_strat, reward, n_state, done)
+
                     score += reward
                     state = n_state
 
@@ -114,13 +127,16 @@ def ai_race_loop():
             # TODO Check if last lap and everyone has fullfilled the rule of changeing tyres at least once to different compound
 
 
+        agent.replay(agent.mem, 500)
         # Display the current standings
         test_print(CURRENT_RACE_LAP[0], grid_sorted)
 
         # Give Information about the performance of our AI
         print(f"Race: {episode}\tScore: {score}")
 
-
+    weights = agent.state_dict()
+    torch.save(weights, "weigts_test_file")
+    
     # Testing some RL AI Stuff    
     # model = build_model(Race.observation_space.shape, Race.action_space.n)
     # model.summary()

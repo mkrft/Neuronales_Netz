@@ -4,14 +4,8 @@ from src.build_grid import build_grid
 from src.race import race_loop
 
 #=====Functions=======================================
-def get_race():
-
-    build_grid()
-
-    all_data = race_loop(False)
-
-    return transform_data(all_data)
-
+def get_race(car):
+    return [car.position, convert_compound(car.tyre.compound), car.tyre.degredation, car.race_time, convert_delta(car.delta_to_car_infront)]
 
 def make_input_vector(all_data, lap, driver_num):
     """
@@ -53,7 +47,7 @@ def convert_compound(tyre_compound):
 def convert_driver_short(driver_short):
     return float(driver_short[1:])
 
-def transform_data(racedata): 
+def transform_data(racedata, current_car): 
     """
     pytorch needs an array of values; hence turn the car - objects into usable data (numbers)
     """
@@ -61,7 +55,7 @@ def transform_data(racedata):
     total_race_state= []
     for lap, data in enumerate(racedata):
         # TODO refine which parts of the total gamestate we actually need
-        race_state_per_lap = [[i.position, convert_driver_short(i.driver.short), convert_compound(i.tyre.compound), i.tyre.degredation, i.race_time, convert_delta(i.delta_to_car_infront)] for i in data]
+        race_state_per_lap = [[i.position, convert_compound(i.tyre.compound), i.tyre.degredation, i.race_time, convert_delta(i.delta_to_car_infront)] for i in data if i == current_car]
         race_state_per_lap = [j for i in race_state_per_lap for j in i]     # flatten the list
         race_state_per_lap.insert(0, lap)   # lap in front 
         print(race_state_per_lap)
