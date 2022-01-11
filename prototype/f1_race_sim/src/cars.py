@@ -21,7 +21,8 @@ from src.config import (
     PITSTOP_ERROR_RANGE
 )
 
-from src.tyre import Tyre 
+from src.tyre import Tyre
+from src.tyrenotknownerror import TyreNotKnownError
 
 
 #=====Code============================================
@@ -78,8 +79,8 @@ class Car():
             self.tyre = Tyre(HARD)
         
         else:
-            # TODO add TyreNotKnownError Exception
-            pass
+            raise TyreNotKnownError(tyre_choice)
+            
 
         # Increment number of pitstops done
         self.stops += 1
