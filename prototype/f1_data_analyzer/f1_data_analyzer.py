@@ -18,13 +18,15 @@ from fastf1 import plotting
 from matplotlib import pyplot as plt
 import prettytable
 
+from src.f1_data_analyzer_helper import parse_args
+
 #=====Main============================================
 if __name__ == "__main__":
 
-    # Set parameters
-    # TODO Make this per Input params
-    year = 2021
-    round = 1
+    args = parse_args()
+
+    year = args.year
+    round = args.round
     compounds = ("SOFT", "MEDIUM", "HARD")
 
     # Define the cache to save to
