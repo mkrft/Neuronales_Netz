@@ -25,7 +25,7 @@ def parse_args():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-y','--year',default=last_season_year)
-    parser.add_argument('-r', '--round', default=1)
+    parser.add_argument('-r', '--race', default=1)
     args = parser.parse_args()
 
     return args
