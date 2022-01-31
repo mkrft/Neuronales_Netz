@@ -20,9 +20,9 @@ REFERANCE_LAP_TIME = 80.0
 RACE_START_OFFSET = 0.1
 
 # Percentage value range of tyre degreation per normal lap
-TYRE_DEG_SOFT = (0.03, 0.045)
-TYRE_DEG_MEDIUM = (0.02, 0.035)
-TYRE_DEG_HARD = (0.01, 0.025)
+TYRE_DEG_SOFT = (0.015, 0.025)
+TYRE_DEG_MEDIUM = (0.01, 0.0175)
+TYRE_DEG_HARD = (0.005, 0.0125)
 
 # Value of increased tyre deg per close interval lap
 TYRE_INTERVAL_PENALTY = (0.005, 0.015)
