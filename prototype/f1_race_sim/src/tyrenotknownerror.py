@@ -8,7 +8,7 @@ from src.const import (
     HARD
 )
 
-class TyreError(Exception):
+class TyreNotKnownError(Exception):
     """
     Exception that is raised, when an unknown tyre is requested
     """
