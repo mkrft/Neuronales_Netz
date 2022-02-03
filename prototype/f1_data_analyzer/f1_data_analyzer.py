@@ -30,11 +30,13 @@ if __name__ == "__main__":
     race = args.race
     compounds = ("SOFT", "MEDIUM", "HARD")
 
+    print(f"Year: {year}\tRound: {race} loading")
+
     # Define the cache to save to
     ff1.Cache.enable_cache("cache")
 
     # Load Session
-    session = ff1.get_session(year, race, "R")
+    session = ff1.get_session(int(year), int(race), "R")
     
     # Load the Laps; only accurate ones means no SC / VSC or Red Flags
     laps = session.load_laps().pick_accurate()
@@ -48,7 +50,8 @@ if __name__ == "__main__":
                     "lap" : "data"
                 }
             }
-        }
+        },
+        "session_info" : session.weekend.name
     }
 
 
