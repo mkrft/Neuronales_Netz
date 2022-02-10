@@ -1,0 +1,33 @@
+[1]
+0.0011798 x^(2)-0.117 x+78.6955 mit xE {0, 55} für HARD
+
+[2]
+f(x)=5.1106*10^(-6) x^(4)-0.000614 x^(3)+0.02525 x^(2)-0.4484 x+79.7119 für HARD gleiche Basis wie oben nur halt mit Grad 4
+-> ist quasi perfekt! Aber leider falsch rum :D warum?
+	-> weil die Daten so sind! fuck
+        -> simple drehen mit VZW :D 
+
+=================Following actual usable====================================================
+
+[3]
+2.16877*10^(-6) x^(4)-0.00033556 x^(3)+0.0164474 x^(2)-0.24907 x+79.5745  für HARD
+-> Basis: ALLE HARD Stint im Jahr 2021 länger als 50 Runden (5 Sets)
+-> Übelst schöner Verlauf! Pace Gewinn am Anfang, zunehmend langsamer und am Ende leichte regen Phase mit Ende Lebenszeit bei 70 Runden! Nahezu perfekt!
+-> Gültigkeit bis etwa 60, Lebenszeit endet bei etwa 65
+-> mode:        average; but no difference between average and median!
+-> power:       4
+
+[4]
+5.024039*10^(-6) x^(4)-0.0005524 x^(3)+0.01999 x^(2)-0.267089 x+80 für HARD
+-> Basis: ALLE HARD Stints in den gesamten Daten mit über 50 Runden (28 Sets)
+-> Kürzere Gültigkeit: xE[0, 52], ab dort enormes degrading
+-> mode:        average
+-> power:       4
+
+
+
+====Current Best====================================================
+[3]
+-> best life span
+-> nicest progress of gaining, than slowly losing time and later on short regen with lifespan of around 65
+-> but "only" based on 5 Sets

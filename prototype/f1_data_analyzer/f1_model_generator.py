@@ -10,6 +10,9 @@
 
 """
 
+#====CONFIG==========================================
+POLYNOM_POWER = 4
+
 
 #=====Imports=========================================
 import os
@@ -36,6 +39,11 @@ def query_handler(compound, driver=None, year=None, min_stint_length=0):
 
     return - {dict} - query_data 
     """
+
+    # Check for correct use of compounds
+    possible_compounds = ["SOFT", "MEDIUM", "HARD"]
+    if compound not in possible_compounds:
+        raise ValueError(f'Given compound "{compound}" not in {possible_compounds}')
 
     # Init
     dirs = []
@@ -95,17 +103,20 @@ def query_handler(compound, driver=None, year=None, min_stint_length=0):
                 else:
 
                     # Go trough every single stint
-                    for stint in data_dict[race_file][race_compound][str(driver)]:
-                        
-                        # Check of stint is longer than we want
-                        if len(data_dict[race_file][race_compound][str(driver)][stint]) >= min_stint_length:
+                    try:
+                        for stint in data_dict[race_file][race_compound][str(driver)]:
                             
-                            # Gen a new sub list for this single data
-                            query_data.append([])
+                            # Check of stint is longer than we want
+                            if len(data_dict[race_file][race_compound][str(driver)][stint]) >= min_stint_length:
+                                
+                                # Gen a new sub list for this single data
+                                query_data.append([])
 
-                            # Now append every single laptime to newst sub list of out query data
-                            for lap in data_dict[race_file][race_compound][str(driver)][stint]:
-                                query_data[-1].append(data_dict[race_file][race_compound][str(driver)][stint][lap]["lap_time"])
+                                # Now append every single laptime to newst sub list of out query data
+                                for lap in data_dict[race_file][race_compound][str(driver)][stint]:
+                                    query_data[-1].append(data_dict[race_file][race_compound][str(driver)][stint][lap]["lap_time"])
+                    except KeyError:
+                        raise KeyError(f"Driver {driver} not available, check out the formula 1 driver numbers on f1.com")
 
 
     return query_data
@@ -168,24 +179,123 @@ def generate_numpy_models(query_data):
             continue
 
         # Compute Polynom with x-axis the number of laps as a list from
-        models.append(list(numpy.polyfit(list(range(0, len(stint_set))), stint_set, 2)))
+        models.append(list(numpy.polyfit(list(range(0, len(stint_set))), stint_set, POLYNOM_POWER)))
         models[-1].append(len(stint_set))
 
     return models
 
+def generate_numpy_models_with_penalty(query_data):
+    ## TEST WITH PENALTY
+    # TODO check if you get ploynom to work within [0, 1]
+    # Go through every stint set and gen a function
+    models = []
+    for stint_set in query_data:
+
+        # Skip data sets that are too small and will raise an exception
+        # Only necessary if the min_stint_length is 0
+        if len(stint_set) <= 1:
+            continue
+
+        # Make the x_axis according to our data
+        x_axis = list(range(0, len(stint_set)))
+
+        # Now add the penalty
+        # TODO check case which tyre is used to define lifespan
+        # here 70 laps as max lifespan of the HARD
+        # with 80 + 15 sec penalty as laptime
+        x_axis.append(70)
+        stint_set.append(95.0)
+
+        # Compute Polynom with x-axis the number of laps as a list from
+        models.append(list(numpy.polyfit(x_axis, stint_set, POLYNOM_POWER)))
+        models[-1].append(len(stint_set))
+
+    return models
+
+
+def combine_models(models, mode="average"):
+    """
+    Now that we have all our models, we can try to get them
+    into one single model that therefore represents all of them
+    
+    param - {list[list]} - models - all the found models as list, inner list represent [x^POLYNOM_POWER, x^POLYNOM_POWER - 1, ..., valid_x_threshold]
+    param - {str} - mode - define how you want to squash the models into one (average, median, ...)
+
+    return - {model} - representing model of form [x^POLYNOM_POWER, x^POLYNOM_POWER - 1, ..., valid_x_threshold]
+    """
+
+    # Check for that right mode is given
+    possible_modes = ["average", "median"]
+    if mode not in possible_modes:
+        raise ValueError(f"Given mode '{mode}' not in {possible_modes}!")
+
+    # Init
+    model = []
+    polynom_parameter_list = []
+
+    # Go through all models
+    for model in models:
+        for index, parameter in enumerate(model):
+
+            # Now save all parameters of different models in one list
+            # Allowing us to get the average/median/.. of each parameter individually
+            try:
+                polynom_parameter_list[index].append(parameter)
+            except IndexError:
+                polynom_parameter_list.append([])
+                polynom_parameter_list[index].append(parameter)
+    
+    # Now compute the single representing model
+    for parameter_set in polynom_parameter_list:
+
+        if mode == "average":
+            model.append(average(parameter_set))
+
+        elif mode == "median":
+            model.append(median(parameter_set))
+
+    return model
+
+
+
+#=====Helpers=========================================
+def print_model(model):
+    """Print a instance of datatype model"""
+
+    for index, entry in enumerate(model):
+        if index == len(models[0])-1:
+            print(f"xE[0,{entry}]")
+            break
+        print(f"x^{POLYNOM_POWER-index}\t{entry}")
+
+
+def average(input_set):
+    """Average of a given list of int / floats"""
+    return sum(input_set) / len(input_set)
+
+def median(input_set):
+    """Median of a given list of int / floats; Not the median per def but close enough because of the "len() % 2 != 0" case"""
+    return sorted(input_set)[round(len(input_set)/2)]
+
+
 #=====Main============================================
 if __name__ == "__main__":
 
-    #TODO Could add arg-parsing, but yeah
+    #TODO SHOULD add arg-parsing, but yeah laziness
+    # Care that the stint_length must be similar to the expected tyre life otherwise the models
+    # will lose validation quickly! But increasing the stint_length to much will reduce the number of fitting sets
+    # drastically; therefore, as always in motorsports, we have to find a good balance!
     compound = "HARD"
     year = 2021
     driver = None
-    stint_length = 50
+    min_stint_length = 50
+    combining_mode = "average"
+
+    # Give short infd
+    print(f"Query for:\ncompound:\t{compound}\nyear:\t\t{year}\ndriver:\t\t{driver}\nstint_length:\t{min_stint_length}\n\n")
 
     # Perform a query
-    query_data = query_handler(compound=compound, driver=driver, min_stint_length=stint_length, year=year)
-    
-    # Quick Info
+    query_data = query_handler(compound=compound, driver=driver, min_stint_length=min_stint_length, year=year)
     print(f"Found {len(query_data)} sets. Normalizing...")
 
     # Normalize the query to the target time of about 80 sec
@@ -194,6 +304,11 @@ if __name__ == "__main__":
     # Generate functions; test with different approches and document on them -> Compare
     # First of all simple func gen on every single set and then compare the found models; average of the models
     # Single Regressions over all the data
+    print("Generating models...")
     models = generate_numpy_models(query_data)
 
-    print(models[0][0], models[0][1], models[0][2], models[0][3])
+    # Now that we have all models we can try to take a average over all the found models
+    print(f"\nCombining Method: {combining_mode}\nResulting model:")
+    average_model = combine_models(models, mode=combining_mode)
+
+    print_model(average_model)
