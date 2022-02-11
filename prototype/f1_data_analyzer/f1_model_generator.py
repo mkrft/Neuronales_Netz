@@ -144,7 +144,7 @@ def normalize_data(query_data):
     for query_index, stint_set in enumerate(query_data):
 
         # Compute norm_factor from reference_time and the first lap set each stint
-        # TODO Could think about using the fastest / slowest / average lap of each stint?
+        # TODO Could think about using the fastest / slowest / average lap of each stint? or just the middle one?
         norm_factor = reference_time / stint_set[0]
 
         # Now go through every lap and alter it according to norm factor
@@ -286,10 +286,10 @@ if __name__ == "__main__":
     # will lose validation quickly! But increasing the stint_length to much will reduce the number of fitting sets
     # drastically; therefore, as always in motorsports, we have to find a good balance!
     # But on the other hand only the long stints actually tell us about the tyre performance when it comes closer to end of tyre life
-    compound = "MEDIUM"
+    compound = "SOFT"
     year = 2021
     driver = None
-    min_stint_length = 40
+    min_stint_length = 30
     combining_mode = "average"
 
     # Give short infd
@@ -317,9 +317,12 @@ if __name__ == "__main__":
 
 # OVERALL NOTES
 # The Fact I normalized to 80 Seconds means they will have laptimes slightly unter 80s, about 78-77s meaning we can
-# increase the overall race distance due to being a "short" circut
+# increase the overall race distance due to being a "short" circut, this also helps concerning the fact that with only 60 laps
+# as done in the prototype, the HARD would be quite nice from start to finish
 #
 # What i like big time about the models it the fact that the tyre warm up is shown strongly with peak performances after about 3-5 laps
 #
 # The models have to go towards +infinity with x going towards +infinity otherwise the tyres would be come undefinable awesome after more laps
-# than they should ever be able to endure
+# than they should ever be able to endure -> no need to implement penalty because its in the models themselves already
+#
+# Normalizing the first value means alls tyres start the first lap with 80 sec... not optimal but close enough i suppose

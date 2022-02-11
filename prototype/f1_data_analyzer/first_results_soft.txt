@@ -1,0 +1,4 @@
+[1]
+2.1047496*10^(-6) x^(4)-7.159884*10^(-6) x^(3)+0.00060814 x^(2)+0.0491257 x+76.5
+-> xE[0, 31], based on 10 sets from 2021, SOFT, stint_length 30
+-> quite nice concerning the pace advantage until tyre dies off completly around lap 30
