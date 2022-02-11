@@ -4,6 +4,7 @@
 """
 
 #=====Imports=========================================
+import random
 
 #=====Module Imports==================================
 from src.config import (
@@ -17,17 +18,24 @@ from src.const import (
     HARD
 )
 
-from src.const import GRID_CACHE
 from src.laptime import compute_lap_times
 from src.display import test_print
-from src.overtake import overtaking
+from src.overtake import overtaking, check_overtake
 from src.order_grid import order_grid
 
 #=====Libraries=======================================
 
 
 #=====Functions=======================================
-def race_loop():
+def race_loop(grid):
+    """
+    Function that shall represent our main loop, in which
+    all computations are done per car for every single lap
+    in order of the grid to have a coherent behaviour
+
+    param - {list[cars]} - grid
+
+    """
     
     # Init the current lap with the starting lap of 0
     current_lap = 0
@@ -35,26 +43,48 @@ def race_loop():
     # "Race" until the RACE_DISTANCE is reached
     while current_lap < RACE_DISTANCE:
 
-        for car in GRID_CACHE:
+        # Reset this param every lap
+        lap_time_car_infront = 0
 
-            # Compute the needed lap time
-            needed_lap_time = compute_lap_times(car)
-            car.race_time = round(car.race_time + needed_lap_time, 2)
+        for position, car in enumerate(grid):
 
-            # Determine if the car has increased tyre degradation or not
-            # TODO add function to correlate delta with the penalty
-            if car.delta_to_car_infront == "-":
-                close_car_infront = False
-            elif car.delta_to_car_infront <= 1.0 and car.position != 1:
-                close_car_infront = True
-            else:
-                close_car_infront = False
+            # Compute lap time the car needs
+            calc_lap_time = compute_lap_times(car)
+
+            # Tyre life get increased by a lap
+            car.tyre.tyre_life += 1
+
+            # Now check if you make overtook a car by having a faster laptime, if so calc if your overtake is successful
+            # If not make sure the calc_lap_time will be slower than the lap_time_car_infront so it wont be overtaken easily
+            if calc_lap_time < lap_time_car_infront:
+                if car.delta_to_car_infront <= abs(calc_lap_time - lap_time_car_infront):
+                    
+                    # Check if the current car is able to make the overtake
+                    # If so just leave the times as they were
+                    if check_overtake(car, grid[position - 1]):
+                        print(f"{car.driver.short} overtook {grid[position - 1].driver.short}")
+
+                    # If not "slow" the car down that was not able to overtake, so it stays behind
+                    # TODO Check if set back is fair
+                    else:
+                        calc_lap_time = lap_time_car_infront + round(random.uniform(0.05, 0.5), 3)
+
+            # Apply the new lap time to the whole race time and update the reference lap for the next car
+            car.race_time = round(car.race_time + calc_lap_time, 2)
+            lap_time_car_infront = calc_lap_time
             
+            # TODO do i have to order the grid here? To prevent falsely applied car_infront_penalty?
+            # I think so..
+
             # Let the tyre degrade according to the interval to car infront
-            if close_car_infront:
-                car.tyre.degrade(car_infront=True)
-            else:
-                car.tyre.degrade()
+            # try / except for the car on pos 1 that has the string "-" as delta
+            try:
+                if car.delta_to_car_infront <= 0.8:
+                    car.tyre.degrade(car_infront=True)
+                else:
+                    car.tyre.degrade()
+            except TypeError:
+                pass
 
             # TODO How to decide wether to pit and on which tyre
             # TODO How to give this option to the AI?
@@ -64,19 +94,12 @@ def race_loop():
 
 
         # Sort the whole grid and set the accoridng intervals
-        grid_sorted = order_grid()
-        
-
-        # Check for potential overtakes and let them happen
-        # TODO Overtakes can still happen just by having a quicker lap...
-        overtaking(grid_sorted)
-
-        grid_sorted = order_grid()
+        grid = order_grid(grid)
 
         # End active lap
         current_lap += 1
 
-        # TODO Check if last lap and everyone has fullfilled the rule of changeing tyres at least once to different compound
+        # TODO Check if last lap and everyone has fullfilled the rule of changing tyres at least once to different compound
 
         # Display the current standings
-        test_print(current_lap, grid_sorted)
+        test_print(current_lap, grid)

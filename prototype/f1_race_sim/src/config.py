@@ -11,7 +11,7 @@
 NUMBER_OF_COMPETITORS = 20
 
 # Set the race distance, meaning the number of laps to drive
-RACE_DISTANCE = 60
+RACE_DISTANCE = 70
 
 # Set the reference for a lap time in seconds
 REFERANCE_LAP_TIME = 80.0
@@ -19,16 +19,16 @@ REFERANCE_LAP_TIME = 80.0
 # Race Time offset due to starting in order not parallel
 RACE_START_OFFSET = 0.1
 
-# Percentage value range of tyre degreation per normal lap
-TYRE_DEG_SOFT = (0.015, 0.025)
-TYRE_DEG_MEDIUM = (0.01, 0.0175)
-TYRE_DEG_HARD = (0.005, 0.0125)
+# Tyre Lifes of the different compounds fitting to the valid ranges of the used models
+# Used jsut to display the percentage values, which serve only for visual representation so
+# I added ten more then the actual valid rate is to prevent us from being still fast at 100% or even more than 100%
+SOFT_TYRE_LIFE = 40
+MEDIUM_TYRE_LIFE = 60
+HARD_TYRE_LIFE = 70
 
-# Value of increased tyre deg per close interval lap
-TYRE_INTERVAL_PENALTY = (0.005, 0.015)
 
 # Seconds lost during a pitstop
-PITSTOP_DELTA_TIME = 22
+PITSTOP_DELTA_TIME = 18
 
 # Describing the potential time lost due to pitstop errors
 PITSTOP_ERROR_RANGE = (0.0, 1.0)

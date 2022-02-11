@@ -28,7 +28,7 @@ class Car():
         Class for easier creation of mutiple cars with different attributes
     """
 
-    def __init__(self, driver, power, tyre, position, race_time, delta_to_car_infront=0, stops=0):
+    def __init__(self, driver, power, tyre, position, race_time, used_tyres=[], delta_to_car_infront=0):
         """
         Constructor Car
 
@@ -46,7 +46,7 @@ class Car():
         self.position = position
         self.race_time = race_time
         self.delta_to_car_infront = delta_to_car_infront
-        self.stops = stops
+        self.used_tyres = used_tyres
 
     #=====Methods=====================================
     def pitstop(self, tyre_choice):
@@ -76,7 +76,7 @@ class Car():
             pass
 
         # Increment number of pitstops done
-        self.stops += 1
+        self.used_tyres.append(tyre_choice)
 
         return
     
@@ -133,11 +133,11 @@ class Car():
 
     # stops Getter/Setter
     @property
-    def stops(self):
-        return self._stops
+    def used_tyres(self):
+        return self._used_tyres
     
-    @stops.setter
-    def stops(self, stops):
-        self._stops = stops
+    @used_tyres.setter
+    def used_tyres(self, used_tyres):
+        self._used_tyres = used_tyres
     
     

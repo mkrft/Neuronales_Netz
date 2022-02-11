@@ -16,8 +16,7 @@ from src.config import (
 )
 from src.const import (
     DEFAULT_DRIVER_NAME, 
-    DEFAULT_DRIVER_SHORT, 
-    GRID_CACHE,
+    DEFAULT_DRIVER_SHORT,
     HARD,
     MEDIUM,
     SOFT
@@ -38,9 +37,12 @@ def build_grid():
 
     TODO
         - How to set different skill levels? Now default
-        - How to set different car power levels, but same for two cars
+        - How to set different car power levels, but same for two cars from same "team"
         - How to give different cars different tyres
     """
+
+    # Init our grid
+    grid = []
 
     # To seperate the field in the beginning
     starting_offset = 0
@@ -68,9 +70,12 @@ def build_grid():
             power=0.5,
             tyre=tyre,
             position=i+1,
-            race_time=starting_offset
+            race_time=starting_offset,
+            used_tyres=[tyre.compound]
         )
 
         starting_offset += RACE_START_OFFSET
 
-        GRID_CACHE.append(car)
+        grid.append(car)
+    
+    return grid

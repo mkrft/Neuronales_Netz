@@ -2,13 +2,10 @@
     Module to hold the print functions for visualization
 """
 
-#=====Imports=========================================
-
-#=====Module Imports==================================
-from src.const import GRID_CACHE
 
 #=====Libraries=======================================
 from prettytable import PrettyTable
+
 
 #=====Functions=======================================
 def test_print(current_lap, grid_sorted):

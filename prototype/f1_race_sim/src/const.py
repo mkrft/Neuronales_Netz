@@ -11,10 +11,6 @@
 DEFAULT_DRIVER_NAME = "Driver "
 DEFAULT_DRIVER_SHORT = "D"
 
-
-# Grid Cache to store all the cars
-GRID_CACHE = []
-
 # Tyre Compouds
 SOFT = "S"
 MEDIUM = "M"

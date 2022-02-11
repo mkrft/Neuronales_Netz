@@ -2,18 +2,12 @@
     Module to compute a estimated laptime concering
     every important aspect of a car (power, driver, tyre, ...)
 
-    The Reference Time sets the time that shall be returned if
-    the power is 0.5
-    the skill is 0.5
-    and with fresh mediums (degredation 100%)
-
-    TODO validate functions to compute laptime
+    TODO Rework the driver and power function, those are very unscientific
 
 """
 
 
 #=====Module Imports==================================
-from src.config import REFERANCE_LAP_TIME
 from src.const import (
         SOFT,
         MEDIUM,
@@ -32,7 +26,7 @@ def compute_lap_times(car):
     return - {int} - lap_time
     """
 
-    lap_time = REFERANCE_LAP_TIME + driver_function(car.driver.skill) + power_function(car.power) + tyre_function(car.tyre)
+    lap_time = driver_function(car.driver.skill) + power_function(car.power) + tyre_function(car.tyre)
 
     return round(lap_time, 2)
 
@@ -71,9 +65,11 @@ def tyre_function(tyre):
     return - {float} - tyre_delta - Delta the tyre influences laptime in seconds
     """
 
+    x = tyre.tyre_life
+
     if tyre.compound == SOFT:
-        return round(16.5857 - 21.8214 * tyre.degredation, 2)
+        return round(2.1047496 * 10**(-6) * x**(4) - 7.159884 * 10**(-6) * x**(3) + 0.00060814 * x**(2) + 0.0491257*x +76.5, 3)
     elif tyre.compound == MEDIUM:
-        return round(17.4095 - 21.2857 * tyre.degredation, 2)
+        return round(1.134435 * x**(4) * 10**(-5) - 0.000897565 * x**(3) + 0.0184279 * x**(2) - 0.07589*x + 80, 3)
     elif tyre.compound == HARD:
-        return round(18.681 - 21.6286 * tyre.degredation, 2)
+        return round(2.16877 * 10**(-6) * x**(4) - 0.00033556 * x**(3) + 0.0164474 * x**(2) - 0.24907*x + 79.5745, 3)

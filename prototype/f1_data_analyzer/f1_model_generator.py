@@ -315,7 +315,7 @@ if __name__ == "__main__":
     print_model(average_model)
 
 
-# OVERALL NOTES
+##### OVERALL NOTES
 # The Fact I normalized to 80 Seconds means they will have laptimes slightly unter 80s, about 78-77s meaning we can
 # increase the overall race distance due to being a "short" circut, this also helps concerning the fact that with only 60 laps
 # as done in the prototype, the HARD would be quite nice from start to finish
