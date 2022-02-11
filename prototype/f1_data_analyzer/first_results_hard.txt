@@ -16,6 +16,7 @@ f(x)=5.1106*10^(-6) x^(4)-0.000614 x^(3)+0.02525 x^(2)-0.4484 x+79.7119 für HAR
 -> Gültigkeit bis etwa 60, Lebenszeit endet bei etwa 65
 -> mode:        average; but no difference between average and median!
 -> power:       4
+-> BUT arguable that the effective range is too long with about 70 laps; compared to MEDIUM data i am a bit worried it might be bad
 
 [4]
 5.024039*10^(-6) x^(4)-0.0005524 x^(3)+0.01999 x^(2)-0.267089 x+80 für HARD

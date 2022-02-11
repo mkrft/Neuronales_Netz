@@ -1,0 +1,12 @@
+[1]
+1.21499*10^(-5)*x^(4)-0.001068*x^(3)+0.0330904*x^(2)-0.450371*x+80
+mit MEDIUM, over all years, no driver and stint_length 40
+-> 24 sets found
+-> xE[0, 44]
+-> I think its a pretty nice model with a good range until about lap 50
+
+[2]
+1.134435 x^(4)*10^(-5)-0.000897565 x^(3)+0.0184279 x^(2)-0.07589 x+80
+with MEDIUM, over 2021, no driver and stint_length 40
+-> due to awsome model in HARD for 2021 only i thought i give it a try, but sucks
+-> drivers get slower with fresh tyres, only get advantage with 30 laps into stint_length

@@ -266,7 +266,7 @@ def print_model(model):
         if index == len(models[0])-1:
             print(f"xE[0,{entry}]")
             break
-        print(f"x^{POLYNOM_POWER-index}\t{entry}")
+        print(f"x^{POLYNOM_POWER-index} * {entry}")
 
 
 def average(input_set):
@@ -285,10 +285,11 @@ if __name__ == "__main__":
     # Care that the stint_length must be similar to the expected tyre life otherwise the models
     # will lose validation quickly! But increasing the stint_length to much will reduce the number of fitting sets
     # drastically; therefore, as always in motorsports, we have to find a good balance!
-    compound = "HARD"
+    # But on the other hand only the long stints actually tell us about the tyre performance when it comes closer to end of tyre life
+    compound = "MEDIUM"
     year = 2021
     driver = None
-    min_stint_length = 50
+    min_stint_length = 40
     combining_mode = "average"
 
     # Give short infd
@@ -312,3 +313,13 @@ if __name__ == "__main__":
     average_model = combine_models(models, mode=combining_mode)
 
     print_model(average_model)
+
+
+# OVERALL NOTES
+# The Fact I normalized to 80 Seconds means they will have laptimes slightly unter 80s, about 78-77s meaning we can
+# increase the overall race distance due to being a "short" circut
+#
+# What i like big time about the models it the fact that the tyre warm up is shown strongly with peak performances after about 3-5 laps
+#
+# The models have to go towards +infinity with x going towards +infinity otherwise the tyres would be come undefinable awesome after more laps
+# than they should ever be able to endure
