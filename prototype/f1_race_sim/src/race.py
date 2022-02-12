@@ -22,6 +22,7 @@ from src.laptime import compute_lap_times
 from src.display import test_print
 from src.overtake import overtaking, check_overtake
 from src.order_grid import order_grid
+from src.customerrors import RaceError
 
 #=====Libraries=======================================
 
@@ -99,7 +100,17 @@ def race_loop(grid):
         # End active lap
         current_lap += 1
 
-        # TODO Check if last lap and everyone has fullfilled the rule of changing tyres at least once to different compound
+        try:
+            if(current_lap == RACE_DISTANCE):
+                for car in grid:
+                    if(car.destinctUsedTyreTypes() < 2):
+                        raise RaceError(f"The car of {car.driver.name} has not fullfilled the racerule of changing tyres to one different compound")
+        except RaceError as e:
+            print(e.message)
+            #Perhaps do something different Alex?
+
+
+
 
         # Display the current standings
         test_print(current_lap, grid)

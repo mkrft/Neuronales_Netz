@@ -17,6 +17,8 @@ POLYNOM_POWER = 4
 #=====Imports=========================================
 import os
 import json
+import argparse
+import datetime
 
 #=====Module Imports==================================
 
@@ -276,6 +278,24 @@ def average(input_set):
 def median(input_set):
     """Median of a given list of int / floats; Not the median per def but close enough because of the "len() % 2 != 0" case"""
     return sorted(input_set)[round(len(input_set)/2)]
+
+def parse_args():
+    '''Function to parse the console attribute arguments'''
+    last_season_year = int(datetime.datetime.now().date().strftime("%Y")) -1
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-y','--year',default=last_season_year)
+    parser.add_argument('-d','--driver',default=None)
+    parser.add_argument('-l','--length',default=30)
+
+    #Add Flag selection, to switch between SOFT/MEDIUM/HARD - Compounds
+    #Add Flag selection, to switch between Average/Medium interpolation mode    
+
+    args = parser.parse_args()
+
+    
+
+
+
 
 
 #=====Main============================================

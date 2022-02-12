@@ -20,6 +20,7 @@ from src.config import (
 )
 
 from src.tyre import Tyre 
+from src.customerrors import TyreNotKnownError
 
 
 #=====Code============================================
@@ -72,13 +73,16 @@ class Car():
             self.tyre = Tyre(HARD)
         
         else:
-            # TODO add TyreNotKnownError Exception
-            pass
+            raise TyreNotKnownError(tyre_choice)
 
         # Increment number of pitstops done
         self.used_tyres.append(tyre_choice)
 
         return
+
+    def destinctUsedTyreTypes(self):
+        countOfUsedTypes = len(list(set(self.used_tyres)))
+        return countOfUsedTypes
     
     #=====Property Function Class Car=================
     
