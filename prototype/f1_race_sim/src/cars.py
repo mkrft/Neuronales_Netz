@@ -28,7 +28,7 @@ class Car():
         Class for easier creation of mutiple cars with different attributes
     """
 
-    def __init__(self, driver, power, tyre, position, race_time, used_tyres=[], delta_to_car_infront=0):
+    def __init__(self, driver, power, tyre, position, grid_position, race_time=0, used_tyres=[], delta_to_car_infront=0):
         """
         Constructor Car
 
@@ -44,6 +44,7 @@ class Car():
         self.power = power
         self.tyre = tyre
         self.position = position
+        self.grid_position = position
         self.race_time = race_time
         self.delta_to_car_infront = delta_to_car_infront
         self.used_tyres = used_tyres
@@ -139,5 +140,15 @@ class Car():
     @used_tyres.setter
     def used_tyres(self, used_tyres):
         self._used_tyres = used_tyres
+
+
+    # grid_position Getter/Setter
+    @property
+    def grid_position(self):
+        return self._grid_position
+    
+    @grid_position.setter
+    def grid_position(self, grid_position):
+        self._grid_position = grid_position
     
     
