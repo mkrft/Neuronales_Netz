@@ -31,7 +31,7 @@ class Driver():
 
     @property
     def name(self):
-        return self.name
+        return self._name
 
     @name.setter
     def name(self, name):

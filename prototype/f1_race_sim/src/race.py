@@ -97,15 +97,10 @@ def race_loop(grid):
         # End active lap
         current_lap += 1
 
-        try:
-            if(current_lap == RACE_DISTANCE):
-                for car in grid:
-                    if(car.destinctUsedTyreTypes() < 2):
-                        raise RaceError(f"The car of {car.driver.name} has not fullfilled the racerule of changing tyres to one different compound")
-        except RaceError as e:
-            print(e.message)
-            #Perhaps do something different Alex?
-
+        if(current_lap == RACE_DISTANCE):
+            for car in grid:
+                if(car.destinctUsedTyreTypes() < 2):
+                    car.position = "DSQ"
 
 
 
