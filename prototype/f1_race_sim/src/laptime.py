@@ -26,33 +26,27 @@ def compute_lap_times(car):
     return - {int} - lap_time
     """
 
-    lap_time = driver_function(car.driver.skill) + power_function(car.power) + tyre_function(car.tyre)
+    lap_time = individual_performance(car.driver.skill, car.power) + tyre_function(car.tyre)
 
     return round(lap_time, 2)
 
 
-def driver_function(skill):
+def individual_performance(skill, power):
     """
-    Compute the driver influence on the laptime
+    Compute an add on to the lap time according to the performance of the car
+    and the skill of its driver
 
-    param - {float} - skill - Skill value of the driver
+    This is based on data concerning HAM and MAZ from 2021 as biggest differences. Sorry Russia.
 
-    return - {float} - skill_delta
-    """
+    param - {float} - skill
+    param - {float} - power
 
-    return round(-2*skill + 1, 2)
-
-
-def power_function(power):
-    """
-    Compute the cars power influence on the laptime
-
-    param - {float} - power - Power value of the car
-
-    return - {float} - power_delta
+    return - {float} - lap_time_addon
     """
 
-    return round(1.833333 - 3*power, 2)
+    x = skill + power
+    return -0.477811 * x**(4) + 2.26017 * x**(3) - 3.21407 * x**(2) + 0.51794 *x + 1.38617
+
 
 
 def tyre_function(tyre):

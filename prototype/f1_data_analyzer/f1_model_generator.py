@@ -13,14 +13,11 @@
 #====CONFIG==========================================
 POLYNOM_POWER = 4
 
-
 #=====Imports=========================================
 import os
 import json
 import argparse
 import datetime
-
-#=====Module Imports==================================
 
 #=====Libraries=======================================
 import numpy
@@ -182,34 +179,6 @@ def generate_numpy_models(query_data):
 
         # Compute Polynom with x-axis the number of laps as a list from
         models.append(list(numpy.polyfit(list(range(0, len(stint_set))), stint_set, POLYNOM_POWER)))
-        models[-1].append(len(stint_set))
-
-    return models
-
-def generate_numpy_models_with_penalty(query_data):
-    ## TEST WITH PENALTY
-    # TODO check if you get ploynom to work within [0, 1]
-    # Go through every stint set and gen a function
-    models = []
-    for stint_set in query_data:
-
-        # Skip data sets that are too small and will raise an exception
-        # Only necessary if the min_stint_length is 0
-        if len(stint_set) <= 1:
-            continue
-
-        # Make the x_axis according to our data
-        x_axis = list(range(0, len(stint_set)))
-
-        # Now add the penalty
-        # TODO check case which tyre is used to define lifespan
-        # here 70 laps as max lifespan of the HARD
-        # with 80 + 15 sec penalty as laptime
-        x_axis.append(70)
-        stint_set.append(95.0)
-
-        # Compute Polynom with x-axis the number of laps as a list from
-        models.append(list(numpy.polyfit(x_axis, stint_set, POLYNOM_POWER)))
         models[-1].append(len(stint_set))
 
     return models
