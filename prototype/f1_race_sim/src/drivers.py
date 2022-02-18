@@ -33,6 +33,11 @@ class Driver():
     def name(self):
         return self.name
 
+    @name.setter
+    def name(self, name):
+        self._name = name
+
+
     @property
     def skill(self):
         return self._skill

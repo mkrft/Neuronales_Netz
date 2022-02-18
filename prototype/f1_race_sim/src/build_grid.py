@@ -47,13 +47,14 @@ def build_grid():
     grid = []
     
 
-    NUMBER_OF_COMPETITORS = 20
-    SEPERATION_FACTOR = 5
+    # Generate a list of all possible grid positions
+    # and devide it in certain start ranges
     pos_start = list(range(1, NUMBER_OF_COMPETITORS + 1))
 
     possible_start_pos = []
     for x in range(0, len(pos_start), SEPERATION_FACTOR):
         possible_start_pos.append(pos_start[x : x + SEPERATION_FACTOR])
+
 
     # Generate a starting grid
     for i in range(NUMBER_OF_COMPETITORS):
@@ -61,8 +62,8 @@ def build_grid():
 
         # Start to deploy the skill / power levels dynamically
         # TODO Eval there skill / power models
-        # currently skill makes up around 8 secs over a race
-        #           power makes up around 8 secs over a race distance
+        # The difference should not be to big, otherwise we get the same result everytime :D
+        # Still showing that overtaking is too easy right now
         skill = round(1 - i / 21, 3)
         if i % 2 == 0:
             power = round(1 - i / 21, 3)
@@ -99,18 +100,15 @@ def build_grid():
         grid.append(car)
     
 
-    # Order the grid concerning the 
+    # Order the grid concerning their grid positions
     grid = sorted(grid, key=lambda car: car.grid_position)
 
-    # Now apply the race start off set
+    # Now apply the race start offset
     # To seperate the field in the beginning
     starting_offset = 0
     for car in grid:
         car.race_time += starting_offset
         starting_offset += RACE_START_OFFSET
-
-    for car in grid:
-        print(car.grid_position, car.position, car.race_time)
 
     return grid
 
@@ -135,7 +133,7 @@ def start_pos_generator(skill, power, possible_start_pos):
     start_range_index = int((len(possible_start_pos) - 1) - (((skill + power + 0.0001) * len(possible_start_pos)/ 2) - 1))
 
     # Prevent error from happening by incrementing the index
-    if possible_start_pos[start_range_index] == []:
+    while possible_start_pos[start_range_index] == []:
         start_range_index += 1
 
     # Choose a random elements within the given range of starting positions

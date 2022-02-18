@@ -74,22 +74,19 @@ def race_loop(grid):
             car.race_time = round(car.race_time + calc_lap_time, 2)
             lap_time_car_infront = calc_lap_time
             
-            # TODO do i have to order the grid here? To prevent falsely applied car_infront_penalty?
-            # I think so..
 
             # Let the tyre degrade according to the interval to car infront
-            # try / except for the car on pos 1 that has the string "-" as delta
+            # try / except for the car on pos 1 that has the string "-" as delta, therefore no one in front and we can degrade without penalty
             try:
                 if car.delta_to_car_infront <= 0.8:
                     car.tyre.degrade(car_infront=True)
                 else:
                     car.tyre.degrade()
             except TypeError:
-                pass
+                car.tyre.degrade()
 
             # TODO How to decide wether to pit and on which tyre
             # TODO How to give this option to the AI?
-            # TODO Only test implementation
             if current_lap == 25: 
                 car.pitstop(MEDIUM)
 

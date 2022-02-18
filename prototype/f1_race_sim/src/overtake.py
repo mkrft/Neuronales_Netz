@@ -34,7 +34,7 @@ def check_overtake(car, car_infront):
 
     # Probability Function
     # TODO Add Function that takes delta, tyres, power, skill into consideration
-    probability = 0.5
+    probability = 0.15
 
     # Check if car is able to overtake
     if round(random.uniform(0.0, 1.0), 2) <= probability:
