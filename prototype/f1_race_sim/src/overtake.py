@@ -27,18 +27,10 @@ def check_overtake(car, car_infront):
     return - {bool} - overtake_done
     """
 
-    # Init
-    overtake_done = False
+    # TODO Whole function could be a single line :D i think
+    # It did.
+    return True if round(random.uniform(0.0, 1.0), 2) <= 0.15 else False
 
-    # Probability Function
-    # TODO Add Function that takes delta, tyres, power, skill into consideration
-    probability = 0.2
-
-    # Check if car is able to overtake
-    if round(random.uniform(0.0, 1.0), 2) <= probability:
-        overtake_done = True 
-
-    return overtake_done
 
 
 def overtaking(grid_sorted, print_opt = True):

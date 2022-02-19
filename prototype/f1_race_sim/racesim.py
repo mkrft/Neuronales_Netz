@@ -21,7 +21,7 @@ from src.race import race_loop
 if __name__ == "__main__":
 
     # Init cars with drivers
-    build_grid()
+    grid = build_grid()
 
     # Simulate race
-    race_loop()
+    race_loop(grid)

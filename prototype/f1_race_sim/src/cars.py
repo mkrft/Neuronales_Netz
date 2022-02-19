@@ -21,8 +21,8 @@ from src.config import (
     PITSTOP_ERROR_RANGE
 )
 
-from src.tyre import Tyre
-from src.tyrenotknownerror import TyreNotKnownError
+from src.tyre import Tyre 
+from src.customerrors import TyreNotKnownError
 
 
 #=====Code============================================
@@ -31,7 +31,7 @@ class Car():
         Class for easier creation of mutiple cars with different attributes
     """
 
-    def __init__(self, driver, power, tyre, position, race_time, delta_to_car_infront=0, stops=0, last_lap=110):
+    def __init__(self, driver, power, tyre, position, grid_position, race_time=0, used_tyres=[], delta_to_car_infront=0):
         """
         Constructor Car
 
@@ -47,11 +47,10 @@ class Car():
         self.power = power
         self.tyre = tyre
         self.position = position
-        self.starting_pos = position
+        self.grid_position = position
         self.race_time = race_time
         self.delta_to_car_infront = delta_to_car_infront
-        self.stops = stops
-        self.last_lap = last_lap
+        self.used_tyres = used_tyres
 
     #=====Methods=====================================
     def pitstop(self, tyre_choice):
@@ -80,12 +79,15 @@ class Car():
         
         else:
             raise TyreNotKnownError(tyre_choice)
-            
 
         # Increment number of pitstops done
-        self.stops += 1
+        self.used_tyres.append(tyre_choice)
 
         return
+
+    def destinctUsedTyreTypes(self):
+        countOfUsedTypes = len(list(set(self.used_tyres)))
+        return countOfUsedTypes
     
     #=====Property Function Class Car=================
     
@@ -140,31 +142,20 @@ class Car():
 
     # stops Getter/Setter
     @property
-    def stops(self):
-        return self._stops
+    def used_tyres(self):
+        return self._used_tyres
     
-    @stops.setter
-    def stops(self, stops):
-        self._stops = stops
+    @used_tyres.setter
+    def used_tyres(self, used_tyres):
+        self._used_tyres = used_tyres
 
-    # starting_pos Getter/Setter
+
+    # grid_position Getter/Setter
     @property
-    def starting_pos(self):
-        return self._starting_pos
+    def grid_position(self):
+        return self._grid_position
     
-    @starting_pos.setter
-    def starting_pos(self, starting_pos):
-        self._starting_pos = starting_pos
-
-
-    # last_lap Getter/Setter
-    @property
-    def last_lap(self):
-        return self._last_lap
-    
-    @last_lap.setter
-    def last_lap(self, last_lap):
-        self._last_lap = last_lap
-    
-    
+    @grid_position.setter
+    def grid_position(self, grid_position):
+        self._grid_position = grid_position
     

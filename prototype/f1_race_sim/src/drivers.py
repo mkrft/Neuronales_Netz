@@ -26,8 +26,17 @@ class Driver():
         self.skill = skill
 
     
-    #=====Property Function Class Car=================
+    #=====Property Function Class Driver=================
     # TODO add all functions that are needed! Only those
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = name
+
 
     @property
     def skill(self):

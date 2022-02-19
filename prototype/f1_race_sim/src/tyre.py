@@ -9,10 +9,9 @@ import random
 
 #=====Module Imports==================================
 from src.config import (
-    TYRE_DEG_SOFT,
-    TYRE_DEG_MEDIUM,
-    TYRE_DEG_HARD,
-    TYRE_INTERVAL_PENALTY
+    SOFT_TYRE_LIFE,
+    MEDIUM_TYRE_LIFE,
+    HARD_TYRE_LIFE
 )
 
 from src.const import (
@@ -28,7 +27,7 @@ class Tyre():
     will be on the different cars
     """
 
-    def __init__(self, compound, degredation=1):
+    def __init__(self, compound, degredation=1, tyre_life=0):
         """
         Constructor for tyres
 
@@ -37,6 +36,7 @@ class Tyre():
         """
         self.compound = compound
         self.degredation = degredation
+        self.tyre_life = tyre_life
 
     #=====Property Functions Class Car=================
     @property
@@ -56,28 +56,39 @@ class Tyre():
     def degredation(self, degredation):
         self._degredation = degredation
 
+    @property
+    def tyre_life(self):
+        return self._tyre_life
+    
+    @tyre_life.setter
+    def tyre_life(self, tyre_life):
+        self._tyre_life = tyre_life
+
 
     #=====Methods=====================================
     def degrade(self, car_infront=False):
         """
-        Function to alter the tyre degradation over a
-        single lap in clean air, meaning no car in front
-        """
+        Just a simple function to display the tyre life in a percentage
+        for the people viewing it!
 
-        # Determine which tyre is used
-        if self._compound == SOFT:
-            self._degredation -= round(random.uniform(TYRE_DEG_SOFT[0], TYRE_DEG_SOFT[1]), 2)
-        elif self._compound == MEDIUM:
-            self._degredation -= round(random.uniform(TYRE_DEG_MEDIUM[0], TYRE_DEG_MEDIUM[1]), 2)
-        elif self._compound == HARD:
-            self._degredation -= round(random.uniform(TYRE_DEG_HARD[0], TYRE_DEG_HARD[1]), 2)
-        else:
-            # TODO Add own Excpetions and according handling
-            print("[Error] Tyre was not one of the three")
+        param - {tyre} - self
+        param - {bool} - car_infront - tells you if the car is close to a car infront
+        """
 
         # Add penalty if the car is close to a car in front
         if car_infront:
-            self._degredation -= round(random.uniform(TYRE_INTERVAL_PENALTY[0], TYRE_INTERVAL_PENALTY[1]), 2)
+            self.tyre_life += round(random.uniform(0.01, 0.09), 2)
+
+        # Compute the degredation level as known from F1 Games
+        if self._compound == SOFT:
+            self._degredation = round(1 - self.tyre_life / SOFT_TYRE_LIFE, 2)
+
+        elif self._compound == MEDIUM:
+            self._degredation = round(1 - self.tyre_life / MEDIUM_TYRE_LIFE, 2)
+
+        elif self._compound == HARD:
+            self._degredation = round(1 - self.tyre_life / HARD_TYRE_LIFE, 2)
+
 
         # Prevent tyre degredation to be negative
         if self._degredation < 0:

@@ -8,6 +8,7 @@
 """
 
 #=====Imports=========================================
+import random
 
 #=====Module Imports==================================
 from src.config import (
@@ -15,9 +16,9 @@ from src.config import (
     RACE_START_OFFSET
 )
 from src.const import (
+    SEPERATION_FACTOR,
     DEFAULT_DRIVER_NAME, 
-    DEFAULT_DRIVER_SHORT, 
-    GRID_CACHE,
+    DEFAULT_DRIVER_SHORT,
     HARD,
     MEDIUM,
     SOFT
@@ -38,18 +39,39 @@ def build_grid():
 
     TODO
         - How to set different skill levels? Now default
-        - How to set different car power levels, but same for two cars
+        - How to set different car power levels, but same for two cars from same "team"
         - How to give different cars different tyres
     """
 
-    # To seperate the field in the beginning
-    starting_offset = 0
+    # Init our grid
+    grid = []
+    
 
-    # Reset the Grid
-    GRID_CACHE.clear()
+    # Generate a list of all possible grid positions
+    # and devide it in certain start ranges
+    pos_start = list(range(1, NUMBER_OF_COMPETITORS + 1))
+
+    possible_start_pos = []
+    for x in range(0, len(pos_start), SEPERATION_FACTOR):
+        possible_start_pos.append(pos_start[x : x + SEPERATION_FACTOR])
+
 
     # Generate a starting grid
     for i in range(NUMBER_OF_COMPETITORS):
+
+
+        # Start to deploy the skill / power levels dynamically
+        # TODO Eval there skill / power models
+        # The difference should not be to big, otherwise we get the same result everytime :D
+        # Still showing that overtaking is too easy right now
+        skill = round(1 - i / 21, 3)
+        if i % 2 == 0:
+            power = round(1 - i / 21, 3)
+
+
+        # Calc starting position
+        starting_pos, possible_start_pos = start_pos_generator(skill, power, possible_start_pos)
+
 
         # Make sure there are only three letters
         # per driver short
@@ -61,19 +83,64 @@ def build_grid():
         driver = Driver(
             name=DEFAULT_DRIVER_NAME + driver_number,
             short=DEFAULT_DRIVER_SHORT + driver_number,
-            skill=0.5
+            skill=skill
         )
 
         tyre = Tyre(compound=SOFT)
 
         car = Car(
             driver=driver,
-            power=0.5,
+            power=power,
             tyre=tyre,
-            position=i+1,
-            race_time=starting_offset
+            position=starting_pos,
+            grid_position=starting_pos,
+            used_tyres=[tyre.compound]
         )
 
+        grid.append(car)
+    
+
+    # Order the grid concerning their grid positions
+    grid = sorted(grid, key=lambda car: car.grid_position)
+
+    # Now apply the race start offset
+    # To seperate the field in the beginning
+    starting_offset = 0
+    for car in grid:
+        car.race_time += starting_offset
         starting_offset += RACE_START_OFFSET
 
-        GRID_CACHE.append(car)
+    return grid
+
+
+def start_pos_generator(skill, power, possible_start_pos):
+    """
+    Generate a start position based on the skill and power of a driver
+    if the position is already given, choose a different one
+
+    param - {float} - skill
+    param - {float} - power
+    param - {list[int]} - possible_start_pos
+
+    return - {int} - starting_pos
+    return - {list[list[int]]} - possible_start_pos
+    
+    """
+
+    # Max of skill and power summed is 2, so we need the factor that normalizes them to the SEPERATION_FACTOR
+    # the resulting factor shall define the index in which will be searched for the starting position
+    # add 0.001 to allow skill = 0 and power = 0 to work
+    start_range_index = int((len(possible_start_pos) - 1) - (((skill + power + 0.0001) * len(possible_start_pos)/ 2) - 1))
+
+    # Prevent error from happening by incrementing the index
+    while possible_start_pos[start_range_index] == []:
+        start_range_index += 1
+
+    # Choose a random elements within the given range of starting positions
+    starting_pos = random.choice(possible_start_pos[start_range_index])
+
+    # Now delete the starting pos that will be given away from the given subset
+    possible_start_pos[start_range_index].remove(starting_pos)
+
+    return starting_pos, possible_start_pos
+

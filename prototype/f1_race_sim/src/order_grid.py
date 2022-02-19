@@ -4,16 +4,8 @@
 
 """
 
-#=====Imports=========================================
-
-#=====Module Imports==================================
-from src.const import GRID_CACHE
-
-#=====Libraries=======================================
-
-
 #=====Functions=======================================
-def order_grid():
+def order_grid(unsorted_grid):
     """
     Function to order the grid
 
@@ -21,7 +13,7 @@ def order_grid():
     """ 
 
     # Order grid by race time at the end of the lap
-    grid_sorted = sorted(GRID_CACHE, key=lambda car: car.race_time)
+    grid_sorted = sorted(unsorted_grid, key=lambda car: car.race_time)
 
     # Alter the positions according to race time
     for index in range(0, len(grid_sorted)):
