@@ -277,6 +277,7 @@ def parse_args():
     if(args.length < 30):
         print("You selected a stint with less than 30 rounds, which is the minimum value, it will be set to this value")
         args.length = 30
+        # TODO think of not setting the mindistance and working with real value or throwing an exception and exiting
 
     return args
 

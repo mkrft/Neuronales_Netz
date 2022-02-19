@@ -19,12 +19,18 @@ class enTyreType(Enum):
     M = "MEDIUM",
     S = "SOFT"
 
+    def __str__(self):
+        return self.value
+
 class enInterpolationMode(Enum):
     '''
         Enum representing all available InterpolationModes for selection
     '''
     A = "average",
     M = "median"
+
+    def __str__(self):
+        return self.value
 
 
 
