@@ -10,7 +10,6 @@ import random
 from src.config import (
     RACE_DISTANCE,
     REFERANCE_LAP_TIME,
-    CURRENT_RACE_LAP
 )
 
 from src.const import (
@@ -42,7 +41,7 @@ def race_loop(grid, print_opt=True):
     racedata = []
 
     # "Race" until the RACE_DISTANCE is reached
-    while CURRENT_RACE_LAP[0] < RACE_DISTANCE:
+    while current_lap < RACE_DISTANCE:
 
         # Reset this param every lap
         lap_time_car_infront = 0
@@ -96,7 +95,7 @@ def race_loop(grid, print_opt=True):
         racedata.append(grid)
 
         # End active lap
-        CURRENT_RACE_LAP[0] += 1
+        current_lap += 1
 
         if(current_lap == RACE_DISTANCE):
             for car in grid:
