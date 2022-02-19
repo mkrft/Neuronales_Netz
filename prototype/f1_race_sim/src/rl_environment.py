@@ -19,12 +19,11 @@ from src.const import (
 )
 
 from src.config import (
-    CURRENT_RACE_LAP,
     RACE_DISTANCE
 )
 
 from src.build_grid import build_grid
-from src.get_data import get_race
+from src.get_data import get_state
 
 #=====Libraries=======================================
 from gym import Env
@@ -46,8 +45,7 @@ class RacingEnv(Env):
         # Define four descrete possible actions
         self.action_space = Discrete(4)
 
-        # Arry of possibilities
-        # TODO Here we will have to give a full grid state via
+        # TODO maybe clean up the state, most of it is in self.car anyways
 
         # limits of our state values
         float32_max = np.finfo(np.float32).max
@@ -63,8 +61,19 @@ class RacingEnv(Env):
         # position, tyre.compound, car.tyre.degredation, car.race_time, car.delta_to_car_infront
         self.state = [1.0, 1.0, 1.0, 0.0, 0.0]
 
+        # monitoring the lost or gained time
+        self.prev_state = self.state
+
+
+    def update_car_params(self):
+        """
+        re-initialize the vars dependant on the car, avoid having to to this in the constructor.
+        Making a new object every race is not needed since only the car object is modified, hence this is
+        more efficient
+        """
+        self.starting_pos = self.car.position
         
-    def step(self, action):
+    def step(self, action, lap):
         """
         Routine that shall be done each lap by the Agent
 
@@ -88,20 +97,24 @@ class RacingEnv(Env):
             pass
 
         # Set the new state
-        # self.state = self.car.tyre.degredation
-        self.state = get_race(self.car)
+        self.prev_state = self.state
+        self.state = get_state(self.car)
 
         # Check if race is over and comupte the reward to give
-        if CURRENT_RACE_LAP[0] < RACE_DISTANCE - 1:
+        if lap < RACE_DISTANCE - 1:
             done = False
-            reward = 0
+            reward = -0.1 * (self.state[-1] - self.prev_state[-1])
         else:
             done = True
 
-            if self.car.starting_pos + self.car.position == 2:
+            # check the distinctness of the tyres, penalize if too low
+            if(self.car.destinctUsedTyreTypes() < 2):
+                reward = -100
+
+            if self.starting_pos + self.car.position == 2:
                 reward = 20
             else:
-                reward = -1 * self.car.position - self.car.starting_pos
+                reward = -1 * self.car.position - self.starting_pos
 
         # Add debug info for later
         info = {}
@@ -111,13 +124,9 @@ class RacingEnv(Env):
 
     def reset(self):
         """
-        Clear the grid and build a new one
+        reset the state
         """
-        
-        build_grid()
-        CURRENT_RACE_LAP[0] = 0
 
-        #Trying something
         self.state = [1.0, 1.0, 1.0, 0.0, 0.0]
         return self.state
 

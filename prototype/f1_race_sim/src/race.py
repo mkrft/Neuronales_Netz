@@ -38,7 +38,6 @@ def race_loop(grid, print_opt=True):
     
     # Init the current lap with the starting lap of 0
     current_lap = 0
-    racedata = []
 
     # "Race" until the RACE_DISTANCE is reached
     while current_lap < RACE_DISTANCE:
@@ -92,7 +91,6 @@ def race_loop(grid, print_opt=True):
 
         # Sort the whole grid and set the accoridng intervals
         grid = order_grid(grid)
-        racedata.append(grid)
 
         # End active lap
         current_lap += 1
@@ -107,5 +105,3 @@ def race_loop(grid, print_opt=True):
         # Display the current standings
         if print_opt:
             test_print(current_lap, grid)
-
-    return racedata 

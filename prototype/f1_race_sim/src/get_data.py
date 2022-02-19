@@ -1,10 +1,9 @@
-from src.const import GRID_CACHE
 from src.config import NUMBER_OF_COMPETITORS
 from src.build_grid import build_grid
 from src.race import race_loop
 
 #=====Functions=======================================
-def get_race(car):
+def get_state(car):
     return [car.position, convert_compound(car.tyre.compound), car.tyre.degredation, car.race_time, convert_delta(car.delta_to_car_infront)]
 
 def make_input_vector(all_data, lap, driver_num):

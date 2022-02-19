@@ -12,10 +12,10 @@
 """
 
 #=====Module Imports==================================
-from src.rl_test_loop import ai_race_loop
+from src.ai_race_loop import ai_race_loop
+from src.build_grid import build_grid
 
 #=====Program Entry===================================
 if __name__ == "__main__":
-
     # Start the race!
     ai_race_loop()
