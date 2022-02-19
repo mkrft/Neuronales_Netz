@@ -41,12 +41,6 @@ def query_handler(compound, driver=None, year=None, min_stint_length=0):
     return - {dict} - query_data 
     """
 
-    #Unnecessary, check is performed automatically while parsing the console arguments
-    # Check for correct use of compounds
-    #possible_compounds = list(enTyreType)
-    #if compound not in possible_compounds:
-    #    raise ValueError(f'Given compound "{compound.vaule}" not in {possible_compounds}')
-
     # Init
     dirs = []
 
@@ -198,11 +192,6 @@ def combine_models(models, mode=enInterpolationMode.A):
     return - {model} - representing model of form [x^POLYNOM_POWER, x^POLYNOM_POWER - 1, ..., valid_x_threshold]
     """
 
-    # Check for that right mode is given
-    #possible_modes = list(enInterpolationMode)
-    #if mode not in possible_modes:
-    #    raise ValueError(f"Given mode '{mode.value}' not in {possible_modes}!")
-
     # Init
     model = []
     polynom_parameter_list = []
@@ -263,8 +252,8 @@ def parse_args():
     parser.add_argument('-l','--length', type=int, default=30)
 
 
-    parser.add_argument('-t','--tyre', type=enTyreType, action=EnumAction, help="Select Typre-Type: S-Soft, M-Medium, H-Hard", default="S")
-    parser.add_argument('-i', '--interpolationmode', type=enInterpolationMode, action=EnumAction, help="Select the interpolation mode: A-Average, M-Median")
+    parser.add_argument('-t','--tyre', type=enTyreType, action=EnumAction, help="Select Typre-Type: S-Soft, M-Medium, H-Hard", default=enTyreType.S)
+    parser.add_argument('-i', '--interpolationmode', type=enInterpolationMode, action=EnumAction, help="Select the interpolation mode: A-Average, M-Median",default=enInterpolationMode.A)
 
 
     try:
@@ -289,8 +278,6 @@ def parse_args():
 
 #=====Main============================================
 if __name__ == "__main__":
-
-    #TODO SHOULD add arg-parsing, but yeah laziness
     # Care that the stint_length must be similar to the expected tyre life otherwise the models
     # will lose validation quickly! But increasing the stint_length to much will reduce the number of fitting sets
     # drastically; therefore, as always in motorsports, we have to find a good balance!
@@ -303,7 +290,7 @@ if __name__ == "__main__":
     combining_mode = args.interpolationmode
 
     # Give short infd
-    print(f"Query for:\ncompound:\t{compound.value}\nyear:\t\t{year}\ndriver:\t\t{driver}\nstint_length:\t{min_stint_length}\n\n")
+    print(f"Query for:\ncompound:\t{compound}\nyear:\t\t{year}\ndriver:\t\t{driver}\nstint_length:\t{min_stint_length}\n\n")
 
     # Perform a query
     query_data = query_handler(compound=compound, driver=driver, min_stint_length=min_stint_length, year=year)
