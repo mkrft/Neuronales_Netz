@@ -253,8 +253,11 @@ def median(input_set):
 
 def parse_args():
     '''Function to parse the console attribute arguments'''
+
     last_season_year = int(datetime.datetime.now().date().strftime("%Y")) -1
+
     parser = argparse.ArgumentParser()
+
     parser.add_argument('-y','--year',type=int,default=last_season_year)
     parser.add_argument('-d','--driver', type=str,default=None)
     parser.add_argument('-l','--length', type=int, default=30)
@@ -264,13 +267,11 @@ def parse_args():
     parser.add_argument('-i', '--interpolationmode', type=enInterpolationMode, action=EnumAction, help="Select the interpolation mode: A-Average, M-Median")
 
 
-    #Add Flag selection, to switch between SOFT/MEDIUM/HARD - Compounds S/M/H
-    #Add Flag selection, to switch between Average/Medium interpolation mode / Flags A/M 
-
     try:
         args = parser.parse_args()
     except Exception as e:
-        print(e)
+        print("Error while parsing arguments, invalid arguments given")
+        exit()
 
 
     if(args.length < 30):
