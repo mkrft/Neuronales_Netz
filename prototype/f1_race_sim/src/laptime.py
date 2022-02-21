@@ -2,8 +2,6 @@
     Module to compute a estimated laptime concering
     every important aspect of a car (power, driver, tyre, ...)
 
-    TODO Rework the driver and power function, those are very unscientific
-
 """
 
 

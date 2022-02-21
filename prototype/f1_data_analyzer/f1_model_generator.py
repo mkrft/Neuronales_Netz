@@ -240,6 +240,7 @@ def median(input_set):
     """Median of a given list of int / floats; Not the median per def but close enough because of the "len() % 2 != 0" case"""
     return sorted(input_set)[round(len(input_set)/2)]
 
+
 def parse_args():
     '''Function to parse the console attribute arguments'''
 
@@ -271,10 +272,6 @@ def parse_args():
     return args
 
     
-
-
-
-
 
 #=====Main============================================
 if __name__ == "__main__":
