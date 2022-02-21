@@ -97,6 +97,7 @@ def race_loop(grid):
         # End active lap
         current_lap += 1
 
+        # TODO talk with Tim how to make this understandable for the AI
         if(current_lap == RACE_DISTANCE):
             for car in grid:
                 if(car.destinctUsedTyreTypes() < 2):

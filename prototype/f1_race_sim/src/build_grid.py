@@ -28,8 +28,6 @@ from src.cars import Car
 from src.drivers import Driver
 from src.tyre import Tyre
 
-#=====Libraries=======================================
-
 
 #=====Functions=======================================
 def build_grid():
@@ -38,9 +36,7 @@ def build_grid():
     Save according information to the grid#
 
     TODO
-        - How to set different skill levels? Now default
-        - How to set different car power levels, but same for two cars from same "team"
-        - How to give different cars different tyres
+        - How to give different cars different tyres -> shall we go to random tyres choices in order to let the AI learn everything?
     """
 
     # Init our grid
@@ -113,6 +109,7 @@ def build_grid():
     return grid
 
 
+
 def start_pos_generator(skill, power, possible_start_pos):
     """
     Generate a start position based on the skill and power of a driver
@@ -132,9 +129,18 @@ def start_pos_generator(skill, power, possible_start_pos):
     # add 0.001 to allow skill = 0 and power = 0 to work
     start_range_index = int((len(possible_start_pos) - 1) - (((skill + power + 0.0001) * len(possible_start_pos)/ 2) - 1))
 
+    # Give the possibility that a driver has to start at the back of the grid
+    if random.uniform(0, 1.0) <= 0.08:
+        start_range_index = -1
+
+
     # Prevent error from happening by incrementing the index
     while possible_start_pos[start_range_index] == []:
         start_range_index += 1
+
+        # Prevent an overflow and reset to zero
+        if start_range_index == len(possible_start_pos):
+            start_range_index = -1
 
     # Choose a random elements within the given range of starting positions
     starting_pos = random.choice(possible_start_pos[start_range_index])

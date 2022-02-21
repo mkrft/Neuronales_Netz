@@ -29,6 +29,7 @@ def check_overtake(car, car_infront):
 
     # TODO Whole function could be a single line :D i think
     # It did.
+    # But still a actual computation for the likelihood of a overtake missing
     return True if round(random.uniform(0.0, 1.0), 2) <= 0.15 else False
 
 
