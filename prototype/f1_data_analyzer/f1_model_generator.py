@@ -175,7 +175,7 @@ def generate_numpy_models(query_data):
             continue
 
         # Compute Polynom with x-axis the number of laps as a list from
-        models.append(list(numpy.polyfit(list(range(0, len(stint_set))), stint_set, POLYNOM_POWER)))
+        models.append(list(numpy.polyfit(list(range(0,len(stint_set))), stint_set, POLYNOM_POWER)))
         models[-1].append(len(stint_set))
 
     return models
@@ -303,7 +303,7 @@ if __name__ == "__main__":
     models = generate_numpy_models(query_data)
 
     # Now that we have all models we can try to take a average over all the found models
-    print(f"\nCombining Method: {combining_mode}\nResulting model:")
+    print(f"\nCombining Method: {combining_mode.value}\nResulting model:")
     average_model = combine_models(models, mode=combining_mode)
 
     print_model(average_model)
