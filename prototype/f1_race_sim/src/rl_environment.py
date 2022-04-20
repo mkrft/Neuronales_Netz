@@ -101,6 +101,7 @@ class RacingEnv(Env):
         self.state = get_state(self.car)
 
         # Check if race is over and comupte the reward to give
+        # TODO optimize the rewards
         if lap < RACE_DISTANCE - 1:
             done = False
             reward = -0.1 * (self.state[-1] - self.prev_state[-1])
@@ -109,10 +110,10 @@ class RacingEnv(Env):
 
             # check the distinctness of the tyres, penalize if too low
             if(self.car.destinctUsedTyreTypes() < 2):
-                reward = -100
+                reward = -1000
 
             if self.starting_pos + self.car.position == 2:
-                reward = 20
+                reward = 200
             else:
                 reward = -1 * self.car.position - self.starting_pos
 

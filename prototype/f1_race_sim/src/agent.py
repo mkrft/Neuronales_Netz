@@ -29,7 +29,7 @@ class Agent(nn.Module):
 
         # epsilon for policy
         self.epsilon = 1
-        self.epsilon_decay = 0.001
+        self.epsilon_decay = 0.008
         self.epsilon_min = 0.1
 
         # weight of later rewards
@@ -71,7 +71,7 @@ class Agent(nn.Module):
         for state, action, reward, next, done in batch:
             self.train_single(state, action, reward, next, done)
 
-    def decay_espilon(self):
+    def decay_epsilon(self):
         if self.epsilon > self.epsilon_min:
             self.epsilon -= self.epsilon_decay
 
