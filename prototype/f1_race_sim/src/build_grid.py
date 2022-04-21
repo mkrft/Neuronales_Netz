@@ -27,6 +27,7 @@ from src.const import (
 from src.cars import Car
 from src.drivers import Driver
 from src.tyre import Tyre
+from src.order_grid import order_grid
 
 #=====Libraries=======================================
 
@@ -105,10 +106,10 @@ def build_grid():
 
     # Now apply the race start offset
     # To seperate the field in the beginning
-    starting_offset = 0
-    for car in grid:
-        car.race_time += starting_offset
-        starting_offset += RACE_START_OFFSET
+    for index,car in enumerate(grid):
+        car.race_time += index * RACE_START_OFFSET
+        car.delta_to_leader += index * RACE_START_OFFSET
+        car.delta_to_car_infront += RACE_START_OFFSET if index is not 0 else 0
 
     return grid
 
