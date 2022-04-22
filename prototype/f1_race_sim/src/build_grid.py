@@ -94,7 +94,6 @@ def build_grid() -> list:
             power=power,
             tyre=tyre,
             position=starting_pos,
-            grid_position=starting_pos,
             used_tyres=[tyre.compound]
         )
 
