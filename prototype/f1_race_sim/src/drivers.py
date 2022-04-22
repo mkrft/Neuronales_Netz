@@ -11,7 +11,7 @@ class Driver():
         in this Simulator
     """
 
-    def __init__(self, name, short, skill):
+    def __init__(self, name : str, short: str, skill:int):
         """
         Constructor for a driver
 

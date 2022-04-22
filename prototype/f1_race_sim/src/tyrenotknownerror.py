@@ -13,6 +13,6 @@ class TyreNotKnownError(Exception):
     Exception that is raised, when an unknown tyre is requested
     """
 
-    def __init__(self,requestTyre,message=f"The available types are {SOFT}, {MEDIUM}, {HARD}"):
+    def __init__(self,requestTyre : str,message : str=f"The available types are {SOFT}, {MEDIUM}, {HARD}"):
         self.message = f"An unknown tyre of type {requestTyre} was requested. \n {message}"
         super().__init__(self.message)

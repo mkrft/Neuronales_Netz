@@ -24,6 +24,7 @@ from src.config import (
 
 from src.build_grid import build_grid
 from src.get_data import get_state
+from src.cars import Car
 
 #=====Libraries=======================================
 from gym import Env
@@ -37,7 +38,7 @@ class RacingEnv(Env):
     Parent  Env     OpenAI Gym Blueprint for an RL Environment
     """
 
-    def __init__(self, car):
+    def __init__(self, car : Car):
         """
         Constructor of our Env
         """
@@ -73,7 +74,7 @@ class RacingEnv(Env):
         """
         self.starting_pos = self.car.position
         
-    def step(self, action, lap):
+    def step(self, action : int, lap: int):
         """
         Routine that shall be done each lap by the Agent
 

@@ -27,7 +27,7 @@ class Tyre():
     will be on the different cars
     """
 
-    def __init__(self, compound, degredation=1, tyre_life=0):
+    def __init__(self, compound :str, degredation:float=1, tyre_life : float=0):
         """
         Constructor for tyres
 
@@ -66,7 +66,7 @@ class Tyre():
 
 
     #=====Methods=====================================
-    def degrade(self, car_infront=False):
+    def degrade(self, car_infront : bool=False) -> None:
         """
         Just a simple function to display the tyre life in a percentage
         for the people viewing it!

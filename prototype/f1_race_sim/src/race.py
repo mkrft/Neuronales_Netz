@@ -26,7 +26,7 @@ from src.customerrors import RaceError
 
 
 #=====Functions=======================================
-def race_loop(grid, print_opt=True):
+def race_loop(grid : list, print_opt : bool=True) -> None:
     """
     Function that shall represent our main loop, in which
     all computations are done per car for every single lap

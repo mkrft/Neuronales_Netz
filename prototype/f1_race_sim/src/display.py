@@ -8,7 +8,7 @@ from prettytable import PrettyTable
 
 
 #=====Functions=======================================
-def test_print(current_lap, grid_sorted):
+def test_print(current_lap :int, grid_sorted : list):
     """
     Give a full overview of the current standings
     """

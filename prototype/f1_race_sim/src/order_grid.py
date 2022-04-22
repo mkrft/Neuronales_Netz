@@ -5,7 +5,7 @@
 """
 
 #=====Functions=======================================
-def order_grid(unsorted_grid):
+def order_grid(unsorted_grid : list)->list:
     """
     Function to order the grid
 

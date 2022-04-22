@@ -8,15 +8,14 @@ from src.build_grid import build_grid
 from src.race import race_loop
 
 #=====Functions=======================================
-def get_race():
-
+def get_race() ->list:
     build_grid()
 
     all_data = race_loop(False)
 
     return transform_data(all_data)
 
-def make_input_vector(all_data, lap, driver_num):
+def make_input_vector(all_data : list, lap: int, driver_num : int)->list:
     try:
         lap_data = all_data[lap-1]
 
@@ -41,7 +40,7 @@ def convert_delta(delta):
         return 0
     return delta
 
-def convert_compound(tyre_compound):
+def convert_compound(tyre_compound : str):
     if tyre_compound == 'S':
         return 0.0
     if tyre_compound == 'M':
@@ -51,7 +50,7 @@ def convert_compound(tyre_compound):
 def convert_driver_short(driver_short):
     return float(driver_short[1:])
 
-def transform_data(racedata): 
+def transform_data(racedata : list)->list: 
     """
     pytorch needs an array of values; hence turn the car - objects into usable data (numbers)
     """

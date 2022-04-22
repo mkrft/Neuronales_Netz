@@ -36,7 +36,7 @@ import random
 import torch
 
 #=====Functions=======================================
-def ai_race_loop():
+def ai_race_loop() -> None:
     """
     Main Loop representing the game
     """

@@ -15,7 +15,7 @@ import torch.optim as optim
 
 # A neural Network to predict pitstop rewards 
 class Agent(nn.Module):
-    def __init__(self, learning_rate, inputlen):
+    def __init__(self, learning_rate : float, inputlen : int):
         super(Agent, self).__init__()
         self.reward = 0
         self.short_mem = np.array([])
@@ -50,18 +50,18 @@ class Agent(nn.Module):
         # optimizer must be initiallized last because it needs all parameters (the weights)
         self.optimizer = optim.SGD(self.parameters(), lr=self.lr)
 
-    def forward(self, x):
+    def forward(self, x ):
         # feed an input vector through the network
         x = self.nonlinearity(self.f1(x))
         x = self.nonlinearity(self.f2(x))
         x = F.softmax(x, dim=0)
         return x
 
-    def add_replay(self, state, action, reward, next, done):
+    def add_replay(self, state, action, reward, next, done) -> None:
         # remember an action for replaying
         np.append(self.mem, [state, action, reward, next, done])
 
-    def replay(self, mem, size):
+    def replay(self, mem, size) -> None:
         # replay some training examples
         if len(mem) > size:
             batch = random.sample(mem, size)
@@ -71,12 +71,12 @@ class Agent(nn.Module):
         for state, action, reward, next, done in batch:
             self.train_single(state, action, reward, next, done)
 
-    def decay_epsilon(self):
+    def decay_epsilon(self) -> None:
         if self.epsilon > self.epsilon_min:
             self.epsilon -= self.epsilon_decay
 
 
-    def train_single(self, state, action, reward, next, done):
+    def train_single(self, state, action, reward, next, done) -> None:
         # train on one example
 
         # tell pytorch that we are training the Network

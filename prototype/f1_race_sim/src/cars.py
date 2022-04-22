@@ -22,6 +22,7 @@ from src.config import (
 )
 
 from src.tyre import Tyre 
+from src.drivers import Driver
 from src.customerrors import TyreNotKnownError
 
 
@@ -31,7 +32,7 @@ class Car():
         Class for easier creation of mutiple cars with different attributes
     """
 
-    def __init__(self, driver, power, tyre, position, grid_position, race_time=0, used_tyres=[], delta_to_car_infront=0, delta_to_leader = 0):
+    def __init__(self, driver : Driver, power:int, tyre:Tyre, position:int, race_time: float=0, used_tyres : list=[], delta_to_car_infront: float=0, delta_to_leader : float = 0):
         """
         Constructor Car
 
@@ -54,7 +55,7 @@ class Car():
         self.used_tyres = used_tyres
 
     #=====Methods=====================================
-    def pitstop(self, tyre_choice):
+    def pitstop(self, tyre_choice : int) -> None:
         """
         Function to change tyres to a fresh set and
         add the pitstop detla time to the race time
@@ -84,7 +85,7 @@ class Car():
 
         return
 
-    def destinctUsedTyreTypes(self):
+    def destinctUsedTyreTypes(self) -> int:
         countOfUsedTypes = len(list(set(self.used_tyres)))
         return countOfUsedTypes
     

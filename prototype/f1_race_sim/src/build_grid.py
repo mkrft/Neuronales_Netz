@@ -33,7 +33,7 @@ from src.order_grid import order_grid
 
 
 #=====Functions=======================================
-def build_grid():
+def build_grid() -> list:
     """
     Generate all necessary drivers and cars
     Save according information to the grid#
@@ -114,7 +114,7 @@ def build_grid():
     return grid
 
 
-def start_pos_generator(skill, power, possible_start_pos):
+def start_pos_generator(skill : float, power: float, possible_start_pos:list) -> tuple:
     """
     Generate a start position based on the skill and power of a driver
     if the position is already given, choose a different one

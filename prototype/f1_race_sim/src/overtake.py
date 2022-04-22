@@ -10,13 +10,14 @@ import random
 from src.config import (
     OVERTAKE_TRESHOLD
 )
+from src.cars import Car
 
 
 #=====Libraries=======================================
 
 
 #=====Functions=======================================
-def check_overtake(car, car_infront):
+def check_overtake(car : Car, car_infront : Car) -> bool:
     """
     Function to determine the probability of an overtake
     and return an according bool if overtake is succesful or not
@@ -33,7 +34,7 @@ def check_overtake(car, car_infront):
 
 
 
-def overtaking(grid_sorted, print_opt = True):
+def overtaking(grid_sorted : list, print_opt : bool = True):
     """
     Function for handling the overtake rules and
     to actually perform the overtakes
