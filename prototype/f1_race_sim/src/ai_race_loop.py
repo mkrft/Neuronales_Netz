@@ -57,7 +57,7 @@ def ai_race_loop() -> None:
         state = Race.reset()
         current_lap = 0
 
-        agent.decay_epsilon()
+        agent.decay_epsilon(episode)
 
         # make new cars for every episode
         grid = build_grid()

@@ -20,17 +20,17 @@ class Agent(nn.Module):
         self.reward = 0
         self.short_mem = np.array([])
         self.mem = np.array([])
-        self.agent_target = 1
-        self.agent_predict = 0
         self.lr = learning_rate
+        # amount of episodes where the agent chooses purely random to explore strategies
+        self.decay_gate = 1500
 
         # activation function for each neuron
         self.nonlinearity = F.relu
 
         # epsilon for policy
         self.epsilon = 1
-        self.epsilon_decay = 0.008
-        self.epsilon_min = 0.1
+        self.epsilon_decay = 0.0005
+        self.epsilon_min = 0.01
 
         # weight of later rewards
         self.gamma = 0.9
@@ -71,8 +71,8 @@ class Agent(nn.Module):
         for state, action, reward, next, done in batch:
             self.train_single(state, action, reward, next, done)
 
-    def decay_epsilon(self) -> None:
-        if self.epsilon > self.epsilon_min:
+    def decay_epsilon(self, episode) -> None:
+        if self.epsilon > self.epsilon_min and episode > self.decay_gate:
             self.epsilon -= self.epsilon_decay
 
 
@@ -84,7 +84,6 @@ class Agent(nn.Module):
         # since we are training we need the derivatives
         torch.set_grad_enabled(True)
 
-        target = reward
         
         # convert state arrays to list of lists and then to tensors
         next_state = torch.tensor(next, dtype=torch.float32)
@@ -92,14 +91,17 @@ class Agent(nn.Module):
 
         # approximately the value the network should give for current state + action
         if not done:
-            target = reward + self.gamma * torch.max(self.forward(next_state)[0])
+            target = reward + self.gamma * torch.max(self.forward(next_state))
+        else:
+            target = reward
 
-        # value for current state + all actions network gives
+        # value for previous state + all actions network gives
         out = self.forward(state)
 
         # make a target vector, needs to be the same shape as the network output
         target_vector = out.clone()
-        target_vector[action] = target    # set the appropriate index
+        # the target is what we computed before in out, but the action we took can be replaced with the calculated target value
+        target_vector[action] = target
         target_vector.detach()      # dont need a gradient on this
         # print(f"target vector: {target_vector}")
 
