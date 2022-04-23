@@ -158,4 +158,13 @@ class Car():
     @grid_position.setter
     def grid_position(self, grid_position):
         self._grid_position = grid_position
+
+    #delta_to_leader Getter/Setter
+    @property
+    def delta_to_leader(self):
+        return self._delta_to_leader
+
+    @delta_to_leader.setter
+    def delta_to_leader(self, delta_to_leader):
+        self._delta_to_leader = delta_to_leader
     
