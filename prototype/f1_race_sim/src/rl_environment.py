@@ -46,7 +46,6 @@ class RacingEnv(Env):
         # Define four descrete possible actions
         self.action_space = Discrete(4)
 
-        # TODO maybe clean up the state, most of it is in self.car anyways
 
         # limits of our state values
         float32_max = np.finfo(np.float32).max
@@ -57,6 +56,9 @@ class RacingEnv(Env):
 
         # Add the according car
         self.car = car
+
+        # previous distance to leader for per round rewards
+        self.previous_delta_to_leader = 0
 
         # Starting state
         # position, tyre.compound, car.tyre.degredation, car.race_time, car.delta_to_car_infront
@@ -105,8 +107,16 @@ class RacingEnv(Env):
         # TODO optimize the rewards
         if lap < RACE_DISTANCE - 1:
             done = False
-            reward = -0.1 * (self.state[-1] - self.prev_state[-1])
+
+            lost_time = self.car.delta_to_leader - self.previous_delta_to_leader
+
+            # reward function for every round 
+            reward = -0.1 * lost_time
+
+            self.previous_delta_to_leader = self.car.delta_to_leader
+
         else:
+            # rewards at the end of the race
             done = True
 
             # check the distinctness of the tyres, penalize if too low
@@ -116,7 +126,7 @@ class RacingEnv(Env):
             if self.starting_pos + self.car.position == 2:
                 reward = 200
             else:
-                reward = -1 * self.car.position - self.starting_pos
+                reward = -1 * self.car.delta_to_leader
 
         # Add debug info for later
         info = {}

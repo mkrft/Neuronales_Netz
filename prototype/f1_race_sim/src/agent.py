@@ -22,14 +22,14 @@ class Agent(nn.Module):
         self.mem = np.array([])
         self.lr = learning_rate
         # amount of episodes where the agent chooses purely random to explore strategies
-        self.decay_gate = 1500
+        self.decay_gate = 0
 
         # activation function for each neuron
         self.nonlinearity = F.relu
 
         # epsilon for policy
         self.epsilon = 1
-        self.epsilon_decay = 0.0005
+        self.epsilon_decay = 0.001
         self.epsilon_min = 0.01
 
         # weight of later rewards
