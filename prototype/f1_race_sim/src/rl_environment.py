@@ -49,8 +49,10 @@ class RacingEnv(Env):
 
         # limits of our state values
         float32_max = np.finfo(np.float32).max
-        highs = np.array([20.0, 3.0, 1.0, float32_max , float32_max])
-        lows = np.array([1.0, 0.0, 0.0, 0.0 , 0.0])
+        # highs = np.array([20.0, 3.0, 1.0, float32_max, float32_max, 3.0])
+        # lows = np.array([1.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        highs = np.array([100.0, RACE_DISTANCE])
+        lows = np.array([0.0, 0.0])
         self.observation_space = Box(low=lows, high=highs)
 
 
@@ -61,8 +63,9 @@ class RacingEnv(Env):
         self.previous_delta_to_leader = 0
 
         # Starting state
-        # position, tyre.compound, car.tyre.degredation, car.race_time, car.delta_to_car_infront
-        self.state = [1.0, 1.0, 1.0, 0.0, 0.0]
+        # position, tyre.compound, car.tyre.degredation * 100, lap 
+        # self.state = [1.0, 1.0, 100.0, RACE_DISTANCE, 0.0, 1.0]
+        self.state = [100.0, RACE_DISTANCE]
 
         # monitoring the lost or gained time
         self.prev_state = self.state
@@ -101,7 +104,7 @@ class RacingEnv(Env):
 
         # Set the new state
         self.prev_state = self.state
-        self.state = get_state(self.car)
+        self.state = get_state(self.car, lap)
 
         # Check if race is over and comupte the reward to give
         # TODO optimize the rewards
@@ -123,8 +126,9 @@ class RacingEnv(Env):
             if(self.car.destinctUsedTyreTypes() < 2):
                 reward = -1000
 
-            if self.starting_pos + self.car.position == 2:
+            elif self.starting_pos + self.car.position == 2:
                 reward = 200
+
             else:
                 reward = -1 * self.car.delta_to_leader
 
@@ -139,7 +143,8 @@ class RacingEnv(Env):
         reset the state
         """
 
-        self.state = [1.0, 1.0, 1.0, 0.0, 0.0]
+        # self.state = [1.0, 1.0, 100.0, RACE_DISTANCE, 0.0, 1.0]
+        self.state = [100.0, RACE_DISTANCE]
         return self.state
 
     #==Set active car=================================

@@ -21,6 +21,9 @@ class Agent(nn.Module):
         self.short_mem = np.array([])
         self.mem = np.array([])
         self.lr = learning_rate
+        # scores for logging the learning process
+        self.scores = []
+
         # amount of episodes where the agent chooses purely random to explore strategies
         self.decay_gate = 0
 
@@ -29,32 +32,31 @@ class Agent(nn.Module):
 
         # epsilon for policy
         self.epsilon = 1
-        self.epsilon_decay = 0.001
-        self.epsilon_min = 0.01
+        self.epsilon_decay = 0.0005
+        self.epsilon_min = 0.0001
 
         # weight of later rewards
-        self.gamma = 0.9
+        self.gamma = 0.8
 
-        # layer sizes, for now 3 layers
         # fixed : input is the length of the input data
-        self.first = inputlen 
-        # variable hidden layer
-        self.second = 200
+        self.l1 = inputlen 
+        # variable hidden layers
+        self.l2 = 400
         # output is the number of actions to take
-        self.third = 4
+        self.l3 = 4
 
         # initialize the network layers
-        self.f1 = nn.Linear(self.first, self.second)
-        self.f2 = nn.Linear(self.second, self.third)
+        self.f1 = nn.Linear(self.l1, self.l2)
+        self.f2 = nn.Linear(self.l2, self.l3)
 
         # optimizer must be initiallized last because it needs all parameters (the weights)
         self.optimizer = optim.SGD(self.parameters(), lr=self.lr)
 
-    def forward(self, x ):
+    def forward(self, x):
         # feed an input vector through the network
         x = self.nonlinearity(self.f1(x))
-        x = self.nonlinearity(self.f2(x))
-        x = F.softmax(x, dim=0)
+        x = self.f2(x)
+        #x = F.softmax(x, dim=0)
         return x
 
     def add_replay(self, state, action, reward, next, done) -> None:
@@ -72,18 +74,20 @@ class Agent(nn.Module):
             self.train_single(state, action, reward, next, done)
 
     def decay_epsilon(self, episode) -> None:
-        if self.epsilon > self.epsilon_min and episode > self.decay_gate:
+        if (self.epsilon > self.epsilon_min) and (episode > self.decay_gate):
             self.epsilon -= self.epsilon_decay
+        elif episode > self.decay_gate:
+            self.epsilon = self.epsilon_min
 
 
     def train_single(self, state, action, reward, next, done) -> None:
         # train on one example
+        # TODO partially decouple the prediction and target networks
 
         # tell pytorch that we are training the Network
         self.train()
         # since we are training we need the derivatives
         torch.set_grad_enabled(True)
-
         
         # convert state arrays to list of lists and then to tensors
         next_state = torch.tensor(next, dtype=torch.float32)
@@ -91,7 +95,8 @@ class Agent(nn.Module):
 
         # approximately the value the network should give for current state + action
         if not done:
-            target = reward + self.gamma * torch.max(self.forward(next_state))
+            predicted_next_action_rewards = self.forward(next_state)
+            target = reward + self.gamma * torch.max(predicted_next_action_rewards)
         else:
             target = reward
 

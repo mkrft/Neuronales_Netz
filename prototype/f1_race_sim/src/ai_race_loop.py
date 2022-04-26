@@ -32,6 +32,7 @@ from src.agent import Agent
 
 #=====Libraries=======================================
 import numpy as np
+import matplotlib.pyplot as plt
 import random
 import torch
 
@@ -41,13 +42,21 @@ def ai_race_loop() -> None:
     Main Loop representing the game
     """
     # Create the RaceEnvironment with a dummy car
-    Race = RacingEnv(Car(None, None, Tyre(SOFT), None, None))
+    Race = RacingEnv(Car(None, None, Tyre(SOFT), None))
+
+    # Reference for if the network is actually learning what to do: value for the actions immediately before race ends
+    # test_state = torch.tensor([1.0, 1.0, 90.0, 1.0, 0.0, 2.0], dtype=torch.float32)
+    test_state = torch.tensor([99.0, 1.0], dtype=torch.float32)
+    testfile = open("testlog.txt", "a+")
 
     # Dont know why the dimension of box and discrete have dissimilar getters, bit ugly
     action_size = Race.action_space.n
     observation_size = Race.observation_space.shape[0]
 
-    agent = Agent(learning_rate=0.1, inputlen=observation_size)
+    agent = Agent(learning_rate=1e-8, inputlen=observation_size)
+
+    testrun = agent.forward(test_state)
+    testfile.write(repr(testrun)+"\n")
     # Play through the game for every episode
     for episode in range(0, EPISODES + 1):
 
@@ -121,7 +130,10 @@ def ai_race_loop() -> None:
                         # take whichever action maximizes the predicted reward
                         pit_strat = torch.argmax(agent.forward(torch.tensor(state,dtype=torch.float32, requires_grad=True)))
 
+                    # get the environment state info
                     n_state, reward, done, info = Race.step(pit_strat, current_lap)
+
+
 
                     # train with the data
 
@@ -151,9 +163,17 @@ def ai_race_loop() -> None:
         # Display the current standings
         test_print(current_lap, grid_sorted)
 
+        # logging the scores for each episode
+        agent.scores.append(score)
+
         # Give Information about the performance of our AI
         print(f"Race: {episode}\tScore: {score}")
 
-    weights = agent.state_dict()
-    torch.save(weights, "weights_test_file")
+    testrun = agent.forward(test_state)
+    testfile.write(repr(testrun)+"\n")
 
+    testfile.close()
+
+    scores = np.array(agent.scores)
+    plt.plot(scores)
+    plt.show()
