@@ -63,12 +63,12 @@ class Agent(nn.Module):
         # remember an action for replaying
         np.append(self.mem, [state, action, reward, next, done])
 
-    def replay(self, mem, size) -> None:
+    def replay(self, size) -> None:
         # replay some training examples
-        if len(mem) > size:
-            batch = random.sample(mem, size)
+        if len(self.mem) > size:
+            batch = random.sample(self.mem, size)
         else:
-            batch = mem
+            batch = self.mem
 
         for state, action, reward, next, done in batch:
             self.train_single(state, action, reward, next, done)

@@ -159,7 +159,7 @@ def ai_race_loop() -> None:
                     if(car.destinctUsedTyreTypes() < 2):
                         car.position = "DSQ"
 
-        agent.replay(agent.mem, 500)
+        agent.replay(500)
         # Display the current standings
         test_print(current_lap, grid_sorted)
 

@@ -13,7 +13,6 @@
 
 #=====Module Imports==================================
 from src.ai_race_loop import ai_race_loop
-from src.build_grid import build_grid
 
 #=====Program Entry===================================
 if __name__ == "__main__":
