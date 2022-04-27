@@ -85,7 +85,7 @@ class Car():
 
         return
 
-    def destinctUsedTyreTypes(self) -> int:
+    def distinctUsedTyreTypes(self) -> int:
         countOfUsedTypes = len(list(set(self.used_tyres)))
         return countOfUsedTypes
     

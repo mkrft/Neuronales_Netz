@@ -32,7 +32,7 @@ class Agent(nn.Module):
 
         # epsilon for policy
         self.epsilon = 1
-        self.epsilon_decay = 0.0005
+        self.epsilon_decay = 0.001
         self.epsilon_min = 0.0001
 
         # weight of later rewards
@@ -84,14 +84,13 @@ class Agent(nn.Module):
         # train on one example
         # TODO partially decouple the prediction and target networks
 
+        # convert the input lists to tensors
+        state = torch.tensor(state, dtype=torch.float32, requires_grad=True)
+        next_state = torch.tensor(next, dtype=torch.float32, requires_grad=True)
         # tell pytorch that we are training the Network
         self.train()
         # since we are training we need the derivatives
         torch.set_grad_enabled(True)
-        
-        # convert state arrays to list of lists and then to tensors
-        next_state = torch.tensor(next, dtype=torch.float32)
-        state = torch.tensor(state, dtype=torch.float32 ,requires_grad=True)
 
         # approximately the value the network should give for current state + action
         if not done:

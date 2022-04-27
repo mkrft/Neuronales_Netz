@@ -97,7 +97,7 @@ def race_loop(grid : list, print_opt : bool=True) -> None:
 
         if(current_lap == RACE_DISTANCE):
             for car in grid:
-                if(car.destinctUsedTyreTypes() < 2):
+                if(car.distinctUsedTyreTypes() < 2):
                     car.position = "DSQ"
 
 
