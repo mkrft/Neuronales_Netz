@@ -297,7 +297,7 @@ def core_race_loop(agent) -> None:
 
             state = n_state
 
-        agent.replay(agent.mem, 500)
+        agent.replay(500)
         # Display the current standings
         test_print(lap, order_grid(grid))
 
