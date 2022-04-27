@@ -36,7 +36,7 @@ class Agent(nn.Module):
         self.epsilon_min = 0.0001
 
         # weight of later rewards
-        self.gamma = 0.8
+        self.gamma = 0.5
 
         # fixed : input is the length of the input data
         self.l1 = inputlen 
