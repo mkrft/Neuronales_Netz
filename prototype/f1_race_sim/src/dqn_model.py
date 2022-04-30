@@ -29,7 +29,7 @@ class DQNmodel(nn.Module):
         self.f2 = nn.Linear(self.l2, self.l3)
 
         if load_weights_from_file:
-            self.load("src/prediction_network_weights")
+            self.load("prediction_network_weights")
 
 
 
