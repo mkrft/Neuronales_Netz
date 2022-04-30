@@ -1,67 +1,67 @@
 """
-    Model to build the agent from Keras to interact with
-    our environment
+    Agent for making the pitstrat decisions and learning from examples.
+    Implements a Double - DQN by wrapping around a simple neural net.
 
 """
+#=================== Imports ======================
+from src.dqn_model import DQNmodel
+
 #=================== Libraries ====================
 import numpy as np
 import random
+import copy
 import torch 
-import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
 #=================== Code ====================
 
 # A neural Network to predict pitstop rewards 
-class Agent(nn.Module):
-    def __init__(self, learning_rate : float, inputlen : int):
-        super(Agent, self).__init__()
-        self.reward = 0
-        self.short_mem = np.array([])
+class Agent():
+    def __init__(self, learning_rate : float, inputlen : int, load : bool):
+        # Network for predicting the Q - values
+        self.prediction_dqn = DQNmodel(inputlen=inputlen, load_weights_from_file=load)
+        # Network for prediction of the target vectors
+        self.target_dqn = copy.deepcopy(self.prediction_dqn)
+
+        # memory array for experience replay
         self.mem = np.array([])
-        self.lr = learning_rate
+
         # scores for logging the learning process
         self.scores = []
+
+        # optimizer for the prediction Network
+        self.optimizer = optim.SGD(self.prediction_dqn.parameters(), lr=learning_rate)
 
         # amount of episodes where the agent chooses purely random to explore strategies
         self.decay_gate = 0
 
-        # activation function for each neuron
-        self.nonlinearity = F.relu
-
         # epsilon for policy
-        self.epsilon = 1
         self.epsilon_decay = 0.001
         self.epsilon_min = 0.0001
-
+        if not load:
+            self.epsilon = 1
+        else:
+            self.epsilon = self.epsilon_min
         # weight of later rewards
-        self.gamma = 0.5
+        self.gamma = 0.6
 
-        # fixed : input is the length of the input data
-        self.l1 = inputlen 
-        # variable hidden layers
-        self.l2 = 400
-        # output is the number of actions to take
-        self.l3 = 4
+        # counter for copying the prediction network to the target net
+        self.update_counter = 0
 
-        # initialize the network layers
-        self.f1 = nn.Linear(self.l1, self.l2)
-        self.f2 = nn.Linear(self.l2, self.l3)
+        # amount of updates it takes until the prediction is copied
+        self.update_interval = 70
 
-        # optimizer must be initiallized last because it needs all parameters (the weights)
-        self.optimizer = optim.SGD(self.parameters(), lr=self.lr)
-
-    def forward(self, x):
-        # feed an input vector through the network
-        x = self.nonlinearity(self.f1(x))
-        x = self.f2(x)
-        #x = F.softmax(x, dim=0)
-        return x
 
     def add_replay(self, state, action, reward, next, done) -> None:
         # remember an action for replaying
         np.append(self.mem, [state, action, reward, next, done])
+
+
+    def forward(self, state):
+        # pass a state to the prediction net and return the resulting output vector
+        return self.prediction_dqn.forward(state)
+
 
     def replay(self, size) -> None:
         # replay some training examples
@@ -73,6 +73,7 @@ class Agent(nn.Module):
         for state, action, reward, next, done in batch:
             self.train_single(state, action, reward, next, done)
 
+
     def decay_epsilon(self, episode) -> None:
         if (self.epsilon > self.epsilon_min) and (episode > self.decay_gate):
             self.epsilon -= self.epsilon_decay
@@ -82,25 +83,24 @@ class Agent(nn.Module):
 
     def train_single(self, state, action, reward, next, done) -> None:
         # train on one example
-        # TODO partially decouple the prediction and target networks
 
         # convert the input lists to tensors
         state = torch.tensor(state, dtype=torch.float32, requires_grad=True)
         next_state = torch.tensor(next, dtype=torch.float32, requires_grad=True)
         # tell pytorch that we are training the Network
-        self.train()
+        self.prediction_dqn.train()
         # since we are training we need the derivatives
         torch.set_grad_enabled(True)
 
-        # approximately the value the network should give for current state + action
+        # output of the prediction network
+        out = self.prediction_dqn.forward(state)
+
+        # output for the target network
         if not done:
-            predicted_next_action_rewards = self.forward(next_state)
+            predicted_next_action_rewards = self.target_dqn.forward(next_state)
             target = reward + self.gamma * torch.max(predicted_next_action_rewards)
         else:
             target = reward
-
-        # value for previous state + all actions network gives
-        out = self.forward(state)
 
         # make a target vector, needs to be the same shape as the network output
         target_vector = out.clone()
@@ -109,9 +109,13 @@ class Agent(nn.Module):
         target_vector.detach()      # dont need a gradient on this
         # print(f"target vector: {target_vector}")
 
-        #optimize
+        # optimize
         self.optimizer.zero_grad()
         loss = F.mse_loss(out, target_vector)
         loss.backward()
         self.optimizer.step()
 
+        self.update_counter += 1
+        # copy the prediction net to the target net
+        if (self.update_counter % self.update_interval) == 0:
+            self.target_dqn.load_state_dict(self.prediction_dqn.state_dict())

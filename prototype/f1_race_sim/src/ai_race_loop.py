@@ -192,8 +192,9 @@ def race_reward_func(car_state):
         reward = 200
     else:
         reward = -car_state.delta_to_leader
-    if car_state.position == "DSQ":
-        reward = -1000
+    # confuses the ai in the current version, needs a more complex input state and net architecture
+    #if car_state.position == "DSQ":
+        #reward = -1000
         
     return reward
 
@@ -206,7 +207,7 @@ def get_state(car: Car, lap : int):
     return [car.tyre.degredation * 100, RACE_DISTANCE-lap]
 
 
-def ai_race_loop():
+def ai_race_loop(load=False):
     """
     start the learning loop by initializing some parameters and jumping into the core loop
     """
@@ -218,7 +219,9 @@ def ai_race_loop():
     action_size = 4
     observation_size = len(test_state)
 
-    agent = Agent(learning_rate=1e-8, inputlen=observation_size)
+    learning_rate = 1e-8
+
+    agent = Agent(learning_rate=learning_rate, inputlen=observation_size, load=load)
 
     testrun = agent.forward(test_state)
     testfile.write(repr(testrun)+"\n")
@@ -234,6 +237,7 @@ def ai_race_loop():
     scores = np.array(agent.scores)
     plt.plot(scores)
     plt.show()
+    torch.save(agent.prediction_dqn.state_dict(), "prediction_network_weights")
 
 
 def convert_actions(action_code):
@@ -298,6 +302,7 @@ def core_race_loop(agent) -> None:
             state = n_state
 
         agent.replay(500)
+
         # Display the current standings
         test_print(lap, order_grid(grid))
 
@@ -306,5 +311,6 @@ def core_race_loop(agent) -> None:
 
         # Give Information about the performance of our AI
         print(f"Race: {episode}\tScore: {score}")
+        print(f"Position of car : {ai_car.position}")
 
 
