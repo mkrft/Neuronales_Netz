@@ -11,7 +11,9 @@ from src.config import (
     EPISODES,
     REFERANCE_LAP_TIME,
     CURRENT_RACE_LAP,
-    RACE_DISTANCE
+    RACE_DISTANCE,
+    LEARNING_RATE
+
 )
 
 from src.const import (
@@ -187,8 +189,8 @@ def lap_reward_func(previous_car_state, current_car_state):
 
     
 def race_reward_func(car_state):
-    # reward given for the last round
-    if car_state.position == 1:
+    # reward given for the last round, additionaly check the 0.0 because dsq overwrites the position
+    if car_state.position == 1 or car_state.delta_to_leader == 0.0:
         reward = 200
     else:
         reward = -car_state.delta_to_leader
@@ -219,9 +221,7 @@ def ai_race_loop(load=False):
     action_size = 4
     observation_size = len(test_state)
 
-    learning_rate = 1e-8
-
-    agent = Agent(learning_rate=learning_rate, inputlen=observation_size, load=load)
+    agent = Agent(learning_rate=LEARNING_RATE, inputlen=observation_size, load=load)
 
     testrun = agent.forward(test_state)
     testfile.write(repr(testrun)+"\n")

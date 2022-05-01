@@ -44,13 +44,13 @@ class Agent():
         else:
             self.epsilon = self.epsilon_min
         # weight of later rewards
-        self.gamma = 0.6
+        self.gamma = 0.8
 
         # counter for copying the prediction network to the target net
         self.update_counter = 0
 
         # amount of updates it takes until the prediction is copied
-        self.update_interval = 70
+        self.update_interval = 10*70
 
 
     def add_replay(self, state, action, reward, next, done) -> None:

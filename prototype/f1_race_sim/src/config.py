@@ -26,6 +26,9 @@ SOFT_TYRE_LIFE = 40
 MEDIUM_TYRE_LIFE = 60
 HARD_TYRE_LIFE = 70
 
+# AI learning rate
+LEARNING_RATE = 6 * 1e-9
+
 
 # Seconds lost during a pitstop
 PITSTOP_DELTA_TIME = 18
