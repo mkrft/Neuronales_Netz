@@ -9,6 +9,7 @@ from src.dqn_model import DQNmodel
 #=================== Libraries ====================
 import numpy as np
 import random
+import time
 import copy
 import torch 
 import torch.nn.functional as F
@@ -29,6 +30,7 @@ class Agent():
 
         # scores for logging the learning process
         self.scores = []
+        self.losses = []
 
         # optimizer for the prediction Network
         self.optimizer = optim.SGD(self.prediction_dqn.parameters(), lr=learning_rate)
@@ -44,13 +46,13 @@ class Agent():
         else:
             self.epsilon = self.epsilon_min
         # weight of later rewards
-        self.gamma = 0.8
+        self.gamma = 0.99
 
         # counter for copying the prediction network to the target net
         self.update_counter = 0
 
         # amount of updates it takes until the prediction is copied
-        self.update_interval = 10*70
+        self.update_interval = 10*50
 
 
     def add_replay(self, state, action, reward, next, done) -> None:
@@ -112,6 +114,7 @@ class Agent():
         # optimize
         self.optimizer.zero_grad()
         loss = F.mse_loss(out, target_vector)
+        self.losses.append(loss.item())
         loss.backward()
         self.optimizer.step()
 

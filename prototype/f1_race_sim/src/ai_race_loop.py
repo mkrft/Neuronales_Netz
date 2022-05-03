@@ -164,7 +164,7 @@ def give_race_rewards(actions, state):
     rewards = {}
 
     for car in actions:
-        reward = race_reward_func(car)
+        reward = race_reward_func(car, state)
         rewards[car] = reward
 
     return rewards
@@ -183,17 +183,19 @@ def lap_reward_func(previous_car_state, current_car_state):
     current_diff_to_first = current_car_state.delta_to_leader
     lost_time = current_diff_to_first - previous_diff_to_first
 
-    reward = -0.1 * lost_time
+    reward = -1 * lost_time
 
     return reward
 
     
-def race_reward_func(car_state):
+def race_reward_func(car_state, grid):
     # reward given for the last round, additionaly check the 0.0 because dsq overwrites the position
     if car_state.position == 1 or car_state.delta_to_leader == 0.0:
-        reward = 200
+        ordered_grid = order_grid(grid)
+        delta_to_second = ordered_grid[1].delta_to_car_infront
+        reward = 50 + delta_to_second
     else:
-        reward = -car_state.delta_to_leader
+        reward = -car_state.delta_to_leader / 5
     # confuses the ai in the current version, needs a more complex input state and net architecture
     #if car_state.position == "DSQ":
         #reward = -1000
@@ -236,6 +238,8 @@ def ai_race_loop(load=False):
 
     scores = np.array(agent.scores)
     plt.plot(scores)
+    plt.show()
+    plt.plot(agent.losses)
     plt.show()
     torch.save(agent.prediction_dqn.state_dict(), "prediction_network_weights")
 

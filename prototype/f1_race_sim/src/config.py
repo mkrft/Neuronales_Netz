@@ -27,8 +27,7 @@ MEDIUM_TYRE_LIFE = 60
 HARD_TYRE_LIFE = 70
 
 # AI learning rate
-LEARNING_RATE = 6 * 1e-9
-
+LEARNING_RATE =9 * 1e-9
 
 # Seconds lost during a pitstop
 PITSTOP_DELTA_TIME = 18
@@ -43,4 +42,4 @@ OVERTAKE_TRESHOLD = 1.0
 CURRENT_RACE_LAP = [0]
 
 # Times how often the games shall be played
-EPISODES = 4000
+EPISODES = 15000
