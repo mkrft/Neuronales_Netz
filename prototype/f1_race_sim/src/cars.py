@@ -21,6 +21,7 @@ from src.config import (
     PITSTOP_ERROR_RANGE
 )
 
+from src.actions import Actions
 from src.tyre import Tyre 
 from src.drivers import Driver
 from src.customerrors import TyreNotKnownError
@@ -68,13 +69,13 @@ class Car():
         self.race_time = round(self.race_time +PITSTOP_DELTA_TIME + random.uniform(PITSTOP_ERROR_RANGE[0], PITSTOP_ERROR_RANGE[1]), 2)
 
         # Fit new tyre to the car
-        if tyre_choice == SOFT:
+        if tyre_choice == Actions.SOFT:
             self.tyre = Tyre(SOFT)
 
-        elif tyre_choice == MEDIUM:
+        elif tyre_choice == Actions.MEDIUM:
             self.tyre = Tyre(MEDIUM)
 
-        elif tyre_choice == HARD:
+        elif tyre_choice == Actions.HARD:
             self.tyre = Tyre(HARD)
         
         else:
