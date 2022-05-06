@@ -219,11 +219,7 @@ def ai_race_loop(load=False):
     test_state = torch.tensor([99.0, 1.0], dtype=torch.float32)
     testfile = open("testlog.txt", "a+")
 
-    # number of actions
-    action_size = len(Actions)
-    observation_size = len(test_state)
-
-    agent = Agent(learning_rate=LEARNING_RATE, inputlen=observation_size, outputlen=action_size,load=load)
+    agent = Agent(learning_rate=LEARNING_RATE, inputlen=len(test_state), outputlen=len(Actions),load=load)
 
     testrun = agent.forward(test_state)
     testfile.write(repr(testrun)+"\n")
