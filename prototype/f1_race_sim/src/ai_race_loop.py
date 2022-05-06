@@ -119,9 +119,9 @@ def take_action(car, actions):
     try:
         action = actions[car]
     except KeyError:
-        action = NONE
+        action = Actions.NONE
 
-    if action == NONE:
+    if action == Actions.NONE:
         pass
     else:
         car.pitstop(action)
@@ -134,7 +134,7 @@ def determine_ai_action(agent, state):
     if random.uniform(0, 1) < agent.epsilon:
         action = Actions(random.randint(0,len(Actions)-1))
     else:
-        action_idx = torch.argmax(agent.forward(state))
+        action_idx = int(torch.argmax(agent.forward(state)))
         action = Actions(action_idx)
     
     return action
@@ -287,7 +287,7 @@ def core_race_loop(agent) -> None:
                     score += rewards[ai_car]
                     actions[car] = determine_ai_action(agent, torch.tensor(n_state, dtype=torch.float32))
                 elif lap == 25:
-                    actions[car] = MEDIUM
+                    actions[car] = Actions.MEDIUM
 
             state = n_state
 
