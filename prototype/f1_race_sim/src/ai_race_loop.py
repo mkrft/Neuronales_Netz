@@ -13,8 +13,8 @@ from src.config import (
     CURRENT_RACE_LAP,
     RACE_DISTANCE,
     LEARNING_RATE
-
 )
+
 
 from src.const import (
     SOFT,
@@ -132,7 +132,7 @@ def determine_ai_action(agent, state):
     Return an action 
     """
     if random.uniform(0, 1) < agent.epsilon:
-        action = Actions(random.randint(0,len(Actions)))
+        action = Actions(random.randint(0,len(Actions)-1))
     else:
         action_idx = torch.argmax(agent.forward(state))
         action = Actions(action_idx)
