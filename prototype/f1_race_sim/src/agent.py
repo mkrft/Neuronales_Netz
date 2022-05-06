@@ -19,9 +19,9 @@ import torch.optim as optim
 
 # A neural Network to predict pitstop rewards 
 class Agent():
-    def __init__(self, learning_rate : float, inputlen : int, load : bool):
+    def __init__(self, learning_rate : float, inputlen : int, outputlen : int, load : bool):
         # Network for predicting the Q - values
-        self.prediction_dqn = DQNmodel(inputlen=inputlen, load_weights_from_file=load)
+        self.prediction_dqn = DQNmodel(inputlen=inputlen,outputlen=outputlen,load_weights_from_file=load)
         # Network for prediction of the target vectors
         self.target_dqn = copy.deepcopy(self.prediction_dqn)
 

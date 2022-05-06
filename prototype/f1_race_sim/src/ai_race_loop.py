@@ -30,6 +30,7 @@ from src.order_grid import order_grid
 from src.build_grid import build_grid
 from src.cars import Car
 from src.tyre import Tyre
+from src.actions import Actions
 
 from src.agent import Agent
 
@@ -130,12 +131,11 @@ def determine_ai_action(agent, state):
     """
     Return an action 
     """
-    actions = [NONE, SOFT, MEDIUM, HARD]
     if random.uniform(0, 1) < agent.epsilon:
-        action = actions[random.randint(0, 3)]
+        action = Actions(random.randint(0,len(Actions)))
     else:
         action_idx = torch.argmax(agent.forward(state))
-        action = actions[action_idx]
+        action = Actions(action_idx)
     
     return action
 
@@ -220,10 +220,10 @@ def ai_race_loop(load=False):
     testfile = open("testlog.txt", "a+")
 
     # number of actions
-    action_size = 4
+    action_size = len(Actions)
     observation_size = len(test_state)
 
-    agent = Agent(learning_rate=LEARNING_RATE, inputlen=observation_size, load=load)
+    agent = Agent(learning_rate=LEARNING_RATE, inputlen=observation_size, outputlen=action_size,load=load)
 
     testrun = agent.forward(test_state)
     testfile.write(repr(testrun)+"\n")
@@ -242,16 +242,6 @@ def ai_race_loop(load=False):
     plt.plot(agent.losses)
     plt.show()
     torch.save(agent.prediction_dqn.state_dict(), "prediction_network_weights")
-
-
-def convert_actions(action_code):
-    if action_code == SOFT:
-        return 1
-    elif action_code == MEDIUM:
-        return 2
-    elif action_code == HARD:
-        return 3
-    return 0
 
 
 def core_race_loop(agent) -> None:
@@ -289,8 +279,8 @@ def core_race_loop(agent) -> None:
             n_state = get_state(ai_car, lap)
 
             # training the ai after taking a step in the environment
-            agent.train_single(state, convert_actions(actions[ai_car]), rewards[ai_car], n_state, done)
-            agent.add_replay(state, convert_actions(actions[ai_car]), rewards[ai_car], n_state, done)
+            agent.train_single(state, actions[ai_car].value, rewards[ai_car], n_state, done)
+            agent.add_replay(state, actions[ai_car].value, rewards[ai_car], n_state, done)
 
             # reset all actions from the last lap
             actions.clear()

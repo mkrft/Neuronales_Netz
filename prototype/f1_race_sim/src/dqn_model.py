@@ -10,7 +10,7 @@ import torch.optim as optim
 
 #=================== Code ====================
 class DQNmodel(nn.Module):
-    def __init__(self, inputlen : int, load_weights_from_file : bool):
+    def __init__(self, inputlen : int, outputlen : int, load_weights_from_file : bool):
         super(DQNmodel, self).__init__()
 
         # activation function for each neuron
