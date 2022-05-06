@@ -22,7 +22,7 @@ class DQNmodel(nn.Module):
         # variable hidden layers
         self.l2 = 400
         # output is the number of actions to take
-        self.l3 = 4
+        self.l3 = outputlen
 
         # initialize the network layers
         self.f1 = nn.Linear(self.l1, self.l2)
