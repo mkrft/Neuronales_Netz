@@ -24,7 +24,7 @@ from src.const import (
 )
 
 from src.laptime import compute_lap_times
-from src.display import test_print
+from src.display import display_standings
 from src.overtake import overtaking, check_overtake
 from src.order_grid import order_grid
 from src.build_grid import build_grid
@@ -294,7 +294,7 @@ def core_race_loop(agent) -> None:
         agent.replay(500)
 
         # Display the current standings
-        test_print(lap, order_grid(grid))
+        display_standings(lap, order_grid(grid))
 
         # logging the scores for each episode
         agent.scores.append(score)

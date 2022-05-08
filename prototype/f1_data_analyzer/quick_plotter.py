@@ -31,8 +31,6 @@ if __name__ == "__main__":
     race = args.race
     driver = args.driver
 
-    type
-
     # Define the cache to save to
     ff1.Cache.enable_cache("cache")
 

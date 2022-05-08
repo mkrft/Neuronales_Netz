@@ -19,8 +19,8 @@ from src.const import (
 )
 
 from src.laptime import compute_lap_times
-from src.display import test_print
-from src.overtake import overtaking, check_overtake
+from src.display import display_standings
+from src.overtake import check_overtake
 from src.order_grid import order_grid
 from src.customerrors import RaceError
 
@@ -53,20 +53,22 @@ def race_loop(grid : list, print_opt : bool=True) -> None:
             # Tyre life get increased by a lap
             car.tyre.tyre_life += 1
 
+
             # Now check if you make overtook a car by having a faster laptime, if so calc if your overtake is successful
             # If not make sure the calc_lap_time will be slower than the lap_time_car_infront so it wont be overtaken easily
             if calc_lap_time < lap_time_car_infront:
                 if car.delta_to_car_infront <= abs(calc_lap_time - lap_time_car_infront):
-                    
+
                     # Check if the current car is able to make the overtake
                     # If so just leave the times as they were
-                    if check_overtake(car, grid[position - 1]):
+                    if check_overtake(pace_diff=abs(calc_lap_time - lap_time_car_infront)-car.delta_to_car_infront):
                         print(f"{car.driver.short} overtook {grid[position - 1].driver.short}")
 
                     # If not "slow" the car down that was not able to overtake, so it stays behind
                     # TODO Check if set back is fair
                     else:
                         calc_lap_time = lap_time_car_infront + round(random.uniform(0.05, 0.5), 3)
+
 
             # Apply the new lap time to the whole race time and update the reference lap for the next car
             car.race_time = round(car.race_time + calc_lap_time, 2)
@@ -95,6 +97,7 @@ def race_loop(grid : list, print_opt : bool=True) -> None:
         # End active lap
         current_lap += 1
 
+        # TODO talk with Tim how to make this understandable for the AI
         if(current_lap == RACE_DISTANCE):
             for car in grid:
                 if(car.distinctUsedTyreTypes() < 2):
@@ -103,5 +106,4 @@ def race_loop(grid : list, print_opt : bool=True) -> None:
 
 
         # Display the current standings
-        if print_opt:
-            test_print(current_lap, grid)
+        display_standings(current_lap, grid)

@@ -19,6 +19,8 @@ import json
 import argparse
 import datetime
 
+from src.customEnums import (enTyreType,enInterpolationMode, EnumAction)
+
 #=====Libraries=======================================
 import numpy
 
@@ -38,11 +40,6 @@ def query_handler(compound, driver=None, year=None, min_stint_length=0):
 
     return - {dict} - query_data 
     """
-
-    # Check for correct use of compounds
-    possible_compounds = ["SOFT", "MEDIUM", "HARD"]
-    if compound not in possible_compounds:
-        raise ValueError(f'Given compound "{compound}" not in {possible_compounds}')
 
     # Init
     dirs = []
@@ -81,7 +78,7 @@ def query_handler(compound, driver=None, year=None, min_stint_length=0):
         for race_compound in data_dict[race_file]:
             
             # Only bother with needed compound
-            if race_compound == compound:
+            if race_compound == compound.value:
 
                 # Differ is the driver is set
                 # Not cleanest code due to the same functions twice, but better perfomance
@@ -178,13 +175,13 @@ def generate_numpy_models(query_data):
             continue
 
         # Compute Polynom with x-axis the number of laps as a list from
-        models.append(list(numpy.polyfit(list(range(0, len(stint_set))), stint_set, POLYNOM_POWER)))
+        models.append(list(numpy.polyfit(list(range(0,len(stint_set))), stint_set, POLYNOM_POWER)))
         models[-1].append(len(stint_set))
 
     return models
 
 
-def combine_models(models, mode="average"):
+def combine_models(models, mode=enInterpolationMode.A):
     """
     Now that we have all our models, we can try to get them
     into one single model that therefore represents all of them
@@ -194,11 +191,6 @@ def combine_models(models, mode="average"):
 
     return - {model} - representing model of form [x^POLYNOM_POWER, x^POLYNOM_POWER - 1, ..., valid_x_threshold]
     """
-
-    # Check for that right mode is given
-    possible_modes = ["average", "median"]
-    if mode not in possible_modes:
-        raise ValueError(f"Given mode '{mode}' not in {possible_modes}!")
 
     # Init
     model = []
@@ -219,10 +211,10 @@ def combine_models(models, mode="average"):
     # Now compute the single representing model
     for parameter_set in polynom_parameter_list:
 
-        if mode == "average":
+        if mode == enInterpolationMode.A:
             model.append(average(parameter_set))
 
-        elif mode == "median":
+        elif mode == enInterpolationMode.M:
             model.append(median(parameter_set))
 
     return model
@@ -248,38 +240,51 @@ def median(input_set):
     """Median of a given list of int / floats; Not the median per def but close enough because of the "len() % 2 != 0" case"""
     return sorted(input_set)[round(len(input_set)/2)]
 
+
 def parse_args():
     '''Function to parse the console attribute arguments'''
+
     last_season_year = int(datetime.datetime.now().date().strftime("%Y")) -1
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('-y','--year',default=last_season_year)
-    parser.add_argument('-d','--driver',default=None)
-    parser.add_argument('-l','--length',default=30)
 
-    #Add Flag selection, to switch between SOFT/MEDIUM/HARD - Compounds
-    #Add Flag selection, to switch between Average/Medium interpolation mode    
+    parser.add_argument('-y','--year',type=int,default=last_season_year)
+    parser.add_argument('-d','--driver', type=str,default=None)
+    parser.add_argument('-l','--length', type=int, default=30)
 
-    args = parser.parse_args()
+
+    parser.add_argument('-t','--tyre', type=enTyreType, action=EnumAction, help="Select Typre-Type: S-Soft, M-Medium, H-Hard", default=enTyreType.S)
+    parser.add_argument('-i', '--interpolationmode', type=enInterpolationMode, action=EnumAction, help="Select the interpolation mode: A-Average, M-Median",default=enInterpolationMode.A)
+
+
+    try:
+        args = parser.parse_args()
+    except Exception as e:
+        print("Error while parsing arguments, invalid arguments given")
+        exit()
+
+
+    if(args.length < 30):
+        print("You selected a stint with less than 30 rounds, which is the minimum value, it will be set to this value")
+        args.length = 30
+        # TODO think of not setting the mindistance and working with real value or throwing an exception and exiting
+
+    return args
 
     
 
-
-
-
-
 #=====Main============================================
 if __name__ == "__main__":
-
-    #TODO SHOULD add arg-parsing, but yeah laziness
     # Care that the stint_length must be similar to the expected tyre life otherwise the models
     # will lose validation quickly! But increasing the stint_length to much will reduce the number of fitting sets
     # drastically; therefore, as always in motorsports, we have to find a good balance!
     # But on the other hand only the long stints actually tell us about the tyre performance when it comes closer to end of tyre life
-    compound = "SOFT"
-    year = 2021
-    driver = None
-    min_stint_length = 30
-    combining_mode = "average"
+    args = parse_args()
+    compound = args.tyre
+    year = args.year
+    driver = args.driver
+    min_stint_length = args.length
+    combining_mode = args.interpolationmode
 
     # Give short infd
     print(f"Query for:\ncompound:\t{compound}\nyear:\t\t{year}\ndriver:\t\t{driver}\nstint_length:\t{min_stint_length}\n\n")
@@ -298,7 +303,7 @@ if __name__ == "__main__":
     models = generate_numpy_models(query_data)
 
     # Now that we have all models we can try to take a average over all the found models
-    print(f"\nCombining Method: {combining_mode}\nResulting model:")
+    print(f"\nCombining Method: {combining_mode.value}\nResulting model:")
     average_model = combine_models(models, mode=combining_mode)
 
     print_model(average_model)

@@ -13,16 +13,18 @@ from src.config import (
 from src.cars import Car
 
 
-#=====Libraries=======================================
-
-
 #=====Functions=======================================
-def check_overtake(car : Car, car_infront : Car) -> bool:
+def check_overtake(pace_diff):
     """
     Function to determine the probability of an overtake
     and return an according bool if overtake is succesful or not
 
-    param - {obj} - car - Instance if Class Car that is trying to overtake
+    Computation of the overtake possibility shall only based on pace. Here we chose
+    simplicity and the implicity of this method rather than creating on own, hard to
+    prove, model based on tyre choice, lap times, delta... because all that
+    is implicit within the pace.
+
+    param - {obj} - car - Instance of Class Car that is trying to overtake
     param - {obj} - car_infront - Instance of Class Car that is in front
 
     return - {bool} - overtake_done
@@ -30,36 +32,4 @@ def check_overtake(car : Car, car_infront : Car) -> bool:
 
     # TODO Whole function could be a single line :D i think
     # It did.
-    return True if round(random.uniform(0.0, 1.0), 2) <= 0.15 else False
-
-
-
-def overtaking(grid_sorted : list, print_opt : bool = True):
-    """
-    Function for handling the overtake rules and
-    to actually perform the overtakes
-
-    param - {list} - gird_sorted - List of pointers to all car objects
-    """
-
-    # Check for every car expect the leader
-    for index in range(1, len(grid_sorted)):
-
-        # Check if car is in reach for a potential overtake
-        if grid_sorted[index].delta_to_car_infront <= OVERTAKE_TRESHOLD:
-
-            # Check the odds of the Overtake being succesfull
-            if check_overtake(car=grid_sorted[index], car_infront=grid_sorted[index - 1]):
-
-                # Switch the position and the race_times as "overtake"
-                pos_cache = grid_sorted[index].position
-                race_time_cache = grid_sorted[index].race_time
-
-                grid_sorted[index].position = grid_sorted[index - 1].position
-                grid_sorted[index].race_time = grid_sorted[index - 1].race_time
-
-                grid_sorted[index - 1].position = pos_cache
-                grid_sorted[index - 1].race_time = race_time_cache
-
-                if print_opt:
-                    print(f"{grid_sorted[index].driver.short} overtook {grid_sorted[index - 1].driver.short}")
+    return True if round(random.uniform(0.0, 1.0), 2) <= (0.25 + pace_diff) else False
