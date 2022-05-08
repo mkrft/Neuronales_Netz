@@ -2,6 +2,8 @@
     Declaration of the Cars as own Class with the
     according attributes
 
+    TODO Add two dry tyres rule
+
 """
 
 #=====Imports=========================================
@@ -19,7 +21,9 @@ from src.config import (
     PITSTOP_ERROR_RANGE
 )
 
+from src.actions import Actions
 from src.tyre import Tyre 
+from src.drivers import Driver
 from src.customerrors import TyreNotKnownError
 
 
@@ -29,7 +33,7 @@ class Car():
         Class for easier creation of mutiple cars with different attributes
     """
 
-    def __init__(self, driver, power, tyre, position, grid_position, race_time=0, used_tyres=[], delta_to_car_infront=0):
+    def __init__(self, driver : Driver, power:int, tyre:Tyre, position:int, race_time: float=0, used_tyres : list=[], delta_to_car_infront: float=0, delta_to_leader : float = 0):
         """
         Constructor Car
 
@@ -48,10 +52,11 @@ class Car():
         self.grid_position = position
         self.race_time = race_time
         self.delta_to_car_infront = delta_to_car_infront
+        self.delta_to_leader = delta_to_leader
         self.used_tyres = used_tyres
 
     #=====Methods=====================================
-    def pitstop(self, tyre_choice):
+    def pitstop(self, tyre_choice : int) -> None:
         """
         Function to change tyres to a fresh set and
         add the pitstop detla time to the race time
@@ -64,13 +69,13 @@ class Car():
         self.race_time = round(self.race_time +PITSTOP_DELTA_TIME + random.uniform(PITSTOP_ERROR_RANGE[0], PITSTOP_ERROR_RANGE[1]), 2)
 
         # Fit new tyre to the car
-        if tyre_choice == SOFT:
+        if tyre_choice == Actions.SOFT:
             self.tyre = Tyre(SOFT)
 
-        elif tyre_choice == MEDIUM:
+        elif tyre_choice == Actions.MEDIUM:
             self.tyre = Tyre(MEDIUM)
 
-        elif tyre_choice == HARD:
+        elif tyre_choice == Actions.HARD:
             self.tyre = Tyre(HARD)
         
         else:
@@ -81,7 +86,7 @@ class Car():
 
         return
 
-    def destinctUsedTyreTypes(self):
+    def distinctUsedTyreTypes(self) -> int:
         countOfUsedTypes = len(list(set(self.used_tyres)))
         return countOfUsedTypes
     
@@ -154,5 +159,13 @@ class Car():
     @grid_position.setter
     def grid_position(self, grid_position):
         self._grid_position = grid_position
-    
+
+    #delta_to_leader Getter/Setter
+    @property
+    def delta_to_leader(self):
+        return self._delta_to_leader
+
+    @delta_to_leader.setter
+    def delta_to_leader(self, delta_to_leader):
+        self._delta_to_leader = delta_to_leader
     

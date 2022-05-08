@@ -10,6 +10,7 @@ import random
 from src.config import (
     OVERTAKE_TRESHOLD
 )
+from src.cars import Car
 
 
 #=====Functions=======================================

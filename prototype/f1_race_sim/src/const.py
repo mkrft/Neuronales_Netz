@@ -12,6 +12,7 @@ DEFAULT_DRIVER_NAME = "Driver "
 DEFAULT_DRIVER_SHORT = "D"
 
 # Tyre Compouds
+NONE = "N"
 SOFT = "S"
 MEDIUM = "M"
 HARD = "H"

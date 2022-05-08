@@ -12,7 +12,7 @@ class RaceError(Exception):
     Exception that is raised, when an error in the race occurs
     """
 
-    def __init__(self,message = "An error related to the race has occured"):
+    def __init__(self,message:str = "An error related to the race has occured"):
         """
         Constructor RaceError
 
@@ -28,7 +28,7 @@ class TyreNotKnownError(Exception):
     Exception that is raised, when an unknown tyre is requested
     """
 
-    def __init__(self,requestTyre,message=f"The available types are {SOFT}, {MEDIUM}, {HARD}"):
+    def __init__(self,requestTyre : str,message:str=f"The available types are {SOFT}, {MEDIUM}, {HARD}"):
         """
         Constructor TyreNotKnownError
 

@@ -5,7 +5,7 @@
 """
 
 #=====Functions=======================================
-def order_grid(unsorted_grid):
+def order_grid(unsorted_grid : list)->list:
     """
     Function to order the grid
 
@@ -25,8 +25,10 @@ def order_grid(unsorted_grid):
         # But skip the driver on pos one
         if index == 0:
             grid_sorted[index].delta_to_car_infront = "-"
+            grid_sorted[index].delta_to_leader = 0
             continue
 
         grid_sorted[index].delta_to_car_infront = round(grid_sorted[index].race_time - grid_sorted[index - 1].race_time, 2)
+        grid_sorted[index].delta_to_leader = round(grid_sorted[index].race_time - grid_sorted[0].race_time,2)
 
     return grid_sorted
