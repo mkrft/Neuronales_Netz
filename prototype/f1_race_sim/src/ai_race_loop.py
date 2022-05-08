@@ -25,7 +25,7 @@ from src.const import (
 
 from src.laptime import compute_lap_times
 from src.display import display_standings
-from src.overtake import overtaking, check_overtake
+from src.overtake import check_overtake
 from src.order_grid import order_grid
 from src.build_grid import build_grid
 from src.cars import Car
@@ -69,7 +69,7 @@ def step(grid, actions, lap):
                
                 # Check if the current car is able to make the overtake
                 # If so just leave the times as they were
-                if check_overtake(car, grid[position - 1]):
+                if check_overtake(pace_diff=abs(calc_lap_time - lap_time_car_infront)-car.delta_to_car_infront):
                     #print(f"{car.driver.short} overtook {grid[position - 1].driver.short}")
                     pass
 
