@@ -33,7 +33,8 @@ class Car():
         Class for easier creation of mutiple cars with different attributes
     """
 
-    def __init__(self, driver : Driver, power:int, tyre:Tyre, position:int, race_time: float=0, used_tyres : list=[], delta_to_car_infront: float=0, delta_to_leader : float = 0):
+    def __init__(self, driver : Driver, power:int, tyre:Tyre, position:int, race_time: float=0, last_lap_time: float=0, 
+                    used_tyres : list=[], delta_to_car_infront: float=0, delta_to_leader : float = 0):
         """
         Constructor Car
 
@@ -51,9 +52,11 @@ class Car():
         self.position = position
         self.grid_position = position
         self.race_time = race_time
+        self.last_lap_time = last_lap_time
         self.delta_to_car_infront = delta_to_car_infront
         self.delta_to_leader = delta_to_leader
         self.used_tyres = used_tyres
+        self.log_info = {}
 
     #=====Methods=====================================
     def pitstop(self, tyre_choice : int) -> None:
@@ -90,6 +93,19 @@ class Car():
         countOfUsedTypes = len(list(set(self.used_tyres)))
         return countOfUsedTypes
     
+
+    def store_logging_data(self, lap):
+        """
+        Store the logging data concerning the last lap driven by self
+        """
+
+        self.log_info[f"{lap}"] = {
+            "lap_time" : self.last_lap_time,
+            "compound" : self.tyre.compound,
+            "pos" : self.position,
+            "tyre_life" : self.tyre.tyre_life
+        }
+
     #=====Property Function Class Car=================
     
     # driver Getter/Setter
@@ -168,4 +184,13 @@ class Car():
     @delta_to_leader.setter
     def delta_to_leader(self, delta_to_leader):
         self._delta_to_leader = delta_to_leader
+
+    #last_lap_time Getter/Setter
+    @property
+    def last_lap_time(self):
+        return self._last_lap_time
+
+    @last_lap_time.setter
+    def last_lap_time(self, last_lap_time):
+        self._last_lap_time = last_lap_time
     

@@ -25,6 +25,7 @@ from src.race_step import step
 from src.display import display_standings
 from src.order_grid import order_grid
 from src.build_grid import build_grid
+from src.eval_data_logger import dump_episode_data
 from src.cars import Car
 from src.actions import Actions
 
@@ -60,7 +61,7 @@ def get_state(car: Car, lap : int):
 
 
 #===== FUNCTIONS =====================================
-def ai_race_loop(load=False):
+def ai_race_loop(load=False, log=False):
     """
     Start the learning loop by initializing some parameters and jumping into the core loop
     """
@@ -77,7 +78,7 @@ def ai_race_loop(load=False):
     testfile.write(repr(testrun)+"\n")
 
     # Play through the game for every episode
-    core_race_loop(agent)
+    core_race_loop(agent=agent, log=log)
 
     testrun = agent.forward(test_state)
     testfile.write(repr(testrun)+"\n")
@@ -95,7 +96,7 @@ def ai_race_loop(load=False):
     torch.save(agent.prediction_dqn.state_dict(), "prediction_network_weights")
 
 
-def core_race_loop(agent) -> None:
+def core_race_loop(agent, log) -> None:
     """
     Main Loop representing the game
     """
@@ -113,6 +114,8 @@ def core_race_loop(agent) -> None:
 
         # initialize the car for the current agent
         ai_car = grid[0]
+        grid[0].driver.short = "DKI"
+
         # Initialize the actions
         actions = {}
 
@@ -148,7 +151,7 @@ def core_race_loop(agent) -> None:
 
         agent.replay(500)
 
-        # Display the current standings
+        # Display the current standings of finished episode
         display_standings(lap, order_grid(grid))
 
         # logging the scores for each episode
@@ -157,5 +160,8 @@ def core_race_loop(agent) -> None:
         # Give Information about the performance of our AI
         print(f"Race: {episode}\tScore: {score}")
         print(f"Position of car : {ai_car.position}")
+
+        if log:
+            dump_episode_data(grid, episode)
 
 

@@ -42,4 +42,4 @@ OVERTAKE_TRESHOLD = 0.25
 CURRENT_RACE_LAP = [0]
 
 # Times how often the games shall be played
-EPISODES = 15000
+EPISODES = 1

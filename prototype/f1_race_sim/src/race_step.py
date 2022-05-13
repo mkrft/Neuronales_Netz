@@ -58,6 +58,7 @@ def step(grid, actions, lap):
 
         # Apply the new lap time to the whole race time and update the reference lap for the next car
         car.race_time = round(car.race_time + calc_lap_time, 2)
+        car.last_lap_time = calc_lap_time
         lap_time_car_infront = calc_lap_time
  
         # Let the tyre degrade according to the interval to car infront
@@ -75,6 +76,10 @@ def step(grid, actions, lap):
 
     # Sort the gird per position
     grid_sorted = order_grid(grid)
+
+    # Store logging data
+    for car in grid:
+        car.store_logging_data(lap=lap)
 
     # Finish current lap
     lap += 1
