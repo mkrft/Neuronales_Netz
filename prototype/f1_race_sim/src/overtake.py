@@ -10,7 +10,6 @@ import random
 from src.config import (
     OVERTAKE_TRESHOLD
 )
-from src.cars import Car
 
 
 #=====Functions=======================================
@@ -30,6 +29,6 @@ def check_overtake(pace_diff):
     return - {bool} - overtake_done
     """
 
-    # TODO Whole function could be a single line :D i think
+    # TODO Whole function could be a single line I think
     # It did.
-    return True if round(random.uniform(0.0, 1.0), 2) <= (0.25 + pace_diff) else False
+    return True if random.uniform(0.0, 1.0) <= (OVERTAKE_TRESHOLD + pace_diff) else False

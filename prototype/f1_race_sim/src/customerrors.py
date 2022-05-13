@@ -1,3 +1,8 @@
+"""
+    Definiton of our custom Exception to Handle
+
+"""
+
 
 #======Module Imports========
 from src.const import (
