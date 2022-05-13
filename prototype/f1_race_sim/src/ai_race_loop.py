@@ -93,7 +93,7 @@ def ai_race_loop(load=False, log=False):
     plt.show()
 
     # Save the current weights
-    torch.save(agent.prediction_dqn.state_dict(), "prediction_network_weights")
+    torch.save(agent.prediction_dqn.state_dict(), "./models/prediction_network_weights")
 
 
 def core_race_loop(agent, log) -> None:

@@ -28,8 +28,9 @@ class DQNmodel(nn.Module):
         self.f1 = nn.Linear(self.l1, self.l2)
         self.f2 = nn.Linear(self.l2, self.l3)
 
+        # TODO FIX PATHS AND ADD /models /logs
         if load_weights_from_file:
-            self.load("./src/prediction_network_weights")
+            self.load("./models/prediction_network_weights")
 
 
 
