@@ -58,14 +58,19 @@ def give_lap_rewards(actions, prior_state, posterior_state):
     return rewards
 
 
-def give_race_rewards(actions, state):
+def give_race_rewards(actions, grid):
     """
-    TODO
+    CMap race rewards to each car
+    
+    param - {dict} - actions - holds all the actions per car per lap
+    parma - {vec} - state - ()
+
+    return - {dict} - rewards - per car
     """
     rewards = {}
 
     for car in actions:
-        reward = race_reward_func(car, state)
+        reward = race_reward_func(car, grid)
         rewards[car] = reward
 
     return rewards
@@ -73,7 +78,10 @@ def give_race_rewards(actions, state):
 
 def get_car_from_driver(driver_name, car_array):
     """
-    TODO
+    Map Car Instance to driver_names
+
+    param - {str} - driver_name
+    param - {list} - car_array - list of relevant Car instances
     """
     try:
         return [car for car in car_array if car.driver.name == driver_name][0]
@@ -83,33 +91,51 @@ def get_car_from_driver(driver_name, car_array):
 
 def lap_reward_func(previous_car_state, current_car_state):
     """
-    TODO
+    Compute the reward for each of the agents laps 
+
+    param - {vec} - previous_car_state
+    param - {vec} - current_car_state
+
+    return - {float} - reward
     """
 
-    # rewards for each of the agents laps 
+    # Get the diffs to leader of current and last lap
     previous_diff_to_first = previous_car_state.delta_to_leader
     current_diff_to_first = current_car_state.delta_to_leader
+
+    # Compute the time lost / gained in the current lap
     lost_time = current_diff_to_first - previous_diff_to_first
 
+    # To use the lost time as reward, invert it
     reward = -1 * lost_time
 
     return reward
 
     
-def race_reward_func(car_state, grid):
+def race_reward_func(car, grid):
     """
-    TODO
+    Calc the race rewards for individual car given current grid
+
+    param - {obj} - car - Instance of Car that it on the grid
+    parma - {list} - grid
+
+    return - {float} - reward
     """
 
     # reward given for the last round, additionaly check the 0.0 because dsq overwrites the position
-    if car_state.position == 1 or car_state.delta_to_leader == 0.0:
+    if car.position == 1 or car.delta_to_leader == 0.0:
+
+        # If car came first compute the delta to the second placed driver to give according reward
         ordered_grid = order_grid(grid)
         delta_to_second = ordered_grid[1].delta_to_car_infront
         reward = 50 + delta_to_second
+
+    # If not first, get negative rewards based on the gap the car left to P1
     else:
-        reward = -car_state.delta_to_leader / 5
+        reward = -car.delta_to_leader / 5
+
     # confuses the ai in the current version, needs a more complex input state and net architecture
-    #if car_state.position == "DSQ":
-        #reward = -1000
+    #if car.position == "DSQ":
+        #reward = -1000.0
         
     return reward
