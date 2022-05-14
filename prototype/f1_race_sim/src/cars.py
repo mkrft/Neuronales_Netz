@@ -103,7 +103,8 @@ class Car():
             "lap_time" : self.last_lap_time,
             "compound" : self.tyre.compound,
             "pos" : self.position,
-            "tyre_life" : self.tyre.tyre_life
+            "tyre_life" : self.tyre.tyre_life,
+            "delta_to_leader" : self.delta_to_leader
         }
 
     #=====Property Function Class Car=================
