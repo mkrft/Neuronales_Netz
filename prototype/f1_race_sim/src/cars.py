@@ -69,7 +69,9 @@ class Car():
 
         # Add the Pitstop delta time to the racetime and add potential
         # time loss due to pitstop errors
-        self.race_time = round(self.race_time +PITSTOP_DELTA_TIME + random.uniform(PITSTOP_ERROR_RANGE[0], PITSTOP_ERROR_RANGE[1]), 2)
+        time_lost = round(PITSTOP_DELTA_TIME + random.uniform(PITSTOP_ERROR_RANGE[0], PITSTOP_ERROR_RANGE[1]), 2)
+        self.race_time += time_lost
+        self.last_lap_time += time_lost
 
         # Fit new tyre to the car
         if tyre_choice == Actions.SOFT:
