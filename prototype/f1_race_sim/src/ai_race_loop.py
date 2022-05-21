@@ -125,7 +125,7 @@ def core_race_loop(agent, log) -> None:
         # play a Race and learn from it
         while lap < RACE_DISTANCE:
             # the if its the last round, set done to true
-            grid, lap, rewards = step(grid, actions, lap)
+            grid, lap, rewards = step(grid, actions, lap, log)
 
             if lap == RACE_DISTANCE:
                 done = True

@@ -21,7 +21,7 @@ import random
 import copy
 
 #====== FUNCTION =====================================
-def step(grid, actions, lap):
+def step(grid, actions, lap, log):
     """
     Do all the cars' actions
     return the new state as the cars in the grid
@@ -78,8 +78,9 @@ def step(grid, actions, lap):
     grid_sorted = order_grid(grid)
 
     # Store logging data
-    for car in grid:
-        car.store_logging_data(lap=lap)
+    if log:
+        for car in grid:
+            car.store_logging_data(lap=lap)
 
     # Finish current lap
     lap += 1
