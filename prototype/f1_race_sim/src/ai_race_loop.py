@@ -139,7 +139,7 @@ def core_race_loop(agent, log, selfplay) -> None:
 
     for episode in range(0, EPISODES + 1):
 
-        if episode % SELFPLAY_UPDATE_INTERVAL == 0:
+        if episode % SELFPLAY_UPDATE_INTERVAL == 0 and selfplay:
             old_agent = copy.deepcopy(agent)
 
         # Reset the game
