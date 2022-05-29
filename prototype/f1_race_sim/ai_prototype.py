@@ -23,12 +23,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Neural Network Parameters")
     parser.add_argument('--load_from_file', action='store_true', default=False, help='Load the weights from the file models/prediction_network_weigts')
     parser.add_argument('--log', action='store_true', default=False, help='Log the data of every single episode! So handle with care!')
+    parser.add_argument('--selfplay', action='store_true', default=False, help='Instead of choosing a static action each race, take an older version of the ai as competitor - strategy (the same for every competitor!)')
+    parser.add_argument('--test', action='store_true', default=False, help='Turn off the gradients and do not learn, just play the sim. Usefull for evaluating an already trained ai.')
     args = parser.parse_args()
 
     # Read input
     load_from_file = args.load_from_file
     log = args.log
+    selfplay = args.selfplay
+    test = args.test
     
     
     # Start the race!
-    ai_race_loop(load=load_from_file, log=log)
+    ai_race_loop(load=load_from_file, log=log, selfplay=selfplay, test=test)

@@ -9,7 +9,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 
 #=================== Code ====================
-class DQNmodel(nn.Module):
+class DQNmodel(nn.Sequential):
     def __init__(self, inputlen : int, outputlen : int, load_weights_from_file : bool):
         super(DQNmodel, self).__init__()
 
@@ -20,13 +20,15 @@ class DQNmodel(nn.Module):
         # fixed : input is the length of the input data
         self.l1 = inputlen 
         # variable hidden layers
-        self.l2 = 400
+        self.l2 = 30
+        self.l3 = self.l2
         # output is the number of actions to take
-        self.l3 = outputlen
+        self.l4 = outputlen
 
         # initialize the network layers
         self.f1 = nn.Linear(self.l1, self.l2)
         self.f2 = nn.Linear(self.l2, self.l3)
+        self.f3 = nn.Linear(self.l3, self.l4)
 
         # TODO FIX PATHS AND ADD /models /logs
         if load_weights_from_file:
@@ -37,8 +39,8 @@ class DQNmodel(nn.Module):
     def forward(self, x):
         # feed an input vector through the network
         x = self.nonlinearity(self.f1(x))
-        x = self.f2(x)
-        #x = F.softmax(x, dim=0)
+        x = self.nonlinearity(self.f2(x))
+        x = self.f3(x)
         return x
     
     def load(self, filepath):
