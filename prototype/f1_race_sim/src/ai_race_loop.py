@@ -67,11 +67,11 @@ def determine_other_driver_action(old_agent, state):
     return action
 
 def get_reset_state():
-    return [100.0, RACE_DISTANCE]
+    return [100.0, RACE_DISTANCE, 0.0]
 
 
 def get_state(car: Car, lap : int):
-    return [car.tyre.degredation * 100, RACE_DISTANCE-lap]
+    return [car.tyre.degredation * 100, RACE_DISTANCE-lap, car.delta_to_leader]
 
 
 #===== FUNCTIONS =====================================
@@ -81,7 +81,7 @@ def ai_race_loop(load=False, log=False, selfplay=False, test=False):
     """
 
     # Reference for if the network is actually learning what to do: value for the actions immediately before race ends
-    test_state = torch.tensor([99.0, 1.0], dtype=torch.float32)
+    test_state = torch.tensor([99.0, 1.0, 0.0], dtype=torch.float32)
     testfile = open("testlog.txt", "a+")
 
     # Create our agent

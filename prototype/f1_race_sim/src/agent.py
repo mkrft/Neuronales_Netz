@@ -53,7 +53,7 @@ class Agent():
         # epsilon for policy
         self.epsilon_decay = 1/EXPLORATION_TIME
 
-        self.epsilon_min = 0.0001
+        self.epsilon_min = 0.001
         if not load:
             self.epsilon = 1
         else:
@@ -84,7 +84,7 @@ class Agent():
         if len(self.mem) > size:
             batch = random.sample(self.mem, size)
         else:
-            batch = random.sample(self.mem, len(self.mem))
+            return
 
         for state, action, reward, next, done in batch:
             self.train_single(state, action, reward, next, done)
