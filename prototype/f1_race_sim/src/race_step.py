@@ -54,7 +54,7 @@ def step(grid, actions, lap, log):
                 # If not "slow" the car down that was not able to overtake, so it stays behind
                 # TODO Check if set back is fair
                 else:
-                    calc_lap_time = lap_time_car_infront + round(random.uniform(0.05, 0.5), 3)
+                    calc_lap_time = lap_time_car_infront + round(random.uniform(0.2, 0.8), 3)
 
         # Apply the new lap time to the whole race time and update the reference lap for the next car
         car.race_time = round(car.race_time + calc_lap_time, 2)
