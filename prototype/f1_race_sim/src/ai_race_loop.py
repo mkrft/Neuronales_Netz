@@ -122,7 +122,7 @@ def core_race_loop(agent, log) -> None:
         state = get_reset_state()
         actions[ai_car] = determine_ai_action(agent, torch.tensor(state, dtype=torch.float32))
 
-        # play a Race and learn from it
+        # Play a Race and learn from it
         while lap < RACE_DISTANCE:
             # the if its the last round, set done to true
             grid, lap, rewards = step(grid, actions, lap, log)
