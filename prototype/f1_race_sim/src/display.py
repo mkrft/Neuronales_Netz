@@ -27,7 +27,7 @@ def display_standings(current_lap, grid_sorted):
             output.add_row([ color + f"{car.position}" + Style.RESET_ALL,
                             color + car.driver.short + Style.RESET_ALL,
                             color + f"{car.tyre.compound} {round(car.tyre.degredation * 100, 2)}%" + Style.RESET_ALL,
-                            color + f"{car.race_time}" + Style.RESET_ALL,
+                            color + f"{round(car.race_time,2)}" + Style.RESET_ALL,
                             color + f"+ {car.delta_to_car_infront}" + Style.RESET_ALL,
                             color + f"{car.grid_position}" + Style.RESET_ALL])
             continue            
