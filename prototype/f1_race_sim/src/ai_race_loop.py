@@ -67,11 +67,11 @@ def determine_other_driver_action(old_agent, state):
     return action
 
 def get_reset_state():
-    return [100.0, RACE_DISTANCE, 0.0]
+    return torch.tensor([100.0, RACE_DISTANCE, 0.0], dtype=torch.float32)
 
 
 def get_state(car: Car, lap : int):
-    return [car.tyre.degredation * 100, RACE_DISTANCE-lap, car.delta_to_leader]
+    return torch.tensor([car.tyre.degredation * 100, RACE_DISTANCE-lap, car.delta_to_leader], dtype=torch.float32)
 
 
 #===== FUNCTIONS =====================================
@@ -160,7 +160,7 @@ def core_race_loop(agent, log, selfplay) -> None:
         actions = {}
 
         state = get_reset_state()
-        actions[ai_car] = determine_ai_action(agent, torch.tensor(state, dtype=torch.float32))
+        actions[ai_car] = determine_ai_action(agent, state)
 
         # Play a Race and learn from it
         while lap < RACE_DISTANCE:
@@ -183,12 +183,12 @@ def core_race_loop(agent, log, selfplay) -> None:
             for car in grid:
                 if car == ai_car:
                     score += rewards[ai_car]
-                    actions[car] = determine_ai_action(agent, torch.tensor(n_state, dtype=torch.float32))
+                    actions[car] = determine_ai_action(agent, n_state)
 
                 # competitor - actions
                 elif selfplay:
                     # use older version of AI - agent
-                    actions[car] = determine_other_driver_action(old_agent, torch.tensor(n_state, dtype=torch.float32))
+                    actions[car] = determine_other_driver_action(old_agent, n_state)
 
                 elif lap == 15:
                     # static action
@@ -241,7 +241,7 @@ def evaluation_testloop(agent, log, selfplay):
         actions = {}
 
         state = get_reset_state()
-        actions[ai_car] = determine_ai_action(agent, torch.tensor(state, dtype=torch.float32))
+        actions[ai_car] = determine_ai_action(agent, state)
 
         # play a Race and learn from it
         while lap < RACE_DISTANCE:
@@ -257,12 +257,12 @@ def evaluation_testloop(agent, log, selfplay):
             for car in grid:
                 if car == ai_car:
                     score += rewards[ai_car]
-                    actions[car] = determine_ai_action(agent, torch.tensor(n_state, dtype=torch.float32))
+                    actions[car] = determine_ai_action(agent, n_state)
 
                 # competitor - actions
                 elif selfplay:
                     # use older version of AI - agent
-                    actions[car] = determine_other_driver_action(old_agent, torch.tensor(n_state, dtype=torch.float32))
+                    actions[car] = determine_other_driver_action(old_agentn_state)
 
                 elif lap == 25:
                     # static action
