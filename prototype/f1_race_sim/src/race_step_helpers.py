@@ -107,7 +107,7 @@ def lap_reward_func(previous_car_state, current_car_state):
     lost_time = current_diff_to_first - previous_diff_to_first
 
     # To use the lost time as reward, invert it
-    reward = -1 * lost_time
+    reward = -1 * lost_time / 10
 
     return reward
 
@@ -128,11 +128,11 @@ def race_reward_func(car, grid):
         # If car came first compute the delta to the second placed driver to give according reward
         ordered_grid = order_grid(grid)
         delta_to_second = ordered_grid[1].delta_to_car_infront
-        reward = 50 + delta_to_second
+        reward = delta_to_second
 
     # If not first, get negative rewards based on the gap the car left to P1
     else:
-        reward = -car.delta_to_leader / 5
+        reward = -car.delta_to_leader / 10
 
     # confuses the ai in the current version, needs a more complex input state and net architecture
     #if car.position == "DSQ":
