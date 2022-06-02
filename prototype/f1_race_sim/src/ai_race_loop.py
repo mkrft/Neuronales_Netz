@@ -190,7 +190,7 @@ def core_race_loop(agent, log, selfplay) -> None:
                     # use older version of AI - agent
                     actions[car] = determine_other_driver_action(old_agent, torch.tensor(n_state, dtype=torch.float32))
 
-                elif lap == 25:
+                elif lap == 15:
                     # static action
                     actions[car] = Actions.MEDIUM
 
