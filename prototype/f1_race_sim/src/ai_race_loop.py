@@ -75,7 +75,7 @@ def get_state(car: Car, lap : int):
 
 
 #===== FUNCTIONS =====================================
-def ai_race_loop(load=False, log=False, selfplay=False, test=False):
+def ai_race_loop(load=False, log=False, selfplay=False, test=False, mutate=False):
     """
     Start the learning loop by initializing some parameters and jumping into the core loop
     """
@@ -85,7 +85,7 @@ def ai_race_loop(load=False, log=False, selfplay=False, test=False):
     testfile = open("testlog.txt", "a+")
 
     # Create our agent
-    agent = Agent(learning_rate=LEARNING_RATE, inputlen=len(test_state), outputlen=len(Actions),load=load)
+    agent = Agent(learning_rate=LEARNING_RATE, inputlen=len(test_state), outputlen=len(Actions),load=load,mutate=mutate)
 
     # Quick test run to verify
     testrun = agent.forward(test_state)

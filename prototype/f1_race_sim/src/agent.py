@@ -31,9 +31,9 @@ def get_epsilon_decay_exponential(target_episodes, min_val):
 
 # A neural Network to predict pitstop rewards 
 class Agent():
-    def __init__(self, learning_rate : float, inputlen : int, outputlen : int, load : bool):
+    def __init__(self, learning_rate : float, inputlen : int, outputlen : int, load : bool, mutate:bool):
         # Network for predicting the Q - values
-        self.prediction_dqn = DQNmodel(inputlen=inputlen,outputlen=outputlen,load_weights_from_file=load)
+        self.prediction_dqn = DQNmodel(inputlen=inputlen,outputlen=outputlen,load_weights_from_file=load,mutate=mutate)
         # Network for prediction of the target vectors
         self.target_dqn = copy.deepcopy(self.prediction_dqn)
 

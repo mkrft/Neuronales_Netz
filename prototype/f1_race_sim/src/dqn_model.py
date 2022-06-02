@@ -8,9 +8,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
+from src.mutate import mutate
+
 #=================== Code ====================
 class DQNmodel(nn.Sequential):
-    def __init__(self, inputlen : int, outputlen : int, load_weights_from_file : bool):
+    def __init__(self, inputlen : int, outputlen : int, load_weights_from_file : bool, mutate:bool):
         super(DQNmodel, self).__init__()
 
         # activation function for each neuron
@@ -33,6 +35,11 @@ class DQNmodel(nn.Sequential):
         # TODO FIX PATHS AND ADD /models /logs
         if load_weights_from_file:
             self.load("./models/prediction_network_weights")
+            # mutate if requested
+            if mutate:
+                self = mutate(self)
+
+        
 
 
 
