@@ -22,7 +22,7 @@ class DQNmodel(nn.Sequential):
         # fixed : input is the length of the input data
         self.l1 = inputlen 
         # variable hidden layers
-        self.l2 = 40
+        self.l2 = 30
         self.l3 = self.l2
         # output is the number of actions to take
         self.l4 = outputlen

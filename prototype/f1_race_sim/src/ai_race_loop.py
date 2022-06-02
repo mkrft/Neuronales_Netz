@@ -67,11 +67,11 @@ def determine_other_driver_action(old_agent, state):
     return action
 
 def get_reset_state():
-    return torch.tensor([100.0, RACE_DISTANCE, 0.0], dtype=torch.float32)
+    return torch.tensor([100.0, RACE_DISTANCE, 0.0, 70.0], dtype=torch.float32)
 
 
 def get_state(car: Car, lap : int):
-    return torch.tensor([car.tyre.degredation * 100, RACE_DISTANCE-lap, car.delta_to_leader], dtype=torch.float32)
+    return torch.tensor([car.tyre.degredation * 100, RACE_DISTANCE-lap, car.delta_to_leader, car.last_lap_time], dtype=torch.float32)
 
 
 #===== FUNCTIONS =====================================
@@ -81,7 +81,7 @@ def ai_race_loop(load=False, log=False, selfplay=False, test=False, mutate=False
     """
 
     # Reference for if the network is actually learning what to do: value for the actions immediately before race ends
-    test_state = torch.tensor([99.0, 1.0, 0.0], dtype=torch.float32)
+    test_state = torch.tensor([99.0, 1.0, 0.0, 70.0], dtype=torch.float32)
     testfile = open("testlog.txt", "a+")
 
     # Create our agent
@@ -173,8 +173,8 @@ def core_race_loop(agent, log, selfplay) -> None:
             n_state = get_state(ai_car, lap)
 
             # training the ai after taking a step in the environment
-            agent.train_single(state, actions[ai_car].value, rewards[ai_car], n_state, done)
-            agent.add_replay(state, actions[ai_car].value, rewards[ai_car], n_state, done)
+            # agent.train_single(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done))
+            agent.add_replay(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done))
 
             # reset all actions from the last lap
             actions.clear()
@@ -197,6 +197,7 @@ def core_race_loop(agent, log, selfplay) -> None:
             state = n_state
 
         # learn from experiences in short term memory
+        #agent.train_batch(BATCHSIZE)
         agent.replay(BATCHSIZE)
 
         # Display the current standings of finished episode
@@ -262,7 +263,7 @@ def evaluation_testloop(agent, log, selfplay):
                 # competitor - actions
                 elif selfplay:
                     # use older version of AI - agent
-                    actions[car] = determine_other_driver_action(old_agentn_state)
+                    actions[car] = determine_other_driver_action(old_agent, n_state)
 
                 elif lap == 25:
                     # static action
