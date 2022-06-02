@@ -22,8 +22,8 @@ if __name__ == "__main__":
 
     # Define args parser
     parser = argparse.ArgumentParser(description="Plotting parameters")
-    parser.add_argument('-d','--driver', help="Driver to evaluate")
-    parser.add_argument('-f', '--file', help="Log file to gather data from")
+    parser.add_argument('-d','--driver', help="Driver to evaluate", required=True)
+    parser.add_argument('-f', '--file', help="Log file to gather data from", required=True)
     args = parser.parse_args()
 
     # Read input
@@ -58,24 +58,25 @@ if __name__ == "__main__":
     # Gen subplots
     fix, ax = plt.subplots(3)
     ax[0].plot(laps, lap_time, color="green")
-    ax[0].set_xlabel("Lap Number")
-    ax[0].set_ylabel("Lap Time in Seconds")
+    ax[0].set_xlabel("Laps")
+    ax[0].set_ylabel("Lap Time [s]")
 
     ## Stint / Compound
     ax10 = ax[1].twinx()
     ax[1].plot(laps, compound, color="cyan")
-    ax[1].set_xlabel("Lap Number")
+    ax[1].set_xlabel("Laps")
     ax[1].set_ylabel("Compound", color="cyan")
 
     ax10.plot(laps, tyre_life, color="red")
-    ax10.set_xlabel("Lap Number")
-    ax10.set_ylabel("\nTire Age in Laps", color="red")
+    ax10.set_xlabel("Laps")
+    ax10.set_ylabel("\nTire Age [Laps]", color="red")
 
     ## TyreLife
     ax[2].plot(laps, delta_to_leader, color="yellow")
-    ax[2].set_xlabel("Lap Number")
-    ax[2].set_ylabel("Delta to Leader in Seconds")
+    ax[2].set_xlabel("Laps")
+    ax[2].set_ylabel("Delta to Leader [s]")
 
+    plt.tight_layout()
     plt.show()
 
     

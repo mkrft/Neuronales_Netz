@@ -78,7 +78,7 @@ def query_handler(compound, driver=None, year=None, min_stint_length=0):
         for race_compound in data_dict[race_file]:
             
             # Only bother with needed compound
-            if race_compound == compound.value:
+            if race_compound == compound:
 
                 # Differ is the driver is set
                 # Not cleanest code due to the same functions twice, but better perfomance
@@ -193,11 +193,12 @@ def combine_models(models, mode=enInterpolationMode.A):
     """
 
     # Init
-    model = []
+    target_model = []
     polynom_parameter_list = []
 
     # Go through all models
     for model in models:
+
         for index, parameter in enumerate(model):
 
             # Now save all parameters of different models in one list
@@ -211,13 +212,14 @@ def combine_models(models, mode=enInterpolationMode.A):
     # Now compute the single representing model
     for parameter_set in polynom_parameter_list:
 
+        
         if mode == enInterpolationMode.A:
-            model.append(average(parameter_set))
+            target_model.append(average(parameter_set))
 
         elif mode == enInterpolationMode.M:
-            model.append(median(parameter_set))
+            target_model.append(median(parameter_set))
 
-    return model
+    return target_model
 
 
 
@@ -264,9 +266,9 @@ def parse_args():
         exit()
 
 
-    if(args.length < 30):
+    if(args.length < 5):
         print("You selected a stint with less than 30 rounds, which is the minimum value, it will be set to this value")
-        args.length = 30
+        args.length = 5
         # TODO think of not setting the mindistance and working with real value or throwing an exception and exiting
 
     return args
@@ -281,6 +283,7 @@ if __name__ == "__main__":
     # But on the other hand only the long stints actually tell us about the tyre performance when it comes closer to end of tyre life
     args = parse_args()
     compound = args.tyre
+    compound = compound.value[0]
     year = args.year
     driver = args.driver
     min_stint_length = args.length
