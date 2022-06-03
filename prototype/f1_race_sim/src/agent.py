@@ -12,6 +12,7 @@ import numpy as np
 import random
 import math
 import copy
+import time
 import torch 
 import torch.nn.functional as F
 import torch.optim as optim
@@ -39,6 +40,7 @@ class Agent():
 
         # memory array for experience replay
         self.mem = deque(maxlen=MEMSIZE)
+        self.exploration_mem = deque(maxlen=EXPLORATION_TIME * RACE_DISTANCE)
 
         # scores for logging the learning process
         self.scores = []
@@ -69,9 +71,12 @@ class Agent():
         self.update_interval = 30 * RACE_DISTANCE
 
 
-    def add_replay(self, state, action, reward, next, done) -> None:
+    def add_replay(self, state, action, reward, next, done, episode) -> None:
         # remember an action for replaying
-        self.mem.append((state, action, reward, next, done))
+        if episode > EXPLORATION_TIME:
+            self.mem.append((state, action, reward, next, done))
+        else:
+            self.exploration_mem.append((state, action, reward, next, done))
 
 
     def forward(self, state):
@@ -79,10 +84,15 @@ class Agent():
         return self.prediction_dqn.forward(state)
 
 
-    def replay(self, size) -> None:
+    def replay(self, size, episode) -> None:
         # replay some training examples one by one
-        if len(self.mem) > size:
-            batch = random.sample(self.mem, size)
+        if len(self.exploration_mem) > size:
+            if episode > EXPLORATION_TIME:
+                batch = random.sample(self.mem, round(size * 0.8))
+                batch.extend(random.sample(self.exploration_mem, round(size*0.2)))
+                random.shuffle(batch)
+            else:
+                batch = random.sample(self.exploration_mem, size)
         else:
             return
 
@@ -118,8 +128,9 @@ class Agent():
 
         # output for the target network
         if not done:
-            predicted_next_action_rewards = self.target_dqn.forward(next)
-            target = reward + self.gamma * torch.max(predicted_next_action_rewards)
+            best_predicted_action = torch.argmax(self.prediction_dqn.forward(next))
+            predicted_next_action_reward = self.target_dqn.forward(next)[best_predicted_action]
+            target = reward + self.gamma * predicted_next_action_reward
         else:
             target = reward
 

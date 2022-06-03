@@ -174,7 +174,7 @@ def core_race_loop(agent, log, selfplay) -> None:
 
             # training the ai after taking a step in the environment
             # agent.train_single(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done))
-            agent.add_replay(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done))
+            agent.add_replay(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done), episode)
 
             # reset all actions from the last lap
             actions.clear()
@@ -198,7 +198,7 @@ def core_race_loop(agent, log, selfplay) -> None:
 
         # learn from experiences in short term memory
         #agent.train_batch(BATCHSIZE)
-        agent.replay(BATCHSIZE)
+        agent.replay(BATCHSIZE, episode)
 
         # Display the current standings of finished episode
         display_standings(lap, order_grid(grid))
