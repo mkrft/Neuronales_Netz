@@ -21,7 +21,7 @@ def medium_function(x):
     return round(x**(4) * 1.58346733*10**(-5) - x**(3)*0.00094469 + x**(2)*0.0197911 - x*0.200544 + 79.92767, 3)
 
 def hard_function(x):
-    return round(x**(4) * 6.08866*10**(-6) - x*(3)*0.000321395 + x**(2)*0.005271977 - x*0.04700884 + 79.88238, 3)
+    return round(x**(4) * 6.08866*10**(-6) - x**(3)*0.000321395 + x**(2)*0.005271977 - x*0.04700884 + 79.88238, 3)
 
 #==== Main ===========================================
 if __name__ == "__main__":
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     plt.plot(laps, hard_array, color="grey", label="Hard")
 
     # Set the Axis Scales
-    plt.xlim(0, 80)
+    plt.xlim(0, 50)
     plt.ylim(77, 83)
 
     # Set the Axis Labels
