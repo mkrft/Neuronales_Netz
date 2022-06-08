@@ -4,7 +4,7 @@
 
 """
 #=================== Imports ======================
-from src.dqn_model import DQNmodel
+from src.dqn_model import DQNmodel, DQNmodel_dueling
 from src.config import MEMSIZE, EXPLORATION_TIME, RACE_DISTANCE
 
 #=================== Libraries ====================
@@ -52,6 +52,12 @@ class Agent():
         # amount of episodes where the agent chooses purely random to explore strategies
         self.decay_gate = 0
 
+        # Boltzmann - policy parameters
+        self.temperature_initial = 0.1
+        self.temperature_min = 0.1
+        self.temperature_decay = (self.temperature_initial - self.temperature_min) / EXPLORATION_TIME
+        self.temperature = self.temperature_initial
+
         # epsilon for policy
         self.epsilon_decay = 1/EXPLORATION_TIME
 
@@ -87,11 +93,11 @@ class Agent():
     def replay(self, size, episode) -> None:
         # replay some training examples one by one
         if len(self.exploration_mem) > size:
-            if episode > EXPLORATION_TIME:
+            if episode > EXPLORATION_TIME and len(self.mem) > size:
                 batch = random.sample(self.mem, round(size * 0.8))
                 batch.extend(random.sample(self.exploration_mem, round(size*0.2)))
                 random.shuffle(batch)
-            else:
+            elif len(self.exploration_mem) > size:
                 batch = random.sample(self.exploration_mem, size)
         else:
             return
@@ -106,6 +112,8 @@ class Agent():
         elif episode > self.decay_gate:
             self.epsilon = self.epsilon_min
 
+    def decay_temperature(self):
+        self.temperature -= self.temperature_decay
 
     def decay_epsilon_exponential(self, episode) -> None:
         if (self.epsilon > self.epsilon_min) and (episode > self.decay_gate):
