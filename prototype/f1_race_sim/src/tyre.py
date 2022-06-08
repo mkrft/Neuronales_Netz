@@ -77,7 +77,7 @@ class Tyre():
 
         # Add penalty if the car is close to a car in front
         if car_infront:
-            self.tyre_life += round(random.uniform(0.05, 0.15), 2)
+            self.tyre_life += round(random.uniform(0.1, 0.2), 2)
 
         # Compute the degredation level as known from F1 Games
         if self._compound == SOFT:

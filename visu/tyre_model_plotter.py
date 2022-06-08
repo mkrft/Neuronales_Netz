@@ -41,7 +41,7 @@ if __name__ == "__main__":
     plt.plot(laps, hard_array, color="grey", label="Hard")
 
     # Set the Axis Scales
-    plt.xlim(0, 50)
+    plt.xlim(0, 40)
     plt.ylim(77, 83)
 
     # Set the Axis Labels
