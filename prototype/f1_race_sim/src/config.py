@@ -27,7 +27,7 @@ MEDIUM_TYRE_LIFE = 60
 HARD_TYRE_LIFE = 70
 
 # AI learning rate
-LEARNING_RATE = 5 * 1e-6
+LEARNING_RATE = 8 * 1e-6
 
 # Seconds lost during a pitstop
 PITSTOP_DELTA_TIME = 18
@@ -48,7 +48,7 @@ EPISODES = 2500
 MEMSIZE = 2000 * RACE_DISTANCE
 
 # Size of the batches used for learning due to experience replay
-BATCHSIZE = 5 * 70
+BATCHSIZE = 1 * 70
 
 # Time until Epsilon reaches the minimum value
 EXPLORATION_TIME = 1500
