@@ -66,7 +66,7 @@ class Tyre():
 
 
     #=====Methods=====================================
-    def degrade(self, car_infront : bool=False) -> None:
+    def degrade(self, car_infront : bool=False, delta_to_car_infront : float=None) -> None:
         """
         Just a simple function to display the tyre life in a percentage
         for the people viewing it!
@@ -77,7 +77,8 @@ class Tyre():
 
         # Add penalty if the car is close to a car in front
         if car_infront:
-            self.tyre_life += round(random.uniform(0.1, 0.2), 2)
+            x = delta_to_car_infront
+            self.tyre_life += round(-0.17482517 * x**(4) + 0.543900 * x**(3) - 0.41783216 * x**(2) - 0.141802 * x + 0.24055944)
 
         # Compute the degredation level as known from F1 Games
         if self._compound == SOFT:

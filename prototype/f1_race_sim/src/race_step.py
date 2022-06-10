@@ -64,8 +64,8 @@ def step(grid, actions, lap, log):
         # Let the tyre degrade according to the interval to car infront
         # try / except for the car on pos 1 that has the string "-" as delta, therefore no one in front and we can degrade without penalty
         try:
-            if car.delta_to_car_infront <= 0.8:
-                car.tyre.degrade(car_infront=True)
+            if car.delta_to_car_infront <= 1:
+                car.tyre.degrade(car_infront=True, delta_to_car_infront=car.delta_to_car_infront)
             else:
                 car.tyre.degrade()
         except TypeError:
