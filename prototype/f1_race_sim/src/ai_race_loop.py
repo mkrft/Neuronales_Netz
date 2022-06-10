@@ -41,17 +41,31 @@ import matplotlib.pyplot as plt
 import random
 import torch
 import copy
+import time
 
 
 #====== HELPERS ======================================
-def determine_ai_action(agent, state):
+def determine_ai_action(agent, state, epsilon_policy = True):
     """
-    Return an action for the Agent to take
+    Return an action for the Agent to take according to the specified policy
     """
-    if random.uniform(0, 1) < agent.epsilon:
-        action = Actions(random.randint(0,len(Actions)-1))
+    if epsilon_policy:
+        if random.uniform(0, 1) < agent.epsilon:
+            action = Actions(random.randint(0,len(Actions)-1))
+        else:
+            action_idx = int(torch.argmax(agent.forward(state)))
+            action = Actions(action_idx)
+
     else:
-        action_idx = int(torch.argmax(agent.forward(state)))
+        # boltzmann policy
+        softmax_layer = torch.nn.Softmax(dim=-1)
+        q_vals = agent.forward(state)
+        # normalize the outputs so the softmax output doesnt explode
+        q_vals = q_vals.clamp(-30, 30)
+        probabilities = softmax_layer(q_vals / agent.temperature)
+        probabilities = probabilities.detach().numpy()
+        choices = list(range(len(Actions)))
+        action_idx = np.random.choice(choices, p = probabilities)
         action = Actions(action_idx)
     
     return action
@@ -148,6 +162,7 @@ def core_race_loop(agent, log, selfplay) -> None:
         lap = 0
 
         agent.decay_epsilon_linear(episode)
+        agent.decay_temperature()
 
         # make new cars for every episode
         grid = build_grid()
@@ -160,7 +175,7 @@ def core_race_loop(agent, log, selfplay) -> None:
         actions = {}
 
         state = get_reset_state()
-        actions[ai_car] = determine_ai_action(agent, state)
+        actions[ai_car] = determine_ai_action(agent, state, epsilon_policy=True)
 
         # Play a Race and learn from it
         while lap < RACE_DISTANCE:
@@ -173,7 +188,7 @@ def core_race_loop(agent, log, selfplay) -> None:
             n_state = get_state(ai_car, lap)
 
             # training the ai after taking a step in the environment
-            # agent.train_single(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done))
+            #agent.train_single(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done))
             agent.add_replay(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done), episode)
 
             # reset all actions from the last lap
@@ -183,7 +198,7 @@ def core_race_loop(agent, log, selfplay) -> None:
             for car in grid:
                 if car == ai_car:
                     score += rewards[ai_car]
-                    actions[car] = determine_ai_action(agent, n_state)
+                    actions[car] = determine_ai_action(agent, n_state, epsilon_policy=True)
 
                 # competitor - actions
                 elif selfplay:

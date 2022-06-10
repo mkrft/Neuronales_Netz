@@ -111,7 +111,7 @@ def lap_reward_func(previous_car_state, current_car_state):
 
     # To use the lost time as reward, invert it
     reward = -1 * lost_time / 100
-    reward = clamp(reward, -20, 20)
+    reward = clamp(reward, -3, 3)
 
     return reward
 
@@ -138,7 +138,7 @@ def race_reward_func(car, grid):
     else:
         reward = -car.delta_to_leader / 100
         # clamp the reward to prevent huge gradients
-        reward = clamp(reward, -1000, 200)
+        reward = clamp(reward, -40, 200)
 
     # confuses the ai in the current version, needs a more complex input state and net architecture
     #if car.position == "DSQ":
