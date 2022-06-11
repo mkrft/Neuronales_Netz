@@ -7,7 +7,7 @@
 
     author:     Alexander Müller
     date:       05.10.2021
-    version:    0.0.1
+    version:    1.0.0
 
     Please contact us for further information via Git.
 

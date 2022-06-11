@@ -21,9 +21,11 @@ def display_standings(current_lap, grid_sorted):
     #Defining the colortheme
     color = Fore.GREEN
     for car in grid_sorted:
-        #ensure that only the ai car is beeing colored
+
+        # Ensure that only the ai car is beeing colored
         if str(car.driver.short).__contains__("DKI"):
-            #add a row to the table with all entries being colored individually            
+            
+            # Add a row to the table with all entries being colored individually            
             output.add_row([ color + f"{car.position}" + Style.RESET_ALL,
                             color + car.driver.short + Style.RESET_ALL,
                             color + f"{car.tyre.compound} {round(car.tyre.degredation * 100, 2)}%" + Style.RESET_ALL,

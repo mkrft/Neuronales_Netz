@@ -3,7 +3,7 @@
 
     author:     Alexander Mueller
     date:       14.05.2022
-    version:    0.0.1
+    version:    1.0.0
 
     Project: Formula One Strategy AI (FOSA)
 """

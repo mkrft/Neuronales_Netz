@@ -6,7 +6,7 @@
 
     author:     Alexander Müller
     date:       08.02.2022
-    version:    0.0.1
+    version:    1.0.0
 
 """
 
@@ -140,7 +140,6 @@ def normalize_data(query_data):
     for query_index, stint_set in enumerate(query_data):
 
         # Compute norm_factor from reference_time and the first lap set each stint
-        # TODO Could think about using the fastest / slowest / average lap of each stint? or just the middle one?
         norm_factor = reference_time / stint_set[0]
 
         # Now go through every lap and alter it according to norm factor
