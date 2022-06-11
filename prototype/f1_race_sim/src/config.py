@@ -27,7 +27,7 @@ MEDIUM_TYRE_LIFE = 60
 HARD_TYRE_LIFE = 70
 
 # AI learning rate
-LEARNING_RATE = 8 * 1e-6
+LEARNING_RATE = 1 * 1e-5
 
 # Seconds lost during a pitstop
 PITSTOP_DELTA_TIME = 18
@@ -42,13 +42,14 @@ OVERTAKE_TRESHOLD = 0.25
 CURRENT_RACE_LAP = [0]
 
 # Times how often the games shall be played
-EPISODES = 2500
+EPISODES = 3000
 
 # Maximum size of experience replay memory
-MEMSIZE = 2000 * RACE_DISTANCE
+MEMSIZE = 250 * RACE_DISTANCE
 
 # Size of the batches used for learning due to experience replay
-BATCHSIZE = 1 * 70
+#BATCHSIZE = 1 * 70
+BATCHSIZE = 32
 
 # Time until Epsilon reaches the minimum value
 EXPLORATION_TIME = 1500

@@ -153,6 +153,7 @@ class Agent():
         loss = F.mse_loss(out, target_vector)
         self.losses.append(loss.item())
         loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.prediction_dqn.parameters(), 2000)
 
         self.optimizer.step()
 
