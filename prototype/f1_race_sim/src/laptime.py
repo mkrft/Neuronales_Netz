@@ -19,9 +19,9 @@ from src.tyre import Tyre
 def compute_lap_times(car:Car) -> float:
     """
     Compute the current lap time (pace) of a single
-    car with concern to all the important data
+    car based on the tyre life with additional offset due to individual performance
 
-    param - {obj} - car - Holding all information that is relevant for the computation
+    param - {obj} - car - Object of car with all necessary data for the lap time computation
 
     return - {int} - lap_time
     """

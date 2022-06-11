@@ -22,9 +22,9 @@ RACE_START_OFFSET = 0.1
 # Tyre Lifes of the different compounds fitting to the valid ranges of the used models
 # Used jsut to display the percentage values, which serve only for visual representation so
 # I added ten more then the actual valid rate is to prevent us from being still fast at 100% or even more than 100%
-SOFT_TYRE_LIFE = 40
-MEDIUM_TYRE_LIFE = 60
-HARD_TYRE_LIFE = 70
+SOFT_TYRE_LIFE = 25
+MEDIUM_TYRE_LIFE = 45
+HARD_TYRE_LIFE = 50
 
 # AI learning rate
 LEARNING_RATE = 1 * 1e-5

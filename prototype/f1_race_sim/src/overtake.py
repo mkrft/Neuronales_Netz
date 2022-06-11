@@ -7,10 +7,7 @@
 import random
 
 #=====Module Imports==================================
-from src.config import (
-    OVERTAKE_TRESHOLD
-)
-
+from src.config import OVERTAKE_TRESHOLD
 
 #=====Functions=======================================
 def check_overtake(pace_diff):
