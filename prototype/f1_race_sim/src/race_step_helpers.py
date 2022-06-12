@@ -116,19 +116,12 @@ def race_reward_func(car, grid):
     return - {float} - reward
     """
 
-
-    # confuses the ai in the current version, needs a more complex input state and net architecture
-    #if car.position == "DSQ":
-        #reward = -1000.0
-
-    if car.position == 1 or car.delta_to_leader == 0.0:
+    if car.position == 1 and not car.disqualified:
         ordered_grid = order_grid(grid)
         dist_to_second = ordered_grid[1].delta_to_car_infront
         reward = dist_to_second / 100
-    elif car.position == 'DSQ':
-        ordered_grid = order_grid(grid)
-        pos = ordered_grid.index(car)
-        reward = 1 - (pos)
+    elif car.disqualified:
+        reward = -20
     else:
         reward = (1 - car.position)
         

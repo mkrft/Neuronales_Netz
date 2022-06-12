@@ -74,7 +74,7 @@ class Agent():
         self.update_counter = 0
 
         # amount of updates it takes until the prediction is copied
-        self.update_interval = 30 * RACE_DISTANCE
+        self.update_interval = 20 * RACE_DISTANCE
 
 
     def add_replay(self, state, action, reward, next, done, episode) -> None:

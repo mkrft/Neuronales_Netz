@@ -56,6 +56,7 @@ class Car():
         self.delta_to_car_infront = delta_to_car_infront
         self.delta_to_leader = delta_to_leader
         self.used_tyres = used_tyres
+        self.disqualified = False
         self.log_info = {}
 
     #=====Methods=====================================
@@ -108,6 +109,9 @@ class Car():
             "tyre_life" : self.tyre.tyre_life,
             "delta_to_leader" : self.delta_to_leader
         }
+
+    def disqualify(self):
+        self.disqualified = True
 
     #=====Property Function Class Car=================
     

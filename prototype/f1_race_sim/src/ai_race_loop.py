@@ -81,11 +81,45 @@ def determine_other_driver_action(old_agent, state):
     return action
 
 def get_reset_state():
-    return torch.tensor([100.0, RACE_DISTANCE, 0.0, 70.0], dtype=torch.float32)
+    degredation = 100.0
+    remaining_laps = RACE_DISTANCE
+    delta_to_leader = 0.0
+    lap_time = REFERANCE_LAP_TIME
+    position = 1
+    soft, medium, hard = 1, 0, 1
+    second_compound_flag = 0
+    delta_to_front = 0
+
+    return torch.tensor([degredation, remaining_laps, delta_to_leader, lap_time, position, soft, medium, hard, second_compound_flag, delta_to_front], dtype=torch.float32)
+
+
+def one_hot_compound(compound):
+    """
+    one - hot code the current tyre type
+    """
+    if compound == SOFT:
+        return 1, 0, 0
+    elif compound == MEDIUM:
+        return 0, 1, 0
+    elif compound == HARD:
+        return 0, 0, 1
 
 
 def get_state(car: Car, lap : int):
-    return torch.tensor([car.tyre.degredation * 100, RACE_DISTANCE-lap, car.delta_to_leader, car.last_lap_time], dtype=torch.float32)
+    """
+    return the current state for the AI - Input
+    """
+    degredation = car.tyre.degredation * 100
+    remaining_laps = RACE_DISTANCE - lap
+    delta_to_leader = car.delta_to_leader
+    lap_time = car.last_lap_time
+    position = car.position
+    soft, medium, hard = one_hot_compound(car.tyre.compound)
+    second_compound_flag = 1 if car.distinctUsedTyreTypes() >= 2 else 0
+    delta_to_front = car.delta_to_car_infront if car.delta_to_car_infront != "-" else 0
+    state_tensor = torch.tensor([degredation, remaining_laps, delta_to_leader, lap_time, position, soft, medium, hard, second_compound_flag, delta_to_front], dtype=torch.float32)
+
+    return state_tensor
 
 
 #===== FUNCTIONS =====================================
@@ -95,7 +129,7 @@ def ai_race_loop(load=False, log=False, selfplay=False, test=False, mutate=False
     """
 
     # Reference for if the network is actually learning what to do: value for the actions immediately before race ends
-    test_state = torch.tensor([99.0, 1.0, 0.0, 70.0], dtype=torch.float32)
+    test_state = torch.tensor([99.0, 1.0, 0.0, 70.0, 1, 0, 1, 0, 1, 0], dtype=torch.float32)
     testfile = open("./logs/testlog.txt", "a+")
 
     # Create our agent
@@ -104,8 +138,6 @@ def ai_race_loop(load=False, log=False, selfplay=False, test=False, mutate=False
     # Quick test run to verify
     testrun = agent.forward(test_state)
     testfile.write(repr(testrun)+"\n")
-
-    # Play through the game for every episode
     if not test:
         core_race_loop(agent=agent, log=log, selfplay=selfplay)
     else:
@@ -205,7 +237,7 @@ def core_race_loop(agent, log, selfplay) -> None:
                     # use older version of AI - agent
                     actions[car] = determine_other_driver_action(old_agent, n_state)
 
-                elif lap == 15:
+                elif lap == 25:
                     # static action
                     actions[car] = Actions.MEDIUM
 
@@ -280,7 +312,7 @@ def evaluation_testloop(agent, log, selfplay):
                     # use older version of AI - agent
                     actions[car] = determine_other_driver_action(old_agent, n_state)
 
-                elif lap == 25:
+                elif lap == 15:
                     # static action
                     actions[car] = Actions.MEDIUM
 

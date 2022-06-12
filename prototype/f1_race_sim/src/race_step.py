@@ -86,7 +86,7 @@ def step(grid, actions, lap, log):
     if lap == RACE_DISTANCE:
         for car in grid:
              if(car.distinctUsedTyreTypes() < 2):                    
-                 car.position = "DSQ"
+                 car.disqualify()
         rewards = give_race_rewards(actions, grid)
 
     # Finish step with the current grid, number of laps driven and the rewards for all cars
