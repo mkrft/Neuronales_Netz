@@ -16,7 +16,6 @@ import torch
 import random
 
 #====== HELPERS ======================================
-#====== HELPERS ======================================
 def determine_ai_action(agent, state, epsilon_policy = True):
     """
     Return an action for the Agent to take according to the specified policy
