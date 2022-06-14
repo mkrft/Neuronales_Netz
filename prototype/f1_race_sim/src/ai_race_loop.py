@@ -18,7 +18,8 @@ from src.config import (
 from src.ai_race_loop_helpers import (
     get_reset_state,
     determine_ai_action,
-    get_state
+    get_state,
+    create_plot
 )
 
 from src.race_step import step
@@ -32,9 +33,6 @@ from src.actions import Actions
 from src.agent import Agent
 
 #=====Libraries=======================================
-import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
 import torch
 import copy
 import time
@@ -74,29 +72,7 @@ def ai_race_loop(load=False, log=False, selfplay=False, test=False, mutate=False
 
     testfile.close()
 
-    # Create plot with the scores the AI managed to achieve
-    font = {
-        'family' : 'normal',
-        'weight' : 'normal',
-        'size' : 16
-    }
-    matplotlib.rc('font', **font)
-    matplotlib.rcParams["figure.figsize"] = [30/2.54, 23/2.54]
-    matplotlib.rcParams["figure.autolayout"] = True
-
-    scores = np.array(agent.scores)
-    plt.plot(scores)
-    plt.title("AI - Scores")
-    plt.xlabel("Episode")
-    plt.ylabel("Score")
-    plt.show()
-
-    if not test:
-        plt.plot(agent.losses)
-        plt.title("Errors")
-        plt.xlabel("Learning - step")
-        plt.ylabel("Loss - value (MSE)")
-        plt.show()
+    create_plot(agent.scores, agent.losses, test)
 
     # Save the current weights
     torch.save(agent.prediction_dqn.state_dict(), "./models/prediction_network_weights")

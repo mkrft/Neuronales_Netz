@@ -14,6 +14,8 @@ from src.cars import Car
 
 import torch
 import random
+import matplotlib
+import matplotlib.pyplot as plt
 
 #====== HELPERS ======================================
 def determine_ai_action(agent, state, epsilon_policy = True):
@@ -91,3 +93,29 @@ def get_state(car: Car, lap : int):
     state_tensor = torch.tensor([degredation, remaining_laps, delta_to_leader, lap_time, position, soft, medium, hard, second_compound_flag, delta_to_front], dtype=torch.float32)
 
     return state_tensor
+
+
+def create_plot(scores:list,losses:list, test:bool):
+    # Create plot with the scores the AI managed to achieve
+    font = {
+        'family' : 'normal',
+        'weight' : 'normal',
+        'size' : 16
+    }
+    matplotlib.rc('font', **font)
+    matplotlib.rcParams["figure.figsize"] = [30/2.54, 23/2.54]
+    matplotlib.rcParams["figure.autolayout"] = True
+
+    scores = np.array(agent.scores)
+    plt.plot(scores)
+    plt.title("AI - Scores")
+    plt.xlabel("Episode")
+    plt.ylabel("Score")
+    plt.show()
+
+    if not test:
+        plt.plot(agent.losses)
+        plt.title("Errors")
+        plt.xlabel("Learning - step")
+        plt.ylabel("Loss - value (MSE)")
+        plt.show()
