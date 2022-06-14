@@ -42,7 +42,7 @@ import random
 import torch
 import copy
 import time
-
+from pathlib import Path
 
 #====== HELPERS ======================================
 def determine_ai_action(agent, state, epsilon_policy = True):
@@ -130,7 +130,14 @@ def ai_race_loop(load=False, log=False, selfplay=False, test=False, mutate=False
 
     # Reference for if the network is actually learning what to do: value for the actions immediately before race ends
     test_state = torch.tensor([99.0, 1.0, 0.0, 70.0, 1, 0, 1, 0, 1, 0], dtype=torch.float32)
-    testfile = open("./logs/testlog.txt", "a+")
+    try:
+        testfile = open("./logs/testlog.txt", "a+")
+    except FileNotFoundError:
+        try:
+            testfile = open("./logs/testlog.txt","w+")
+        except FileNotFoundError:
+            Path("./logs").mkdir(parents=True,exist_ok=True)
+            testfile = open("./logs/testlog.txt","w+")
 
     # Create our agent
     agent = Agent(learning_rate=LEARNING_RATE, inputlen=len(test_state), outputlen=len(Actions),load=load,mutate=mutate)
