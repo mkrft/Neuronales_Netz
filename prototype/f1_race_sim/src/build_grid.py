@@ -63,8 +63,6 @@ def build_grid() -> list:
         if i % 2 == 0:
             power = round(1 - i / divison_factor, 3)
 
-        print(skill, power)
-
         # Calc starting position
         starting_pos, possible_start_pos = start_pos_generator(skill, power, possible_start_pos)
 

@@ -12,7 +12,8 @@ from src.config import (
     LEARNING_RATE,
     BATCHSIZE,
     SELFPLAY_UPDATE_INTERVAL,
-    EXPLORATION_TIME
+    EXPLORATION_TIME,
+    NETWORK_EVALUATION_TIME
 )
 
 from src.ai_race_loop_helpers import (
@@ -85,6 +86,10 @@ def core_race_loop(agent, log, selfplay) -> None:
     """
 
     old_agent = copy.deepcopy(agent)
+    mean_score = 0
+
+    current_best_ai = copy.deepcopy(agent.prediction_dqn)
+    current_best_score = -1000000   # any very small number to ensure that better ais get saved
 
     for episode in range(0, EPISODES + 1):
 
@@ -150,6 +155,18 @@ def core_race_loop(agent, log, selfplay) -> None:
 
             state = n_state
 
+        # update the mean score
+        mean_score += score
+
+        if episode % NETWORK_EVALUATION_TIME == 0 and episode != 0:
+            mean_score = mean_score / NETWORK_EVALUATION_TIME
+            if mean_score > current_best_score:
+                current_best_score = mean_score
+                print(mean_score, current_best_score)
+                current_best_ai = copy.deepcopy(agent.prediction_dqn)
+                print("copied network")
+            mean_score = 0
+
         # learn from experiences in short term memory
         #agent.train_batch(BATCHSIZE)
         agent.replay(BATCHSIZE, episode)
@@ -166,6 +183,8 @@ def core_race_loop(agent, log, selfplay) -> None:
 
         if log:
             dump_episode_data(grid, episode)
+
+    agent.prediction_dqn = current_best_ai
 
 
 

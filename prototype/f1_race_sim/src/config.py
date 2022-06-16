@@ -47,7 +47,7 @@ OVERTAKE_TRESHOLD = 0.1
 CURRENT_RACE_LAP = [0]
 
 # Times how often the games shall be played
-EPISODES = 15000
+EPISODES = 12000
 
 # Maximum size of experience replay memory
 MEMSIZE = 250 * RACE_DISTANCE
@@ -57,10 +57,13 @@ MEMSIZE = 250 * RACE_DISTANCE
 BATCHSIZE = 32
 
 # Time until Epsilon reaches the minimum value
-EXPLORATION_TIME = 7000
+EXPLORATION_TIME = 5000
 
 # Amount of episodes between each update for the selfplay - agent
 SELFPLAY_UPDATE_INTERVAL = 500
 
 # Path to load already trained models from
-MODEL_FILE_PATH = "./models/16_06_best_car_from_pole"
+MODEL_FILE_PATH = "./models/prediction_network_weights"
+
+# Time interval for a Network have its performance evaluated while training
+NETWORK_EVALUATION_TIME = 40
