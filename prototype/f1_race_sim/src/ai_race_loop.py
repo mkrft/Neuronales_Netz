@@ -183,9 +183,9 @@ def evaluation_testloop(agent, log, selfplay):
         # make new cars for every episode
         grid = build_grid()
 
-        # initialize the car for the current agent
+        # Initialize the car for the current agent
         ai_car = grid[0]
-        grid[0].driver.short = "DKI"
+        ai_car.driver.short = "DKI"
 
         # Initialize the actions
         actions = {}

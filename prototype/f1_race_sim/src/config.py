@@ -56,3 +56,6 @@ EXPLORATION_TIME = 5000
 
 # Amount of episodes between each update for the selfplay - agent
 SELFPLAY_UPDATE_INTERVAL = 500
+
+# Path to load already trained models from
+MODEL_FILE_PATH = "./models/16_06_best_car_from_pole"
