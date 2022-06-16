@@ -42,7 +42,7 @@ OVERTAKE_TRESHOLD = 0.25
 CURRENT_RACE_LAP = [0]
 
 # Times how often the games shall be played
-EPISODES = 0
+EPISODES = 11000
 
 # Maximum size of experience replay memory
 MEMSIZE = 250 * RACE_DISTANCE

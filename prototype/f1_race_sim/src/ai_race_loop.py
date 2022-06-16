@@ -139,8 +139,11 @@ def core_race_loop(agent, log, selfplay) -> None:
                     # use older version of AI - agent
                     actions[car] = determine_other_driver_action(old_agent, n_state)
 
-                elif lap == 25:
-                    # static action
+                # static action
+                elif lap == 15 and not selfplay:
+                    actions[car] = Actions.MEDIUM
+                    
+                elif lap == 48 and not selfplay:
                     actions[car] = Actions.MEDIUM
 
             state = n_state
@@ -214,8 +217,11 @@ def evaluation_testloop(agent, log, selfplay):
                     # use older version of AI - agent
                     actions[car] = determine_other_driver_action(old_agent, n_state)
 
-                elif lap == 15:
-                    # static action
+                # static action
+                elif lap == 15 and not selfplay:
+                    actions[car] = Actions.MEDIUM
+
+                elif lap == 48 and not selfplay:
                     actions[car] = Actions.MEDIUM
 
             state = n_state
