@@ -13,7 +13,8 @@ import random
 #=====Module Imports==================================
 from src.config import (
     NUMBER_OF_COMPETITORS,
-    RACE_START_OFFSET
+    RACE_START_OFFSET,
+    SKILL_POWER_FACTOR
 )
 from src.const import (
     SEPERATION_FACTOR,
@@ -55,11 +56,14 @@ def build_grid() -> list:
 
 
         # Start to deploy the skill / power levels dynamically
-        # The difference should not be to big, otherwise we get the same result everytime :D
-        skill = round(1 - i / 21, 3)
+        # Adjust the divison factor to spread the field more or make it more close
+        # Factor simply has to be bigger than number of competitors all the time!
+        divison_factor = NUMBER_OF_COMPETITORS * SKILL_POWER_FACTOR
+        skill = round(1 - i / divison_factor, 3)
         if i % 2 == 0:
-            power = round(1 - i / 21, 3)
+            power = round(1 - i / divison_factor, 3)
 
+        print(skill, power)
 
         # Calc starting position
         starting_pos, possible_start_pos = start_pos_generator(skill, power, possible_start_pos)
