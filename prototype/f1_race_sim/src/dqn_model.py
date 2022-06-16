@@ -9,6 +9,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 
 from src.mutate import mutate
+from src.config import MODEL_FILE_PATH
 
 #=================== Code ====================
 
@@ -33,12 +34,18 @@ class DQNmodel(nn.Sequential):
         self.f2 = nn.Linear(self.l2, self.l3)
         self.f3 = nn.Linear(self.l3, self.l4)
 
-        # TODO FIX PATHS AND ADD /models /logs
+        # Load already trained models
         if load_weights_from_file:
-            self.load("./models/prediction_network_weights")
-            # mutate if requested
-            if mutate:
-                self = mutate(self)
+
+            try:
+                self.load(MODEL_FILE_PATH)
+
+                # mutate if requested
+                if mutate:
+                    self = mutate(self)
+            except FileNotFoundError:
+                print("[Error] Model File not found. Please train one first or specify further in config.py")
+                exit()
 
 
     def forward(self, x):

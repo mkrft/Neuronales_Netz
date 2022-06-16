@@ -16,6 +16,7 @@ import torch
 import random
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 
 #====== HELPERS ======================================
 def determine_ai_action(agent, state, epsilon_policy = True):
@@ -106,7 +107,7 @@ def create_plot(scores:list,losses:list, test:bool):
     matplotlib.rcParams["figure.figsize"] = [30/2.54, 23/2.54]
     matplotlib.rcParams["figure.autolayout"] = True
 
-    scores = np.array(agent.scores)
+    scores = np.array(scores)
     plt.plot(scores)
     plt.title("AI - Scores")
     plt.xlabel("Episode")
@@ -114,7 +115,7 @@ def create_plot(scores:list,losses:list, test:bool):
     plt.show()
 
     if not test:
-        plt.plot(agent.losses)
+        plt.plot(losses)
         plt.title("Errors")
         plt.xlabel("Learning - step")
         plt.ylabel("Loss - value (MSE)")

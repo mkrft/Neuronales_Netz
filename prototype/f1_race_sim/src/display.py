@@ -25,6 +25,7 @@ def display_standings(current_lap, grid_sorted):
         # Ensure that only the ai car is beeing colored
         if str(car.driver.short).__contains__("DKI"):
             position_field = car.position if car.position != "DSQ" else "DSQ"
+            
             # Add a row to the table with all entries being colored individually            
             output.add_row([ color + f"{position_field}" + Style.RESET_ALL,
                             color + car.driver.short + Style.RESET_ALL,
