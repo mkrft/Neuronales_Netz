@@ -45,9 +45,9 @@ if __name__ == "__main__":
     plt.ylim(77, 83)
 
     # Set the Axis Labels
-    plt.xlabel("Tyre Life [Laps]")
-    plt.ylabel("Laptime [s]")
+    plt.xlabel("Tyre Life [Laps]", fontsize=15)
+    plt.ylabel("Laptime [s]", fontsize=15)
     
     # Generate the Plot
-    plt.legend()
+    plt.legend(prop={"size":16})
     plt.show()

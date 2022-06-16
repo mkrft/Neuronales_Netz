@@ -59,22 +59,22 @@ if __name__ == "__main__":
     fix, ax = plt.subplots(3)
     ax[0].plot(laps, lap_time, color="green")
     ax[0].set_xlabel("Laps")
-    ax[0].set_ylabel("Lap Time [s]")
+    ax[0].set_ylabel("Lap Time [s]", fontsize=15)
 
     ## Stint / Compound
     ax10 = ax[1].twinx()
     ax[1].plot(laps, compound, color="cyan")
     ax[1].set_xlabel("Laps")
-    ax[1].set_ylabel("Compound", color="cyan")
+    ax[1].set_ylabel("Compound", color="cyan", fontsize=15)
 
     ax10.plot(laps, tyre_life, color="red")
     ax10.set_xlabel("Laps")
-    ax10.set_ylabel("\nTire Age [Laps]", color="red")
+    ax10.set_ylabel("\nTire Age [Laps]", color="red", fontsize=15)
 
-    ## TyreLife
+    ## DeltaToLeader
     ax[2].plot(laps, delta_to_leader, color="yellow")
-    ax[2].set_xlabel("Laps")
-    ax[2].set_ylabel("Delta to Leader [s]")
+    ax[2].set_xlabel("Laps", fontsize=15)
+    ax[2].set_ylabel("Delta to Leader [s]", fontsize=15)
 
     plt.tight_layout()
     plt.show()

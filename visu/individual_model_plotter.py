@@ -39,12 +39,12 @@ if __name__ == "__main__":
 
     # Plot the given array
     plt.plot(individual_values, individual_array, color="orangered")
-    plt.xlabel("Individual Performance Parameter\nSum of Car Performance [0,1] and Driver Performance [0,1]")
-    plt.ylabel("Laptime Offset [s]")
+    plt.xlabel("Individual Performance Parameter\nSum of Car Performance [0,1] and Driver Performance [0,1]", fontsize=15)
+    plt.ylabel("Laptime Offset [s]", fontsize=15)
     plt.show()
 
     # Plot the given array
     plt.plot(tyre_values, tyre_array, color="green")
-    plt.xlabel("Delta to Car in Front [Seconds]")
-    plt.ylabel("Additional Tyre Degradation [Laps]")
+    plt.xlabel("Delta to Car in Front [Seconds]", fontsize=15)
+    plt.ylabel("Additional Tyre Degradation [Laps]", fontsize=15)
     plt.show()
