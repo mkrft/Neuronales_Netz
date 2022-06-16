@@ -36,6 +36,7 @@ from src.agent import Agent
 import torch
 import copy
 import time
+import random
 from pathlib import Path
 
 
@@ -101,9 +102,10 @@ def core_race_loop(agent, log, selfplay) -> None:
         # make new cars for every episode
         grid = build_grid()
 
-        # initialize the car for the current agent
-        ai_car = grid[0]
-        grid[0].driver.short = "DKI"
+        # initialize the car for the current agent based on random start position
+        startindex = random.randrange(0,len(grid))
+        ai_car = grid[startindex]
+        grid[startindex].driver.short = "DKI"
 
         # Initialize the actions
         actions = {}
@@ -183,9 +185,10 @@ def evaluation_testloop(agent, log, selfplay):
         # make new cars for every episode
         grid = build_grid()
 
-        # initialize the car for the current agent
-        ai_car = grid[0]
-        grid[0].driver.short = "DKI"
+        # initialize the car for the current agent based on random start position
+        startindex = random.randrange(0,len(grid))
+        ai_car = grid[startindex]
+        grid[startindex].driver.short = "DKI"
 
         # Initialize the actions
         actions = {}
