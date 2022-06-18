@@ -32,7 +32,7 @@ MEDIUM_TYRE_LIFE = 45
 HARD_TYRE_LIFE = 50
 
 # AI learning rate
-LEARNING_RATE = 1 * 1e-5
+LEARNING_RATE = 2 * 1e-4
 
 # Seconds lost during a pitstop
 PITSTOP_DELTA_TIME = 18
@@ -47,17 +47,17 @@ OVERTAKE_TRESHOLD = 0.1
 CURRENT_RACE_LAP = [0]
 
 # Times how often the games shall be played
-EPISODES = 12000
+EPISODES = 0
 
 # Maximum size of experience replay memory
-MEMSIZE = 250 * RACE_DISTANCE
+MEMSIZE = 200 * RACE_DISTANCE
 
 # Size of the batches used for learning due to experience replay
 #BATCHSIZE = 1 * 70
 BATCHSIZE = 32
 
 # Time until Epsilon reaches the minimum value
-EXPLORATION_TIME = 5000
+EXPLORATION_TIME = 3000
 
 # Amount of episodes between each update for the selfplay - agent
 SELFPLAY_UPDATE_INTERVAL = 500
@@ -67,3 +67,6 @@ MODEL_FILE_PATH = "./models/prediction_network_weights"
 
 # Time interval for a Network have its performance evaluated while training
 NETWORK_EVALUATION_TIME = 40
+
+# Amount of Episodes between the sampling oft the replay buffer
+SAMPLING_PERIOD = 5
