@@ -52,20 +52,22 @@ class Agent():
         # optimizer for the prediction Network
         self.optimizer = optim.Adam(self.prediction_dqn.parameters(), lr=learning_rate)
 
-        # amount of episodes where the agent chooses purely random to explore strategies
-        self.decay_gate = 0
-
         # Boltzmann - policy parameters
-        self.temperature_initial = 0.1
+        self.temperature_initial = 1.0
         self.temperature_min = 0.1
         self.temperature_decay = (self.temperature_initial - self.temperature_min) / EXPLORATION_TIME
         self.temperature = self.temperature_initial
 
+        # Epsilon - policy parameters
         self.epsilon_min = 0.01
+
         if not load:
             self.epsilon = 1
         else:
-            self.epsilon = self.epsilon_min
+            self.epsilon = 0
+
+        # amount of episodes where the agent chooses purely random to explore strategies
+        self.decay_gate = 0
 
         # epsilon for policy
         self.epsilon_decay = (self.epsilon - self.epsilon_min)/EXPLORATION_TIME
@@ -80,7 +82,7 @@ class Agent():
         self.update_interval = 750
 
 
-    def add_replay(self, state, action, reward, next, done, episode) -> None:
+    def add_replay(self, state, action, reward, next, done) -> None:
         # remember an action for replaying
         self.mem.append((state, action, reward, next, done))
 
@@ -90,7 +92,7 @@ class Agent():
         return self.prediction_dqn.forward(state)
 
 
-    def replay(self, size, episode) -> None:
+    def replay(self, size) -> None:
         # replay some training examples one by one
         if len(self.mem) > size:
             batch = random.sample(self.mem, size)
@@ -118,7 +120,9 @@ class Agent():
 
 
     def train_single(self, state, action, reward, next, done) -> None:
-        # train on one example
+        """
+        Train the network on one example from the replay memory
+        """
 
         # convert the input lists to tensors
         # tell pytorch that we are training the Network

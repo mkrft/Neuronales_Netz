@@ -85,8 +85,6 @@ class DQNmodel_dueling(nn.Sequential):
         self.feature_net = nn.Sequential(
                 nn.Linear(self.l1, self.l2),
                 nn.ReLU(),
-                nn.Linear(self.l2, self.l3),
-                nn.ReLU(),
         )
 
         self.value_net = nn.Sequential(
@@ -119,5 +117,4 @@ class DQNmodel_dueling(nn.Sequential):
     
     def load(self, filepath):
         self.load_state_dict(torch.load(filepath))
-
 
