@@ -135,7 +135,7 @@ def core_race_loop(agent, log, selfplay) -> None:
 
             # training the ai after taking a step in the environment
             #agent.train_single(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done))
-            agent.add_replay(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done), episode)
+            agent.add_replay(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done))
             if lap % SAMPLING_PERIOD == 0:
                 #agent.replay(BATCHSIZE, episode)
                 agent.train_batch(BATCHSIZE)

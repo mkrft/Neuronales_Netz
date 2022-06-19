@@ -187,7 +187,7 @@ class Agent():
                     done = True
 
                 n_state = get_state(ai_car, lap)
-                self.add_replay(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done), episode)
+                self.add_replay(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done))
                 actions.clear()
 
                 for car in grid:
