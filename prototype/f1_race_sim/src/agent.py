@@ -62,7 +62,7 @@ class Agent():
         self.epsilon_min = 0.01
 
         if not load:
-            self.epsilon = 1
+            self.epsilon = 0.5
         else:
             self.epsilon = 0
 
@@ -171,8 +171,7 @@ class Agent():
             done = False
             log = False
             grid = build_grid()
-            startindex = 0
-            #startindex = random.randrange(0, len(grid))
+            startindex = random.randrange(0, len(grid))
             ai_car = grid[startindex]
 
             actions = {}

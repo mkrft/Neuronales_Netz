@@ -63,8 +63,9 @@ def get_reset_state():
     soft, medium, hard = 1, 0, 1
     second_compound_flag = 0
     delta_to_front = 0
+    starting_pos = 1
 
-    return torch.tensor([degredation, current_lap, delta_to_leader, lap_time, position, soft, medium, hard, second_compound_flag, delta_to_front], dtype=torch.float32)
+    return torch.tensor([degredation, current_lap, delta_to_leader, lap_time, position, soft, medium, hard, second_compound_flag, delta_to_front, starting_pos], dtype=torch.float32)
 
 
 def one_hot_compound(compound):
@@ -91,7 +92,8 @@ def get_state(car: Car, lap : int):
     soft, medium, hard = one_hot_compound(car.tyre.compound)
     second_compound_flag = 1 if car.distinctUsedTyreTypes() >= 2 else 0
     delta_to_front = car.delta_to_car_infront if car.delta_to_car_infront != "-" else 0
-    state_tensor = torch.tensor([degredation, current_lap, delta_to_leader, lap_time, position, soft, medium, hard, second_compound_flag, delta_to_front], dtype=torch.float32)
+    starting_pos = car.grid_position
+    state_tensor = torch.tensor([degredation, current_lap, delta_to_leader, lap_time, position, soft, medium, hard, second_compound_flag, delta_to_front, starting_pos], dtype=torch.float32)
 
     return state_tensor
 

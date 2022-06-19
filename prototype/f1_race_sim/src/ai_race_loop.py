@@ -49,7 +49,7 @@ def ai_race_loop(load=False, log=False, selfplay=False, test=False, mutate=False
     """
 
     # Reference for if the network is actually learning what to do: value for the actions immediately before race ends
-    test_state = torch.tensor([99.0, 69.0, 0.0, 70.0, 1, 0, 1, 0, 1, 0], dtype=torch.float32)
+    test_state = torch.tensor([99.0, 69.0, 0.0, 70.0, 1, 0, 1, 0, 1, 0, 1], dtype=torch.float32)
     try:
         testfile = open("./logs/testlog.txt", "a+")
     except FileNotFoundError:
@@ -112,8 +112,7 @@ def core_race_loop(agent, log, selfplay) -> None:
         grid = build_grid()
 
         # initialize the car for the current agent based on random start position
-        startindex = 0 
-        #startindex = random.randrange(0,len(grid))
+        startindex = random.randrange(0,len(grid))
         ai_car = grid[startindex]
         grid[startindex].driver.short = "DKI"
 
@@ -214,8 +213,7 @@ def evaluation_testloop(agent, log, selfplay):
         grid = build_grid()
 
         # initialize the car for the current agent based on random start position
-        startindex = 0
-        #startindex = random.randrange(0,len(grid))
+        startindex = random.randrange(0,len(grid))
         ai_car = grid[startindex]
         grid[startindex].driver.short = "DKI"
 
