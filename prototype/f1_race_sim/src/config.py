@@ -72,8 +72,11 @@ NETWORK_EVALUATION_TIME = 40
 SAMPLING_PERIOD = 5
 
 # AI Car Performance Values: if None than random values
-AI_DRIVER_SKILL = 1
-AI_CAR_POWER = 1
+# must be between [0,1] individually
+AI_DRIVER_SKILL = None
+AI_CAR_POWER = None
 
 # AI Car Starting Position: if None than random starting position
-AI_STARTING_POSITION = 0
+# more of an index: So                      "0"         -> Pole
+#                       "NUMBER_OF_COMPETITORS - 1"     -> last
+AI_STARTING_POSITION = None
