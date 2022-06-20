@@ -298,6 +298,4 @@ def evaluation_testloop(agent, log, selfplay):
         if log:
             dump_episode_data(grid, episode)
 
-    # number of bars in histogram
-    bins = sorted(set(car_positions))
-    create_histogram(car_positions, bins)
+    create_histogram(car_positions)

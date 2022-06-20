@@ -34,6 +34,9 @@ if __name__ == "__main__":
     selfplay = args.selfplay
     test = args.test
     mutate = args.mutate
+
+    load_from_file = True
+    test = True
     
     
     # Start the race!

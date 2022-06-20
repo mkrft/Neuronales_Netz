@@ -1,6 +1,7 @@
 from src.config import (
     RACE_DISTANCE,
-    REFERANCE_LAP_TIME)
+    REFERANCE_LAP_TIME,
+    NUMBER_OF_COMPETITORS)
 
 from src.const import(
     SOFT,
@@ -124,6 +125,19 @@ def create_plot(scores:list,losses:list, test:bool):
         plt.show()
 
 
-def create_histogram(values: list, bins : list):
-    plt.hist(values,bins=bins, density=True)
+def create_histogram(values: list):
+    font = {
+        'family' : 'normal',
+        'weight' : 'normal',
+        'size' : 16
+    }
+
+    print(values)
+    matplotlib.rc('font', **font)
+    matplotlib.rcParams["figure.figsize"] = [30/2.54, 23/2.54]
+    matplotlib.rcParams["figure.autolayout"] = True    
+    
+    plt.hist(values,bins=range(NUMBER_OF_COMPETITORS),density=True)
+    plt.ylabel("rel. Wahrscheinlichkeit")
+    plt.xlabel("Endposition")
     plt.show()
