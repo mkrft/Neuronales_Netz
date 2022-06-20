@@ -79,4 +79,4 @@ AI_CAR_POWER = 1
 # AI Car Starting Position: if None than random starting position
 # more of an index: So                      "0"         -> Pole
 #                       "NUMBER_OF_COMPETITORS - 1"     -> last
-AI_STARTING_POSITION = 0
+AI_STARTING_POSITION = 19
