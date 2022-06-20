@@ -41,7 +41,7 @@ PITSTOP_DELTA_TIME = 18
 PITSTOP_ERROR_RANGE = (0.0, 1.0)
 
 # Delta to car infront that has to be to make the overtake possible
-OVERTAKE_TRESHOLD = 0.1
+OVERTAKE_TRESHOLD = 0.25
 
 # Current Race Lap as global var
 CURRENT_RACE_LAP = [0]
@@ -53,7 +53,7 @@ EPISODES = 0
 MEMSIZE = 200 * RACE_DISTANCE
 
 # Size of the batches used for learning due to experience replay
-#BATCHSIZE = 1 * 70
+#BATCHSIZE = 1 * 70 
 BATCHSIZE = 32
 
 # Time until Epsilon reaches the minimum value

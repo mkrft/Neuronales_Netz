@@ -111,10 +111,14 @@ def core_race_loop(agent, log, selfplay) -> None:
         # make new cars for every episode
         grid = build_grid()
 
-        # initialize the car for the current agent based on random start position
+        # Initialize the car for the current agent based on random start position
         startindex = random.randrange(0,len(grid))
         ai_car = grid[startindex]
-        grid[startindex].driver.short = "DKI"
+        ai_car.driver.short = "DKI"
+
+        # Set AI Car Performance Parameters if needed! Otherwise it stays
+        ai_car.driver.skill = ai_car.driver.skill
+        ai_car.power = ai_car.power
 
         # Initialize the actions
         actions = {}
