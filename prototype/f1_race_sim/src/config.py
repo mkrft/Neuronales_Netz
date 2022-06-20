@@ -47,7 +47,7 @@ OVERTAKE_TRESHOLD = 0.25
 CURRENT_RACE_LAP = [0]
 
 # Times how often the games shall be played
-EPISODES = 100
+EPISODES = 10
 
 # Maximum size of experience replay memory
 MEMSIZE = 200 * RACE_DISTANCE
@@ -73,10 +73,10 @@ SAMPLING_PERIOD = 5
 
 # AI Car Performance Values: if None than random values
 # must be between [0,1] individually
-AI_DRIVER_SKILL = None
-AI_CAR_POWER = None
+AI_DRIVER_SKILL = 1
+AI_CAR_POWER = 1
 
 # AI Car Starting Position: if None than random starting position
 # more of an index: So                      "0"         -> Pole
 #                       "NUMBER_OF_COMPETITORS - 1"     -> last
-AI_STARTING_POSITION = None
+AI_STARTING_POSITION = 0
