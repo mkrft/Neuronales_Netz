@@ -1,3 +1,10 @@
+"""
+    Module holding all the helpers for the
+    AI Race Loop
+
+"""
+
+#=====Module Imports==================================
 from src.config import (
     RACE_DISTANCE,
     REFERANCE_LAP_TIME,
@@ -12,9 +19,9 @@ from src.const import(
 from src.actions import Actions
 from src.cars import Car
 
-
-import torch
+#=====Libraries=======================================
 import random
+import torch
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -137,7 +144,10 @@ def create_histogram(values: list):
     matplotlib.rcParams["figure.figsize"] = [30/2.54, 23/2.54]
     matplotlib.rcParams["figure.autolayout"] = True    
     
-    plt.hist(values,bins=range(NUMBER_OF_COMPETITORS),density=True)
+    bin = np.arange(1,NUMBER_OF_COMPETITORS+1, 1)
+
+    plt.hist(values,bins=bin,density=True)
     plt.ylabel("rel. Wahrscheinlichkeit")
     plt.xlabel("Endposition")
+    plt.xticks(bin+.5,bin)
     plt.show()

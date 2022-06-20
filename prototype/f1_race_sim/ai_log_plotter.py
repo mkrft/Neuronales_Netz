@@ -80,7 +80,7 @@ if __name__ == "__main__":
     ax20.plot(laps, position, color="lightblue")
     ax20.set_xlabel("Laps")
     ax20.set_ylabel("\nPosition", color="lightblue", fontsize=15)
-    #ax20.set_ylim(bottom=0, top=20)
+    ax20.set_ylim(bottom=0, top=20)
 
     plt.tight_layout()
     plt.show()
