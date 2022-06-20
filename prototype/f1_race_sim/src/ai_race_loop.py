@@ -14,7 +14,10 @@ from src.config import (
     SELFPLAY_UPDATE_INTERVAL,
     EXPLORATION_TIME,
     NETWORK_EVALUATION_TIME,
-    SAMPLING_PERIOD
+    SAMPLING_PERIOD,
+    AI_CAR_POWER,
+    AI_DRIVER_SKILL,
+    AI_STARTING_POSITION
 )
 
 from src.ai_race_loop_helpers import (
@@ -112,13 +115,20 @@ def core_race_loop(agent, log, selfplay) -> None:
         grid = build_grid()
 
         # Initialize the car for the current agent based on random start position
-        startindex = random.randrange(0,len(grid))
-        ai_car = grid[startindex]
+        if AI_STARTING_POSITION is None:
+            startindex = random.randrange(0,len(grid))
+            ai_car = grid[startindex]
+        else:
+            ai_car = grid[AI_STARTING_POSITION]
+
         ai_car.driver.short = "DKI"
 
-        # Set AI Car Performance Parameters if needed! Otherwise it stays
-        ai_car.driver.skill = ai_car.driver.skill
-        ai_car.power = ai_car.power
+        # Set AI Car Performance Parameters if needed, based on config params! Otherwise it stays
+        if AI_CAR_POWER is not None:
+            ai_car.power = AI_CAR_POWER
+
+        if AI_DRIVER_SKILL is not None:
+            ai_car.driver.skill = AI_DRIVER_SKILL
 
         # Initialize the actions
         actions = {}
@@ -204,6 +214,8 @@ def evaluation_testloop(agent, log, selfplay):
 
     old_net = copy.deepcopy(agent.prediction_dqn)
 
+    car_positions = []
+
     for episode in range(0, EPISODES + 1):
 
         if episode % SELFPLAY_UPDATE_INTERVAL == 0:
@@ -216,10 +228,22 @@ def evaluation_testloop(agent, log, selfplay):
         # make new cars for every episode
         grid = build_grid()
 
-        # initialize the car for the current agent based on random start position
-        startindex = random.randrange(0,len(grid))
-        ai_car = grid[startindex]
-        grid[startindex].driver.short = "DKI"
+        # Initialize the car for the current agent based on random start position
+        if AI_STARTING_POSITION is None:
+            startindex = random.randrange(0,len(grid))
+            ai_car = grid[startindex]
+        else:
+            ai_car = grid[AI_STARTING_POSITION]
+
+        ai_car.driver.short = "DKI"
+
+        # Set AI Car Performance Parameters if needed, based on config params! Otherwise it stays
+        if AI_CAR_POWER is not None:
+            ai_car.power = AI_CAR_POWER
+
+        if AI_DRIVER_SKILL is not None:
+            ai_car.driver.skill = AI_DRIVER_SKILL
+
 
         # Initialize the actions
         actions = {}
@@ -266,6 +290,9 @@ def evaluation_testloop(agent, log, selfplay):
         # Give Information about the performance of our AI
         print(f"Race: {episode}\tScore: {score}")
         print(f"Position of car : {ai_car.position}")
+
+        # Add car positon to list over all episodes for histogram
+        car_positions.append(ai_car.position)
 
         if log:
             dump_episode_data(grid, episode)

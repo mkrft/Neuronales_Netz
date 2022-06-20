@@ -123,6 +123,16 @@ class Car():
         self._driver = driver
 
 
+    # power Getter/Setter
+    @property
+    def power(self):
+        return self._power
+
+    @power.setter
+    def power(self,power):
+        self._power = power
+
+
     # tyre Getter/Setter
     @property
     def tyre(self):

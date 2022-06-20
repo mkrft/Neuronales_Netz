@@ -70,3 +70,10 @@ NETWORK_EVALUATION_TIME = 40
 
 # Amount of Episodes between the sampling oft the replay buffer
 SAMPLING_PERIOD = 5
+
+# AI Car Performance Values: if None than random values
+AI_DRIVER_SKILL = None
+AI_CAR_POWER = None
+
+# AI Car Starting Position: if None than random starting position
+AI_STARTING_POSITION = None
