@@ -102,8 +102,11 @@ def lap_reward_func(previous_car_state, current_car_state):
     return - {float} - reward
     """
 
-    # every lap thats not the finishing one has a reward of 0
-    return 0
+    # reward gained position, punish lost positions
+    previous_pos = previous_car_state.position
+    current_pos = current_car_state.position
+    reward = previous_pos - current_pos
+    return reward
 
     
 def race_reward_func(car, grid):
@@ -123,6 +126,6 @@ def race_reward_func(car, grid):
     elif car.disqualified:
         reward = -20
     else:
-        reward = (1 - car.position)
+        reward = 0
         
     return reward

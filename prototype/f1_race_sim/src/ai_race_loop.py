@@ -12,7 +12,9 @@ from src.config import (
     LEARNING_RATE,
     BATCHSIZE,
     SELFPLAY_UPDATE_INTERVAL,
-    EXPLORATION_TIME
+    EXPLORATION_TIME,
+    NETWORK_EVALUATION_TIME,
+    SAMPLING_PERIOD
 )
 
 from src.ai_race_loop_helpers import (
@@ -47,7 +49,7 @@ def ai_race_loop(load=False, log=False, selfplay=False, test=False, mutate=False
     """
 
     # Reference for if the network is actually learning what to do: value for the actions immediately before race ends
-    test_state = torch.tensor([99.0, 1.0, 0.0, 70.0, 1, 0, 1, 0, 1, 0], dtype=torch.float32)
+    test_state = torch.tensor([99.0, 69.0, 0.0, 70.0, 1, 0, 1, 0, 1, 0, 1], dtype=torch.float32)
     try:
         testfile = open("./logs/testlog.txt", "a+")
     except FileNotFoundError:
@@ -59,6 +61,9 @@ def ai_race_loop(load=False, log=False, selfplay=False, test=False, mutate=False
 
     # Create our agent
     agent = Agent(learning_rate=LEARNING_RATE, inputlen=len(test_state), outputlen=len(Actions),load=load,mutate=mutate)
+    print("initializing replay memory with random actions . . .")
+    if not test:
+        agent.randomly_fill_memory()
 
     # Quick test run to verify
     testrun = agent.forward(test_state)
@@ -84,17 +89,21 @@ def core_race_loop(agent, log, selfplay) -> None:
     Main Loop representing the game
     """
 
-    old_agent = copy.deepcopy(agent)
+    old_net = copy.deepcopy(agent.prediction_dqn)
+    mean_score = 0
+
+    current_best_ai = copy.deepcopy(agent.prediction_dqn)
+    current_best_score = -1000000   # any very small number to ensure that better ais get saved
 
     for episode in range(0, EPISODES + 1):
 
         if episode % SELFPLAY_UPDATE_INTERVAL == 0 and selfplay:
-            old_agent = copy.deepcopy(agent)
+            old_net = copy.deepcopy(agent.prediction_dqn)
 
         # Reset the game
         done = False
         score = 0
-        lap = 0
+        lap = 1
 
         agent.decay_epsilon_linear(episode)
         agent.decay_temperature()
@@ -125,7 +134,10 @@ def core_race_loop(agent, log, selfplay) -> None:
 
             # training the ai after taking a step in the environment
             #agent.train_single(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done))
-            agent.add_replay(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done), episode)
+            agent.add_replay(state, torch.tensor(actions[ai_car].value), torch.tensor(rewards[ai_car]), n_state, torch.tensor(done))
+            if lap % SAMPLING_PERIOD == 0:
+                #agent.replay(BATCHSIZE, episode)
+                agent.train_batch(BATCHSIZE)
 
             # reset all actions from the last lap
             actions.clear()
@@ -139,7 +151,7 @@ def core_race_loop(agent, log, selfplay) -> None:
                 # competitor - actions
                 elif selfplay:
                     # use older version of AI - agent
-                    actions[car] = determine_other_driver_action(old_agent, n_state)
+                    actions[car] = determine_other_driver_action(old_net, n_state)
 
                 # static action
                 elif lap == 15 and not selfplay:
@@ -150,9 +162,19 @@ def core_race_loop(agent, log, selfplay) -> None:
 
             state = n_state
 
+        # update the mean score
+        mean_score += score
+
+        if episode % NETWORK_EVALUATION_TIME == 0 and episode != 0:
+            mean_score = mean_score / NETWORK_EVALUATION_TIME
+            if mean_score >= current_best_score:
+                current_best_score = mean_score
+                current_best_ai = copy.deepcopy(agent.prediction_dqn)
+            mean_score = 0
+
         # learn from experiences in short term memory
         #agent.train_batch(BATCHSIZE)
-        agent.replay(BATCHSIZE, episode)
+        #agent.replay(BATCHSIZE, episode)
 
         # Display the current standings of finished episode
         display_standings(lap, order_grid(grid))
@@ -167,6 +189,8 @@ def core_race_loop(agent, log, selfplay) -> None:
         if log:
             dump_episode_data(grid, episode)
 
+    agent.prediction_dqn = current_best_ai
+
 
 
 def evaluation_testloop(agent, log, selfplay):
@@ -174,16 +198,16 @@ def evaluation_testloop(agent, log, selfplay):
     Pretty much the same as the core loop, except without the learning.
     """
 
-    old_agent = copy.deepcopy(agent)
+    old_net = copy.deepcopy(agent.prediction_dqn)
 
     for episode in range(0, EPISODES + 1):
 
         if episode % SELFPLAY_UPDATE_INTERVAL == 0:
-            old_agent = copy.deepcopy(agent)
+            old_net = copy.deepcopy(agent.prediction_dqn)
 
         # Reset the game
         score = 0
-        lap = 0
+        lap = 1
 
         # make new cars for every episode
         grid = build_grid()
@@ -218,7 +242,7 @@ def evaluation_testloop(agent, log, selfplay):
                 # competitor - actions
                 elif selfplay:
                     # use older version of AI - agent
-                    actions[car] = determine_other_driver_action(old_agent, n_state)
+                    actions[car] = determine_other_driver_action(old_net, n_state)
 
                 # static action
                 elif lap == 15 and not selfplay:

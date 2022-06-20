@@ -56,15 +56,16 @@ def determine_other_driver_action(old_agent, state):
 
 def get_reset_state():
     degredation = 100.0
-    remaining_laps = RACE_DISTANCE
+    current_lap = 1
     delta_to_leader = 0.0
     lap_time = REFERANCE_LAP_TIME
     position = 1
     soft, medium, hard = 1, 0, 1
     second_compound_flag = 0
     delta_to_front = 0
+    starting_pos = 1
 
-    return torch.tensor([degredation, remaining_laps, delta_to_leader, lap_time, position, soft, medium, hard, second_compound_flag, delta_to_front], dtype=torch.float32)
+    return torch.tensor([degredation, current_lap, delta_to_leader, lap_time, position, soft, medium, hard, second_compound_flag, delta_to_front, starting_pos], dtype=torch.float32)
 
 
 def one_hot_compound(compound):
@@ -84,14 +85,15 @@ def get_state(car: Car, lap : int):
     return the current state for the AI - Input
     """
     degredation = car.tyre.degredation * 100
-    remaining_laps = RACE_DISTANCE - lap
+    current_lap = lap
     delta_to_leader = car.delta_to_leader
     lap_time = car.last_lap_time
     position = car.position
     soft, medium, hard = one_hot_compound(car.tyre.compound)
     second_compound_flag = 1 if car.distinctUsedTyreTypes() >= 2 else 0
     delta_to_front = car.delta_to_car_infront if car.delta_to_car_infront != "-" else 0
-    state_tensor = torch.tensor([degredation, remaining_laps, delta_to_leader, lap_time, position, soft, medium, hard, second_compound_flag, delta_to_front], dtype=torch.float32)
+    starting_pos = car.grid_position
+    state_tensor = torch.tensor([degredation, current_lap, delta_to_leader, lap_time, position, soft, medium, hard, second_compound_flag, delta_to_front, starting_pos], dtype=torch.float32)
 
     return state_tensor
 
