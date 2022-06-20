@@ -122,3 +122,8 @@ def create_plot(scores:list,losses:list, test:bool):
         plt.xlabel("Learning - step")
         plt.ylabel("Loss - value (MSE)")
         plt.show()
+
+
+def create_histogram(values: list, bins : list):
+    plt.hist(values,bins=bins, density=True)
+    plt.show()
