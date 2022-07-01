@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
     # To get a window in full size
     mng = plt.get_current_fig_manager()
-    mng.window.showMaximized()
+    #mng.window.showMaximized()
 
     mng.set_window_title(f"Race Data {year} {race} {driver}")
 

@@ -24,11 +24,9 @@ from src.overtake import check_overtake
 from src.order_grid import order_grid
 from src.customerrors import RaceError
 
-#=====Libraries=======================================
-
 
 #=====Functions=======================================
-def race_loop(grid):
+def race_loop(grid : list, print_opt : bool=True) -> None:
     """
     Function that shall represent our main loop, in which
     all computations are done per car for every single lap
@@ -102,7 +100,7 @@ def race_loop(grid):
         # TODO talk with Tim how to make this understandable for the AI
         if(current_lap == RACE_DISTANCE):
             for car in grid:
-                if(car.destinctUsedTyreTypes() < 2):
+                if(car.distinctUsedTyreTypes() < 2):
                     car.position = "DSQ"
 
 

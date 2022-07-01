@@ -26,6 +26,8 @@ SOFT_TYRE_LIFE = 40
 MEDIUM_TYRE_LIFE = 60
 HARD_TYRE_LIFE = 70
 
+# AI learning rate
+LEARNING_RATE =9 * 1e-9
 
 # Seconds lost during a pitstop
 PITSTOP_DELTA_TIME = 18
@@ -34,4 +36,10 @@ PITSTOP_DELTA_TIME = 18
 PITSTOP_ERROR_RANGE = (0.0, 1.0)
 
 # Delta to car infront that has to be to make the overtake possible
-OVERTAKE_TRESHOLD = 1.0
+OVERTAKE_TRESHOLD = 0.25
+
+# Current Race Lap as global var
+CURRENT_RACE_LAP = [0]
+
+# Times how often the games shall be played
+EPISODES = 15000

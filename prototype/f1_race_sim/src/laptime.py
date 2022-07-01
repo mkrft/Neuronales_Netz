@@ -11,10 +11,12 @@ from src.const import (
         MEDIUM,
         HARD
         )
+from src.cars import Car
+from src.tyre import Tyre
 
 
 #=====Functions=======================================
-def compute_lap_times(car):
+def compute_lap_times(car:Car) -> float:
     """
     Compute the current lap time (pace) of a single
     car with concern to all the important data
@@ -29,7 +31,7 @@ def compute_lap_times(car):
     return round(lap_time, 2)
 
 
-def individual_performance(skill, power):
+def individual_performance(skill : float, power: float) -> float:
     """
     Compute an add on to the lap time according to the performance of the car
     and the skill of its driver
@@ -47,7 +49,7 @@ def individual_performance(skill, power):
 
 
 
-def tyre_function(tyre):
+def tyre_function(tyre:Tyre)->float:
     """
     Compute the tyre influence on the laptime
     according to the tyre compound and degredation
