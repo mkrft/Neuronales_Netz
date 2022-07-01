@@ -12,12 +12,7 @@ from src.config import (
     REFERANCE_LAP_TIME,
 )
 
-from src.const import (
-    SOFT,
-    MEDIUM,
-    HARD
-)
-
+from src.actions import Actions
 from src.laptime import compute_lap_times
 from src.display import display_standings
 from src.overtake import check_overtake
@@ -65,9 +60,8 @@ def race_loop(grid : list, print_opt : bool=True) -> None:
                         print(f"{car.driver.short} overtook {grid[position - 1].driver.short}")
 
                     # If not "slow" the car down that was not able to overtake, so it stays behind
-                    # TODO Check if set back is fair
                     else:
-                        calc_lap_time = lap_time_car_infront + round(random.uniform(0.05, 0.5), 3)
+                        calc_lap_time = lap_time_car_infront + round(random.uniform(0.2, 0.8), 3)
 
 
             # Apply the new lap time to the whole race time and update the reference lap for the next car
@@ -78,17 +72,16 @@ def race_loop(grid : list, print_opt : bool=True) -> None:
             # Let the tyre degrade according to the interval to car infront
             # try / except for the car on pos 1 that has the string "-" as delta, therefore no one in front and we can degrade without penalty
             try:
-                if car.delta_to_car_infront <= 0.8:
+                if car.delta_to_car_infront <= 1:
                     car.tyre.degrade(car_infront=True)
                 else:
                     car.tyre.degrade()
             except TypeError:
                 car.tyre.degrade()
 
-            # TODO How to decide wether to pit and on which tyre
-            # TODO How to give this option to the AI?
+            # Static Pitstop for the whole field
             if current_lap == 25: 
-                car.pitstop(MEDIUM)
+                car.pitstop(Actions.MEDIUM)
 
 
         # Sort the whole grid and set the accoridng intervals
@@ -97,7 +90,7 @@ def race_loop(grid : list, print_opt : bool=True) -> None:
         # End active lap
         current_lap += 1
 
-        # TODO talk with Tim how to make this understandable for the AI
+        # Disqualify a car that hasnt used two distinctive tyre compounds
         if(current_lap == RACE_DISTANCE):
             for car in grid:
                 if(car.distinctUsedTyreTypes() < 2):

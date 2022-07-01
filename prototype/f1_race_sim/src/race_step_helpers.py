@@ -28,6 +28,9 @@ def take_action(car, actions):
         car.pitstop(action)
 
 
+def clamp(val, lower, upper):
+    return min(upper, max(lower, val))
+
 def give_lap_rewards(actions, prior_state, posterior_state):
     """
     Map cars to their rewards
@@ -99,16 +102,10 @@ def lap_reward_func(previous_car_state, current_car_state):
     return - {float} - reward
     """
 
-    # Get the diffs to leader of current and last lap
-    previous_diff_to_first = previous_car_state.delta_to_leader
-    current_diff_to_first = current_car_state.delta_to_leader
-
-    # Compute the time lost / gained in the current lap
-    lost_time = current_diff_to_first - previous_diff_to_first
-
-    # To use the lost time as reward, invert it
-    reward = -1 * lost_time
-
+    # reward gained position, punish lost positions
+    previous_pos = previous_car_state.position
+    current_pos = current_car_state.position
+    reward = previous_pos - current_pos
     return reward
 
     
@@ -122,20 +119,13 @@ def race_reward_func(car, grid):
     return - {float} - reward
     """
 
-    # reward given for the last round, additionaly check the 0.0 because dsq overwrites the position
-    if car.position == 1 or car.delta_to_leader == 0.0:
-
-        # If car came first compute the delta to the second placed driver to give according reward
+    if car.position == 1 and not car.disqualified:
         ordered_grid = order_grid(grid)
-        delta_to_second = ordered_grid[1].delta_to_car_infront
-        reward = 50 + delta_to_second
-
-    # If not first, get negative rewards based on the gap the car left to P1
+        dist_to_second = ordered_grid[1].delta_to_car_infront
+        reward = dist_to_second / 100
+    elif car.disqualified:
+        reward = -20
     else:
-        reward = -car.delta_to_leader / 5
-
-    # confuses the ai in the current version, needs a more complex input state and net architecture
-    #if car.position == "DSQ":
-        #reward = -1000.0
+        reward = 0
         
     return reward

@@ -13,7 +13,8 @@ import random
 #=====Module Imports==================================
 from src.config import (
     NUMBER_OF_COMPETITORS,
-    RACE_START_OFFSET
+    RACE_START_OFFSET,
+    SKILL_POWER_FACTOR
 )
 from src.const import (
     SEPERATION_FACTOR,
@@ -35,9 +36,6 @@ def build_grid() -> list:
     """
     Generate all necessary drivers and cars
     Save according information to the grid#
-
-    TODO
-        - How to give different cars different tyres -> shall we go to random tyres choices in order to let the AI learn everything?
     """
 
     # Init our grid
@@ -58,13 +56,12 @@ def build_grid() -> list:
 
 
         # Start to deploy the skill / power levels dynamically
-        # TODO Eval there skill / power models
-        # The difference should not be to big, otherwise we get the same result everytime :D
-        # Still showing that overtaking is too easy right now
-        skill = round(1 - i / 21, 3)
+        # Adjust the divison factor to spread the field more or make it more close
+        # Factor simply has to be bigger than number of competitors all the time!
+        divison_factor = NUMBER_OF_COMPETITORS * SKILL_POWER_FACTOR
+        skill = round(1 - i / divison_factor, 3)
         if i % 2 == 0:
-            power = round(1 - i / 21, 3)
-
+            power = round(1 - i / divison_factor, 3)
 
         # Calc starting position
         starting_pos, possible_start_pos = start_pos_generator(skill, power, possible_start_pos)
@@ -112,6 +109,8 @@ def build_grid() -> list:
 def start_pos_generator(skill : float, power: float, possible_start_pos:list) -> tuple:
     """
     Generate a start position based on the skill and power of a driver
+    but with the possibility of starting at the back to that we have a representation
+    of "qualifying errors".
     if the position is already given, choose a different one
 
     param - {float} - skill

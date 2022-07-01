@@ -27,8 +27,6 @@ class Driver():
 
     
     #=====Property Function Class Driver=================
-    # TODO add all functions that are needed! Only those
-
     @property
     def name(self):
         return self._name

@@ -54,23 +54,23 @@ if __name__ == "__main__":
     # TODO add y-scale limits based on average laptime +- 1sec
     fix, ax = plt.subplots(3)
     ax[0].plot(driver["LapNumber"], lap_times, color="green")
-    ax[0].set_xlabel("Lap Number")
-    ax[0].set_ylabel("Lap Time in Seconds")
+    ax[0].set_xlabel("Lap Number", fontsize=15)
+    ax[0].set_ylabel("Lap Time in Seconds", fontsize=15)
 
     ## Stint / Compound
     ax10 = ax[1].twinx()
     ax[1].plot(driver["LapNumber"], driver["Compound"], color="cyan")
-    ax[1].set_xlabel("Lap Number")
-    ax[1].set_ylabel("Compound", color="cyan")
+    ax[1].set_xlabel("Lap Number", fontsize=15)
+    ax[1].set_ylabel("Compound", color="cyan", fontsize=15)
 
     ax10.plot(driver["LapNumber"], driver["Stint"], color="red")
-    ax10.set_xlabel("Lap Number")
-    ax10.set_ylabel("\nStint", color="red")
+    ax10.set_xlabel("Lap Number", fontsize=15)
+    ax10.set_ylabel("\nStint", color="red", fontsize=15)
 
     ## TyreLife
     ax[2].plot(driver["LapNumber"], driver["TyreLife"], color="yellow")
-    ax[2].set_xlabel("Lap Number")
-    ax[2].set_ylabel("TyreLife in Rounds")
+    ax[2].set_xlabel("Lap Number", fontsize=15)
+    ax[2].set_ylabel("TyreLife in Rounds", fontsize=15)
 
     # To get a window in full size
     mng = plt.get_current_fig_manager()
