@@ -1,0 +1,26 @@
+
+\begin{thenomenclature} 
+\nomgroup{A}
+  \item [{BI}]\begingroup Boehringer Ingelheim\nomeqref {0}\nompageref{I}
+  \item [{BIWAN}]\begingroup Boehringer Ingelheim Wide Area Network\nomeqref {0}\nompageref{I}
+  \item [{DHCP}]\begingroup Dynamic Host Configuration Protocol\nomeqref {0}\nompageref{I}
+  \item [{GUI}]\begingroup grafische Benutzeroberfläche\nomeqref {0}\nompageref{I}
+  \item [{HA}]\begingroup High Availability\nomeqref {0}\nompageref{I}
+  \item [{HCI}]\begingroup Hyperkonvergente Infrastruktur\nomeqref {0}\nompageref{I}
+  \item [{IaaS}]\begingroup Infrastructure as a Service\nomeqref {0}\nompageref{I}
+  \item [{ISM}]\begingroup Infrastructure Service Module\nomeqref {0}\nompageref{I}
+  \item [{IT}]\begingroup Informationstechnik\nomeqref {0}\nompageref{I}
+  \item [{IT}]\begingroup Informationstechnologie\nomeqref {0}\nompageref{I}
+  \item [{OPS}]\begingroup Operative Site\nomeqref {0}\nompageref{I}
+  \item [{OPU}]\begingroup Operating Unit\nomeqref {0}\nompageref{I}
+  \item [{OPU}]\begingroup Operative Unit\nomeqref {0}\nompageref{I}
+  \item [{PaaS}]\begingroup Platform as a Service\nomeqref {0}\nompageref{I}
+  \item [{QoS}]\begingroup Quality of Service\nomeqref {0}\nompageref{I}
+  \item [{QUMU}]\begingroup -\nomeqref {0}\nompageref{I}
+  \item [{SaaS}]\begingroup Software as a Service\nomeqref {0}\nompageref{I}
+  \item [{SAN}]\begingroup Storage Area Network\nomeqref {0}\nompageref{I}
+  \item [{SCCM}]\begingroup System Center Configuration Manager\nomeqref {0}\nompageref{I}
+  \item [{UCS}]\begingroup Unified Computing System\nomeqref {0}\nompageref{I}
+  \item [{VM}]\begingroup virtuelle Maschine\nomeqref {0}\nompageref{I}
+
+\end{thenomenclature}

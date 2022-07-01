@@ -1,0 +1,88 @@
+%%%%%%%%%%%%%%%%%%%%%%%% Eigene Kommandos definieren %%%%%%%%%%%%%%%%%%%%%%%%
+% Definition von \gqq{#1: text}: Text in Anführungszeichen
+\newcommand{\gqq}[1]{\glqq #1\grqq}
+
+% Definition von \footref{#1: label}
+% Verweis auf bereits existierende Fußnoten mittels
+\providecommand*{\footref}[1]{
+	\begingroup
+		\unrestored@protected@xdef\@thefnmark{\ref{#1}}
+	\endgroup
+\@footnotemark}
+
+% Definition von \mypageref{#1: label}
+% Kombination aus \ref{#1: label} und \pageref{#1: label}
+\newcommand{\mypageref}[1]{\ref{#1} auf Seite \pageref{#1}}
+
+% Definition von \myboxquote{#1: text}
+% grau hinterlegte Quotation-Umgebung (für Zitate)
+\newcommand{\myboxquote}[1]{
+	\begin{quotation}
+		\colorbox{boxgray}{\parbox{0.78\textwidth}{#1}}
+	\end{quotation}
+	\vspace*{1mm}
+}
+
+\makeatletter
+\zref@newprop*{appsec}{}
+\zref@addprop{main}{appsec}
+
+% Definition von \applabel{#1: label}{#2: text}
+% von \appsec{#1: text}{#2: label} zur Erzeugung des Labels verwendet)
+\def\applabel#1#2{%
+	\zref@setcurrent{appsec}{#2}%   
+	\zref@wrapper@immediate{\zref@label{#1}}%
+}
+
+% Definition von \appref{#1: label}
+% anstelle \ref{#1: label} zum referenzieren von Anhängen verwenden)
+\def\appref#1{%
+	\hyperref[#1]{\zref@extract{#1}{appsec}}%
+}
+\makeatother
+
+% Definition von \appsection{#1: text}{#2: label}
+% Ersetzt \section{#1: text} und \label{#2: label} für Anhänge)
+\newcommand{\theappsection}[1]{Anhang \Alph{section}:~\protect #1}
+\newcommand{\appsection}[2]{
+	\addtocounter{section}{1}
+	\phantomsection
+	\addcontentsline{toc}{section}{\theappsection{#1}}
+	\markboth{\theappsection{#1}}{}
+
+	\section*{\theappsection{#1}}
+	\applabel{#2}{Anhang \Alph{section}}
+	\label{#2}
+}
+
+%%%%%%%%%%%%%%%%%% Für Bilder (#2 ist das Label) %%%%%%%%%%%%%%%%
+%Definition \bild{#1: Groesse}{#2: Dateiname}{#3: Bildunterschrift}
+\newcommand{\bild}[3]{
+\begin{figure}[H]
+    \centering
+    \caption{#3} \label{fig:#2}
+    \includegraphics[width=#1\textwidth]{Studienarbeit_F1/images/#2}
+\end{figure}
+}
+
+%%%%%%%%%%%%%% Für Bilder mit Zitat (#2 ist das Label) %%%%%%%%%%
+% Definition \bildzitat{#1 Groesse}{#2 Dateiname}{#3 Bildunterschrift}{#4 Seite Zitat}{#5 Zitatkey}
+%%\begin{figure}[H]
+    %\centering
+    %\caption[#3]{#3\protect\footnotemark} \label{fig:my_label}
+    %\includegraphics[width=#1\textwidth]{Studienarbeit_F1/images/#2}
+%\end{figure}
+%\footnotetext{\citet{#5}{#4}
+%}
+
+
+%%%%%%%%%%% Zitieren %%%%%%%%%%
+% Neues Kommando Zitieren \zitat{#1: Seite}{#2: ID der Quelle}
+\newcommand{\zitat}[2]{
+\ifthenelse{\equal{#1}{}}
+    {\footnote{Vgl. \citet{#2}}}
+    {\footnote{Vgl. \citet{#2}{, S. #1}}}
+}
+
+
+\newcommand{\direktzitat}[2]{\ifthenelse{\equal{#1}{}}{\footnote{\citet{#2}}}{\footnote{\citet{#2}{,S. #1}}}}
